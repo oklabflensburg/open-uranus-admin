@@ -4,14 +4,6 @@
   </div>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
-import Search from '~/components/Search.vue';
-
-
-export default defineComponent({
-  components: {
-    Search
-  }
-})
+<script setup>
+import Search from '~/components/Search.vue'
 </script>

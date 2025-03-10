@@ -86,74 +86,102 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue'
+import { useApi } from '@/composables/useApi'
 
-  const eventTitle = ref('');
-  const eventDescription = ref('');
-  const eventDateStart = ref('');
-  const eventDateEnd = ref(''); 
-  const venueId = ref('');
-  const venueName = ref('');
-  const venueType = ref('');
-  const venueStreet = ref('');
-  const venueHouseNumber = ref('');
-  const venuePostalCode = ref('');
-  const venueCity = ref('');
-  const errors = ref({});
+const eventTitle = ref('')
+const eventDescription = ref('')
+const eventDateStart = ref('')
+const eventDateEnd = ref('') 
+const venueId = ref('')
+const venueName = ref('')
+const venueType = ref('')
+const venueStreet = ref('')
+const venueHouseNumber = ref('')
+const venuePostalCode = ref('')
+const venueCity = ref('')
+const errors = ref({})
 
 // Define reactive variables for dropdowns
-const venues = ref([]);
-const venueTypes = ref([]);
+const venues = ref([])
+const venueTypes = ref([])
 
 // Selected values
-const selectedVenue = ref("");
-const selectedVenueType = ref("");
+const selectedVenue = ref("")
+const selectedVenueType = ref("")
 
 // Fetch function
 const fetchData = async (url, targetArray) => {
   try {
-    const response = await fetch(url);
-    const data = await response.json();
-    targetArray.value = data;
+    const response = await fetch(url)
+    const data = await response.json()
+    targetArray.value = data
   } catch (error) {
-    console.error(`Error fetching ${url}:`, error);
+    console.error(`Error fetching ${url}:`, error)
   }
-};
+}
 
 // Fetch data when component is mounted
 onMounted(() => {
-  fetchData("https://api.uranus.oklabflensburg.de/venue/", venues);
-  fetchData("https://api.uranus.oklabflensburg.de/venue/type/", venueTypes);
-});
+  fetchData("https://api.uranus.oklabflensburg.de/venue/", venues)
+  fetchData("https://api.uranus.oklabflensburg.de/venue/type/", venueTypes)
+})
 
-    const handleSubmit = () => {
-      errors.value = {};
-      if (!eventTitle.value) {
-        errors.value.eventTitle = 'Bitte einen Veranstaltungs Titel angeben';
-      }
-      if (!eventDescription.value) {
-        errors.value.eventDescription = 'Bitte eine Veranstaltungs Beschreibung angeben';
-      }
-      if (!eventDateStart.value) {
-        errors.value.eventDateStart = 'Bitte einen Veranstaltungs Beginn angeben';
-      }
-      if (!venueId.value) {
-        errors.value.venueId = 'Bitte eine Veranstaltungsort ID angeben';
-      }
-      if (!venueName.value) {
-        errors.value.venueName = 'Bitte einen Veranstaltungsort Namen angeben';
-      }
-      if (!venueStreet.value) {
-        errors.value.venueStreet = 'Bitte eine Straße des Veranstaltungsortes angeben';
-      }
-      if (!venuePostalCode.value) {
-        errors.value.venuePostalCode = 'Bitte eine Postleitzahl des Veranstaltungsortes angeben';
-      }
-      if (!venueCity.value) {
-        errors.value.venueCity = 'Bitte eine Stadt des Veranstaltungsortes angeben';
-      }
-      if (Object.keys(errors.value).length === 0) {
-        alert('Event gespeichert');
-      }
-    };
+const handleSubmit = async () => {
+  errors.value = {}
+  if (!eventTitle.value) {
+    errors.value.eventTitle = 'Bitte einen Veranstaltungs Titel angeben'
+  }
+  if (!eventDescription.value) {
+    errors.value.eventDescription = 'Bitte eine Veranstaltungs Beschreibung angeben'
+  }
+  if (!eventDateStart.value) {
+    errors.value.eventDateStart = 'Bitte einen Veranstaltungs Beginn angeben'
+  }
+  if (!venueId.value) {
+    errors.value.venueId = 'Bitte eine Veranstaltungsort ID angeben'
+  }
+  if (!venueName.value) {
+    errors.value.venueName = 'Bitte einen Veranstaltungsort Namen angeben'
+  }
+  if (!venueStreet.value) {
+    errors.value.venueStreet = 'Bitte eine Straße des Veranstaltungsortes angeben'
+  }
+  if (!venuePostalCode.value) {
+    errors.value.venuePostalCode = 'Bitte eine Postleitzahl des Veranstaltungsortes angeben'
+  }
+  if (!venueCity.value) {
+    errors.value.venueCity = 'Bitte eine Stadt des Veranstaltungsortes angeben'
+  }
+  if (Object.keys(errors.value).length === 0) {
+    const body = {
+      title: eventTitle.value,
+      description: eventDescription.value,
+      date_start: eventDateStart.value,
+      date_end: eventDateEnd.value,
+      venue_id: venueId.value,
+      venue_name: venueName.value,
+      venue_type: venueType.value,
+      venue_street: venueStreet.value,
+      venue_house_number: venueHouseNumber.value,
+      venue_postal_code: venuePostalCode.value,
+      venue_city: venueCity.value,
+    }
+
+    try {
+      const { fetchApi } = useApi()
+      const data = await fetchApi('https://api.uranus.oklabflensburg.de/event/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      })
+
+      console.log('Success:', data)
+    } catch (error) {
+      console.error('Error sending data:', error)
+    }
+  }
+}
 </script>

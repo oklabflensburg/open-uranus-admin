@@ -5,51 +5,51 @@
     <!-- Name -->
     <div class="">
       <label class="block text-gray-700" for="name">Name</label>
-      <input type="text" id="name" name="name" class="mt-1 p-2 w-full border rounded-xs" v-model="name">
-      <p v-if="errors.name" class="text-red-600">{{ errors.name }}</p>
+      <input type="text" id="name" name="name" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerName">
+      <p v-if="errors.organizerName" class="text-red-600">{{ errors.organizerName }}</p>
     </div>
 
     <!-- Description -->
     <div class="">
       <label class="block text-gray-700" for="description">Beschreibung</label>
-      <textarea id="description" name="description" class="mt-1 p-2 w-full border rounded-xs" v-model="description"></textarea>
-      <p v-if="errors.description" class="text-red-600">{{ errors.description }}</p>
+      <textarea id="description" name="description" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerDescription"></textarea>
+      <p v-if="errors.organizerDescription" class="text-red-600">{{ errors.organizerDescription }}</p>
     </div>
 
     <!-- Contact Email -->
     <div class="">
       <label class="block text-gray-700" for="contact_email">Kontakt E-Mail</label>
-      <input type="email" id="contact_email" name="contact_email" class="mt-1 p-2 w-full border rounded-xs" v-model="contactEmail">
-      <p v-if="errors.contactEmail" class="text-red-600">{{ errors.contactEmail }}</p>
+      <input type="email" id="contact_email" name="contact_email" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerContactEmail">
+      <p v-if="errors.organizerContactEmail" class="text-red-600">{{ errors.organizerContactEmail }}</p>
     </div>
 
     <!-- Contact Phone -->
     <div class="">
       <label class="block text-gray-700" for="contact_phone">Kontakt Telefon</label>
-      <input type="text" id="contact_phone" name="contact_phone" class="mt-1 p-2 w-full border rounded-xs" v-model="contactPhone">
-      <p v-if="errors.contactPhone" class="text-red-600">{{ errors.contactPhone }}</p>
+      <input type="text" id="contact_phone" name="contact_phone" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerContactPhone">
+      <p v-if="errors.organizerContactPhone" class="text-red-600">{{ errors.organizerContactPhone }}</p>
     </div>
 
     <!-- Website URL -->
     <div class="">
       <label class="block text-gray-700" for="website_url">Website URL</label>
-      <input type="url" id="website_url" name="website_url" class="mt-1 p-2 w-full border rounded-xs" v-model="websiteUrl">
-      <p v-if="errors.websiteUrl" class="text-red-600">{{ errors.websiteUrl }}</p>
+      <input type="url" id="website_url" name="website_url" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerWebsiteUrl">
+      <p v-if="errors.organizerWebsiteUrl" class="text-red-600">{{ errors.organizerWebsiteUrl }}</p>
     </div>
 
     <div class="grid grid-cols-12 gap-4">
       <!-- Street -->
       <div class="col-span-9">
         <label class="block text-gray-700" for="street">Straße</label>
-        <input type="text" id="street" name="street" class="mt-1 p-2 w-full border rounded-xs" v-model="street">
-        <p v-if="errors.street" class="text-red-600">{{ errors.street }}</p>
+        <input type="text" id="street" name="street" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerStreet">
+        <p v-if="errors.organizerStreet" class="text-red-600">{{ errors.organizerStreet }}</p>
       </div>
 
       <!-- House Number -->
       <div class="col-span-3">
         <label class="block text-gray-700" for="house_number">Hausnummer</label>
-        <input type="text" id="house_number" name="house_number" class="mt-1 p-2 w-full border rounded-xs" v-model="houseNumber">
-        <p v-if="errors.houseNumber" class="text-red-600">{{ errors.houseNumber }}</p>
+        <input type="text" id="house_number" name="house_number" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerHouseNumber">
+        <p v-if="errors.organizerHouseNumber" class="text-red-600">{{ errors.organizerHouseNumber }}</p>
       </div>
     </div>
 
@@ -57,37 +57,37 @@
       <!-- Postal Code -->
       <div class="col-span-4">
         <label class="block text-gray-700" for="postal_code">Postleitzahl</label>
-        <input type="text" id="postal_code" name="postal_code" class="mt-1 p-2 w-full border rounded-xs" v-model="postalCode">
-        <p v-if="errors.postalCode" class="text-red-600">{{ errors.postalCode }}</p>
+        <input type="text" id="postal_code" name="postal_code" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerPostalCode">
+        <p v-if="errors.organizerPostalCode" class="text-red-600">{{ errors.organizerPostalCode }}</p>
       </div>
 
       <!-- City -->
       <div class="col-span-8">
         <label class="block text-gray-700" for="city">Stadt</label>
-        <input type="text" id="city" name="city" class="mt-1 p-2 w-full border rounded-xs" v-model="city">
-        <p v-if="errors.city" class="text-red-600">{{ errors.city }}</p>
+        <input type="text" id="city" name="city" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerCity">
+        <p v-if="errors.organizerCity" class="text-red-600">{{ errors.organizerCity }}</p>
       </div>
     </div>
 
     <!-- Country Code -->
     <div class="">
       <label class="block text-gray-700" for="country_code">Ländercode</label>
-      <input type="text" id="country_code" name="country_code" class="mt-1 p-2 w-full border rounded-xs" v-model="countryCode">
-      <p v-if="errors.countryCode" class="text-red-600">{{ errors.countryCode }}</p>
+      <input type="text" id="country_code" name="country_code" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerCountryCode">
+      <p v-if="errors.organizerCountryCode" class="text-red-600">{{ errors.organizerCountryCode }}</p>
     </div>
 
     <!-- Latitude and Longitude -->
     <div class="grid grid-cols-12 gap-4">
       <div class="col-span-6">
         <label class="block text-gray-700" for="latitude">Breitengrad</label>
-        <input type="number" step="0.0000001" id="latitude" name="latitude" class="mt-1 p-2 w-full border rounded-xs" v-model="latitude">
-        <p v-if="errors.latitude" class="text-red-600">{{ errors.latitude }}</p>
+        <input type="number" step="0.0000001" id="latitude" name="latitude" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerLatitude">
+        <p v-if="errors.organizerLatitude" class="text-red-600">{{ errors.organizerLatitude }}</p>
       </div>
 
       <div class="col-span-6">
         <label class="block text-gray-700" for="longitude">Längengrad</label>
-        <input type="number" step="0.0000001" id="longitude" name="longitude" class="mt-1 p-2 w-full border rounded-xs" v-model="longitude">
-        <p v-if="errors.longitude" class="text-red-600">{{ errors.longitude }}</p>
+        <input type="number" step="0.0000001" id="longitude" name="longitude" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerLongitude">
+        <p v-if="errors.organizerLongitude" class="text-red-600">{{ errors.organizerLongitude }}</p>
       </div>
     </div>
 
@@ -97,25 +97,26 @@
 
 <script setup>
 import { ref, watch } from 'vue';
+import { useApi } from '@/composables/useApi';
 
 // Reactive form data
-const name = ref('');
-const description = ref('');
-const contactEmail = ref('');
-const contactPhone = ref('');
-const websiteUrl = ref('');
-const street = ref('');
-const houseNumber = ref('');
-const postalCode = ref('');
-const city = ref('');
-const countryCode = ref('');
-const latitude = ref('');
-const longitude = ref('');
+const organizerName = ref('');
+const organizerDescription = ref('');
+const organizerContactEmail = ref('');
+const organizerContactPhone = ref('');
+const organizerWebsiteUrl = ref('');
+const organizerStreet = ref('');
+const organizerHouseNumber = ref('');
+const organizerPostalCode = ref('');
+const organizerCity = ref('');
+const organizerCountryCode = ref('');
+const organizerLatitude = ref('');
+const organizerLongitude = ref('');
 
 const errors = ref({});
 
 const getLocationData = async () => {
-  const url = `https://nominatim.oklabflensburg.de/search?street=${street.value}&housenumber=${houseNumber.value}&city=${city.value}&country=${countryCode.value}&postalcode=${postalCode.value}&limit=1`;
+  const url = `https://nominatim.oklabflensburg.de/search?q=${organizerStreet.value} ${organizerHouseNumber.value} ${organizerCity.value} ${organizerCountryCode.value} ${organizerPostalCode.value}&limit=1`;
 
   try {
     const response = await fetch(url);
@@ -127,8 +128,8 @@ const getLocationData = async () => {
     const data = await response.json();
     // Update latitude and longitude based on the fetched location data
     if (data && data[0]) {
-      latitude.value = data[0].lat;
-      longitude.value = data[0].lon;
+      organizerLatitude.value = data[0].lat;
+      organizerLongitude.value = data[0].lon;
     }
   } catch (error) {
     console.error('Error fetching location data:', error);
@@ -136,7 +137,7 @@ const getLocationData = async () => {
 };
 
 // Watch for changes to the relevant fields
-watch([street, houseNumber, postalCode, city, countryCode], () => {
+watch([organizerStreet, organizerHouseNumber, organizerPostalCode, organizerCity, organizerCountryCode], () => {
   getLocationData();
 });
 
@@ -144,18 +145,18 @@ watch([street, houseNumber, postalCode, city, countryCode], () => {
 const validateForm = () => {
   errors.value = {};
 
-  if (!name.value) errors.value.name = 'Bitte einen Namen angeben';
-  if (!description.value) errors.value.description = 'Bitte eine Beschreibung angeben';
-  if (!contactEmail.value) errors.value.contactEmail = 'Bitte eine E-Mail-Adresse angeben';
-  if (!contactPhone.value) errors.value.contactPhone = 'Bitte eine Telefonnummer angeben';
-  if (!websiteUrl.value) errors.value.websiteUrl = 'Bitte eine Website-URL angeben';
-  if (!street.value) errors.value.street = 'Bitte eine Straße angeben';
-  if (!houseNumber.value) errors.value.houseNumber = 'Bitte eine Hausnummer angeben';
-  if (!postalCode.value) errors.value.postalCode = 'Bitte eine Postleitzahl angeben';
-  if (!city.value) errors.value.city = 'Bitte eine Stadt angeben';
-  if (!countryCode.value) errors.value.countryCode = 'Bitte einen Ländercode angeben';
-  if (!latitude.value) errors.value.latitude = 'Bitte Breitengrad angeben';
-  if (!longitude.value) errors.value.longitude = 'Bitte Längengrad angeben';
+  if (!organizerName.value) errors.value.organizerName = 'Bitte einen Namen angeben';
+  if (!organizerDescription.value) errors.value.organizerDescription = 'Bitte eine Beschreibung angeben';
+  if (!organizerContactEmail.value) errors.value.organizerContactEmail = 'Bitte eine E-Mail-Adresse angeben';
+  if (!organizerContactPhone.value) errors.value.organizerContactPhone = 'Bitte eine Telefonnummer angeben';
+  if (!organizerWebsiteUrl.value) errors.value.organizerWebsiteUrl = 'Bitte eine Website-URL angeben';
+  if (!organizerStreet.value) errors.value.organizerStreet = 'Bitte eine Straße angeben';
+  if (!organizerHouseNumber.value) errors.value.organizerHouseNumber = 'Bitte eine Hausnummer angeben';
+  if (!organizerPostalCode.value) errors.value.organizerPostalCode = 'Bitte eine Postleitzahl angeben';
+  if (!organizerCity.value) errors.value.organizerCity = 'Bitte eine Stadt angeben';
+  if (!organizerCountryCode.value) errors.value.organizerCountryCode = 'Bitte einen Ländercode angeben';
+  if (!organizerLatitude.value) errors.value.organizerLatitude = 'Bitte Breitengrad angeben';
+  if (!organizerLongitude.value) errors.value.organizerLongitude = 'Bitte Längengrad angeben';
 };
 
 // Form submit
@@ -168,22 +169,24 @@ const submitForm = async () => {
   }
 
   const body = {
-    name: name.value,
-    description: description.value,
-    contact_email: contactEmail.value,
-    contact_phone: contactPhone.value,
-    website_url: websiteUrl.value,
-    street: street.value,
-    house_number: houseNumber.value,
-    postal_code: postalCode.value,
-    city: city.value,
-    country_code: countryCode.value,
-    latitude: latitude.value,
-    longitude: longitude.value,
+    name: organizerName.value,
+    description: organizerDescription.value,
+    contact_email: organizerContactEmail.value,
+    contact_phone: organizerContactPhone.value,
+    website_url: organizerWebsiteUrl.value,
+    street: organizerStreet.value,
+    house_number: organizerHouseNumber.value,
+    postal_code: organizerPostalCode.value,
+    city: organizerCity.value,
+    country_code: organizerCountryCode.value,
+    latitude: organizerLatitude.value,
+    longitude: organizerLongitude.value,
   };
 
   try {
-    const response = await fetch('https://api.uranus.oklabflensburg.de/organizer/', {
+    const { fetchApi } = useApi();
+
+    const data = await fetchApi('https://api.uranus.oklabflensburg.de/organizer/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -191,13 +194,7 @@ const submitForm = async () => {
       body: JSON.stringify(body),
     });
 
-    if (response.ok) {
-      const data = await response.json();
-      console.log('Success:', data);
-    } else {
-      const errorData = await response.json();
-      console.error('Error:', errorData);
-    }
+    console.log('Success:', data);
   } catch (error) {
     console.error('Error sending data:', error);
   }

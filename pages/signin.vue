@@ -47,57 +47,22 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuth } from '@/composables/useAuth'
 
-const router = useRouter();
+const router = useRouter()
+const { login } = useAuth()
 
-// Reactive objects for form data
 const signin = ref({
   emailAddress: '',
   password: ''
 })
 
-// Handle sign-in submission
 const handleSignIn = async () => {
-  const url = 'https://api.uranus.oklabflensburg.de/user/signin';
-
-  const formData = new URLSearchParams();
-  formData.append('grant_type', 'password');
-  formData.append('username', emailAddress.value);
-  formData.append('password', password.value);
-  formData.append('scope', ''); // Adjust if necessary
-  formData.append('client_id', 'string'); // Replace with actual client ID
-  formData.append('client_secret', 'string'); // Replace with actual client secret
-
-  try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'accept': 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: formData
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      console.log('Success:', data);
-
-      // Assuming the successful response contains an access token
-      const token = data.access_token;
-
-      // Optionally, store the token in localStorage/sessionStorage or Vuex (for state management)
-      localStorage.setItem('access_token', token);
-
-      // Redirect to the dashboard or home page after successful sign-in
-      router.push('/dashboard'); // Adjust the route to where you want to redirect
-    } else {
-      const errorData = await response.json();
-      console.error('Error:', errorData);
-      // Handle the error (e.g., show error message)
-    }
-  } catch (error) {
-    console.error('Request failed:', error);
-    // Handle network errors
+  const success = await login(signin.value.emailAddress, signin.value.password)
+  if (success) {
+    router.push('/dashboard') // Redirect after login
+  } else {
+    alert('Login failed! Check your credentials.')
   }
-};
-</script>  
+}
+</script>

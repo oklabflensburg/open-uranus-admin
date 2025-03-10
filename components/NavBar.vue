@@ -4,7 +4,7 @@
       <div class="flex justify-between h-16">
         <!-- Logo & Title -->
         <div class="flex items-center">
-          <router-link to="/" class="text-xl font-semibold">Uranus</router-link>
+          <nuxt-link to="/" class="text-xl font-semibold">Uranus</nuxt-link>
         </div>
 
         <!-- Mobile Menu Button -->
@@ -18,26 +18,38 @@
 
         <!-- Desktop Menu -->
         <div class="hidden sm:flex items-center space-x-4">
-          <router-link to="/dashboard" class="px-3 py-2 rounded hover:bg-gray-700">Dashboard</router-link>
-          <router-link to="/organizer" class="px-3 py-2 rounded hover:bg-gray-700">Veranstalter</router-link>
-          <router-link to="/venue" class="px-3 py-2 rounded hover:bg-gray-700">Veranstaltungsort</router-link>
-          <router-link to="/event" class="px-3 py-2 rounded hover:bg-gray-700">Veranstaltung</router-link>
+          <nuxt-link to="/dashboard" class="px-3 py-2 rounded hover:bg-gray-700" v-if="isAuthenticated">Dashboard</nuxt-link>
+          <nuxt-link to="/organizer" class="px-3 py-2 rounded hover:bg-gray-700" v-if="isAuthenticated">Veranstalter</nuxt-link>
+          <nuxt-link to="/venue" class="px-3 py-2 rounded hover:bg-gray-700" v-if="isAuthenticated">Veranstaltungsort</nuxt-link>
+          <nuxt-link to="/event" class="px-3 py-2 rounded hover:bg-gray-700" v-if="isAuthenticated">Veranstaltung</nuxt-link>
+          <nuxt-link to="/signin" class="px-3 py-2 rounded hover:bg-gray-700" v-if="!isAuthenticated">Anmelden</nuxt-link>
+          <button @click="handleLogout" class="px-3 py-2 rounded hover:bg-gray-700" v-if="isAuthenticated">Abmelden</button>
         </div>
       </div>
     </div>
 
     <!-- Mobile Menu Dropdown -->
     <div v-if="isOpen" class="sm:hidden bg-gray-800">
-      <router-link to="/dashboard" class="block px-4 py-2 hover:bg-gray-700">Dashboard</router-link>
-      <router-link to="/organizer" class="block px-4 py-2 hover:bg-gray-700">Veranstalter</router-link>
-      <router-link to="/venue" class="block px-4 py-2 hover:bg-gray-700">Veranstaltungsort</router-link>
-      <router-link to="/event" class="block px-4 py-2 hover:bg-gray-700">Veranstaltung</router-link>
+      <nuxt-link to="/dashboard" class="block px-4 py-2 hover:bg-gray-700" v-if="isAuthenticated">Dashboard</nuxt-link>
+      <nuxt-link to="/organizer" class="block px-4 py-2 hover:bg-gray-700" v-if="isAuthenticated">Veranstalter</nuxt-link>
+      <nuxt-link to="/venue" class="block px-4 py-2 hover:bg-gray-700" v-if="isAuthenticated">Veranstaltungsort</nuxt-link>
+      <nuxt-link to="/event" class="block px-4 py-2 hover:bg-gray-700" v-if="isAuthenticated">Veranstaltung</nuxt-link>
+      <nuxt-link to="/signin" class="block px-4 py-2 hover:bg-gray-700" v-if="!isAuthenticated">Anmelden</nuxt-link>
+      <button @click="handleLogout" class="block px-4 py-2 hover:bg-gray-700" v-if="isAuthenticated">Abmelden</button>
     </div>
   </nav>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue"
+import { useAuth } from '@/composables/useAuth'
 
-const isOpen = ref(false);
+const isOpen = ref(false)
+const { accessToken, logout } = useAuth()
+const isAuthenticated = computed(() => !!accessToken.value)
+
+const handleLogout = () => {
+  logout()
+  navigateTo('/signin')
+}
 </script>

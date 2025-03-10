@@ -76,7 +76,6 @@
     <div class="">
       <label class="block text-gray-700" for="venueOpenedAt">Eröffnungsdatum</label>
       <input type="date" id="venueOpenedAt" name="venueOpenedAt" class="mt-1 p-2 w-full border rounded-xs" v-model="venueOpenedAt">
-      <p v-if="errors.venueOpenedAt" class="text-red-600">{{ errors.venueOpenedAt }}</p>
     </div>
 
     <button type="submit" class="mt-6 px-4 py-2 bg-green-500 text-white rounded-xs hover:bg-green-700 transition">Ort hinzufügen</button>
@@ -84,57 +83,58 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch } from 'vue'
+import { useApi } from '@/composables/useApi'
 
 // Reactive form data
-const venueName = ref('');
-const venueStreet = ref('');
-const venueHouseNumber = ref('');
-const venuePostalCode = ref('');
-const venueCity = ref('');
-const venueCountyCode = ref('');
-const venueCountryCode = ref('');
-const venueLatitude = ref('');
-const venueLongitude = ref('');
-const venueOpenedAt = ref('');
-const errors = ref({});
+const venueName = ref('')
+const venueStreet = ref('')
+const venueHouseNumber = ref('')
+const venuePostalCode = ref('')
+const venueCity = ref('')
+const venueCountyCode = ref('')
+const venueCountryCode = ref('')
+const venueLatitude = ref('')
+const venueLongitude = ref('')
+const venueOpenedAt = ref('')
+const errors = ref({})
 
 // Function to get location data
 const getLocationData = async () => {
-  const url = `https://nominatim.oklabflensburg.de/search?q=${venueStreet.value} ${venueHouseNumber.value} ${venueCity.value} ${venueCountyCode.value} ${venueCountryCode.value} ${venuePostalCode.value}&limit=1`;
+  const url = `https://nominatim.oklabflensburg.de/search?q=${venueStreet.value} ${venueHouseNumber.value} ${venueCity.value} ${venueCountyCode.value} ${venueCountryCode.value} ${venuePostalCode.value}&limit=1`
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(url)
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error('Network response was not ok')
     }
 
     // Parse the response as JSON
-    const data = await response.json();
+    const data = await response.json()
 
     // Store the location data
-    venueLatitude.value = data[0]?.lat || '';
-    venueLongitude.value = data[0]?.lon || '';
+    venueLatitude.value = data[0]?.lat || ''
+    venueLongitude.value = data[0]?.lon || ''
   } catch (error) {
-    console.error('Error fetching location data:', error);
+    console.error('Error fetching location data:', error)
   }
-};
+}
 
 // Watch for changes to the relevant input fields
 watch([venueStreet, venueHouseNumber, venueCity, venueCountyCode, venuePostalCode], () => {
   // Call getLocationData whenever one of these inputs changes
-  getLocationData();
-});
+  getLocationData()
+})
 
-// Submit method using fetch
+// Submit method using fetchApi
 const submitForm = async () => {
   // Validate form fields before submitting
-  validateForm();
+  validateForm()
 
   // If there are errors, don't submit
   if (Object.keys(errors.value).length > 0) {
-    return;
+    return
   }
 
   // Prepare data to send
@@ -146,46 +146,39 @@ const submitForm = async () => {
     venue_city: venueCity.value,
     venue_latitude: venueLatitude.value,
     venue_longitude: venueLongitude.value,
-    venue_opened_at: venueOpenedAt.value,
-  };
+    venue_opened_at: venueOpenedAt.value || null
+  }
 
   try {
-    const response = await fetch('https://api.uranus.oklabflensburg.de/venue/', {
+    const { fetchApi } = useApi()
+    const data = await fetchApi('https://api.uranus.oklabflensburg.de/venue/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
-    });
+    })
 
-    if (response.ok) {
-      const data = await response.json();
-      console.log('Success:', data);
-      // Handle success, reset form, show message, etc.
-    } else {
-      const errorData = await response.json();
-      console.error('Error:', errorData);
-      // Handle error, show message, etc.
-    }
+    console.log('Success:', data)
+    // Handle success, reset form, show message, etc.
   } catch (error) {
-    console.error('Error sending data:', error);
+    console.error('Error sending data:', error)
     // Handle network error
   }
-};
+}
 
 // Form validation
 const validateForm = () => {
-  errors.value = {};
+  errors.value = {}
 
-  if (!venueName.value) errors.value.venueName = 'Bitte Namen für den Veranstaltungsort angeben';
-  if (!venueStreet.value) errors.value.venueStreet = 'Bitte eine Straße angeben';
-  if (!venueHouseNumber.value) errors.value.venueHouseNumber = 'Bitte Hausnummer angeben';
-  if (!venuePostalCode.value) errors.value.venuePostalCode = 'Bitte eine Postleitzahl angeben';
-  if (!venueCity.value) errors.value.venueCity = 'Bitte eine Stadt angeben';
-  if (!venueCountyCode.value) errors.value.venueCountyCode = 'Bitte Bundesland auswählen';
-  if (!venueCountryCode.value) errors.value.venueCountryCode = 'Bitte Ländercode auswählen';
-  if (!venueLatitude.value) errors.value.venueLatitude = 'Bitte Breitengrad angeben';
-  if (!venueLongitude.value) errors.value.venueLongitude = 'Bitte Längengrad angeben';
-  if (!venueOpenedAt.value) errors.value.venueOpenedAt = 'Bitte Eröffnungsdatum angeben';
-};
+  if (!venueName.value) errors.value.venueName = 'Bitte Namen für den Veranstaltungsort angeben'
+  if (!venueStreet.value) errors.value.venueStreet = 'Bitte eine Straße angeben'
+  if (!venueHouseNumber.value) errors.value.venueHouseNumber = 'Bitte Hausnummer angeben'
+  if (!venuePostalCode.value) errors.value.venuePostalCode = 'Bitte eine Postleitzahl angeben'
+  if (!venueCity.value) errors.value.venueCity = 'Bitte eine Stadt angeben'
+  if (!venueCountyCode.value) errors.value.venueCountyCode = 'Bitte Bundesland auswählen'
+  if (!venueCountryCode.value) errors.value.venueCountryCode = 'Bitte Ländercode auswählen'
+  if (!venueLatitude.value) errors.value.venueLatitude = 'Bitte Breitengrad angeben'
+  if (!venueLongitude.value) errors.value.venueLongitude = 'Bitte Längengrad angeben'
+}
 </script>
