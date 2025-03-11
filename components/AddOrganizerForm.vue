@@ -5,35 +5,35 @@
     <!-- Name -->
     <div class="">
       <label class="block text-gray-700" for="name">Name</label>
-      <input type="text" id="name" name="name" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerName">
+      <input type="text" id="name" name="name" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerName" @input="validateField('organizerName')">
       <p v-if="errors.organizerName" class="text-red-600">{{ errors.organizerName }}</p>
     </div>
 
     <!-- Description -->
     <div class="">
       <label class="block text-gray-700" for="description">Beschreibung</label>
-      <textarea id="description" name="description" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerDescription"></textarea>
+      <textarea id="description" name="description" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerDescription" @input="validateField('organizerDescription')"></textarea>
       <p v-if="errors.organizerDescription" class="text-red-600">{{ errors.organizerDescription }}</p>
     </div>
 
     <!-- Contact Email -->
     <div class="">
       <label class="block text-gray-700" for="contact_email">Kontakt E-Mail</label>
-      <input type="email" id="contact_email" name="contact_email" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerContactEmail">
+      <input type="email" id="contact_email" name="contact_email" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerContactEmail" @input="validateField('organizerContactEmail')">
       <p v-if="errors.organizerContactEmail" class="text-red-600">{{ errors.organizerContactEmail }}</p>
     </div>
 
     <!-- Contact Phone -->
     <div class="">
       <label class="block text-gray-700" for="contact_phone">Kontakt Telefon</label>
-      <input type="text" id="contact_phone" name="contact_phone" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerContactPhone">
+      <input type="text" id="contact_phone" name="contact_phone" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerContactPhone" @input="validateField('organizerContactPhone')">
       <p v-if="errors.organizerContactPhone" class="text-red-600">{{ errors.organizerContactPhone }}</p>
     </div>
 
     <!-- Website URL -->
     <div class="">
       <label class="block text-gray-700" for="website_url">Website URL</label>
-      <input type="url" id="website_url" name="website_url" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerWebsiteUrl">
+      <input type="url" id="website_url" name="website_url" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerWebsiteUrl" @input="validateField('organizerWebsiteUrl')">
       <p v-if="errors.organizerWebsiteUrl" class="text-red-600">{{ errors.organizerWebsiteUrl }}</p>
     </div>
 
@@ -41,14 +41,14 @@
       <!-- Street -->
       <div class="col-span-9">
         <label class="block text-gray-700" for="street">Straße</label>
-        <input type="text" id="street" name="street" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerStreet">
+        <input type="text" id="street" name="street" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerStreet" @input="validateField('organizerStreet')">
         <p v-if="errors.organizerStreet" class="text-red-600">{{ errors.organizerStreet }}</p>
       </div>
 
       <!-- House Number -->
       <div class="col-span-3">
         <label class="block text-gray-700" for="house_number">Hausnummer</label>
-        <input type="text" id="house_number" name="house_number" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerHouseNumber">
+        <input type="text" id="house_number" name="house_number" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerHouseNumber" @input="validateField('organizerHouseNumber')">
         <p v-if="errors.organizerHouseNumber" class="text-red-600">{{ errors.organizerHouseNumber }}</p>
       </div>
     </div>
@@ -57,14 +57,14 @@
       <!-- Postal Code -->
       <div class="col-span-4">
         <label class="block text-gray-700" for="postal_code">Postleitzahl</label>
-        <input type="text" id="postal_code" name="postal_code" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerPostalCode">
+        <input type="text" id="postal_code" name="postal_code" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerPostalCode" @input="validateField('organizerPostalCode')">
         <p v-if="errors.organizerPostalCode" class="text-red-600">{{ errors.organizerPostalCode }}</p>
       </div>
 
       <!-- City -->
       <div class="col-span-8">
         <label class="block text-gray-700" for="city">Stadt</label>
-        <input type="text" id="city" name="city" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerCity">
+        <input type="text" id="city" name="city" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerCity" @input="validateField('organizerCity')">
         <p v-if="errors.organizerCity" class="text-red-600">{{ errors.organizerCity }}</p>
       </div>
     </div>
@@ -72,7 +72,7 @@
     <!-- Country Code -->
     <div class="">
       <label class="block text-gray-700" for="country_code">Ländercode</label>
-      <input type="text" id="country_code" name="country_code" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerCountryCode">
+      <input type="text" id="country_code" name="country_code" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerCountryCode" @input="validateField('organizerCountryCode')">
       <p v-if="errors.organizerCountryCode" class="text-red-600">{{ errors.organizerCountryCode }}</p>
     </div>
 
@@ -80,13 +80,13 @@
     <div class="grid grid-cols-12 gap-4">
       <div class="col-span-6">
         <label class="block text-gray-700" for="latitude">Breitengrad</label>
-        <input type="number" step="0.0000001" id="latitude" name="latitude" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerLatitude">
+        <input type="number" step="0.0000001" id="latitude" name="latitude" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerLatitude" @input="validateField('organizerLatitude')">
         <p v-if="errors.organizerLatitude" class="text-red-600">{{ errors.organizerLatitude }}</p>
       </div>
 
       <div class="col-span-6">
         <label class="block text-gray-700" for="longitude">Längengrad</label>
-        <input type="number" step="0.0000001" id="longitude" name="longitude" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerLongitude">
+        <input type="number" step="0.0000001" id="longitude" name="longitude" class="mt-1 p-2 w-full border rounded-xs" v-model="organizerLongitude" @input="validateField('organizerLongitude')">
         <p v-if="errors.organizerLongitude" class="text-red-600">{{ errors.organizerLongitude }}</p>
       </div>
     </div>
@@ -157,6 +157,96 @@ const validateForm = () => {
   if (!organizerCountryCode.value) errors.value.organizerCountryCode = 'Bitte einen Ländercode angeben';
   if (!organizerLatitude.value) errors.value.organizerLatitude = 'Bitte Breitengrad angeben';
   if (!organizerLongitude.value) errors.value.organizerLongitude = 'Bitte Längengrad angeben';
+};
+
+// Validate individual field
+const validateField = (field) => {
+  switch (field) {
+    case 'organizerName':
+      if (!organizerName.value) {
+        errors.value.organizerName = 'Bitte einen Namen angeben';
+      } else {
+        delete errors.value.organizerName;
+      }
+      break;
+    case 'organizerDescription':
+      if (!organizerDescription.value) {
+        errors.value.organizerDescription = 'Bitte eine Beschreibung angeben';
+      } else {
+        delete errors.value.organizerDescription;
+      }
+      break;
+    case 'organizerContactEmail':
+      if (!organizerContactEmail.value) {
+        errors.value.organizerContactEmail = 'Bitte eine E-Mail-Adresse angeben';
+      } else {
+        delete errors.value.organizerContactEmail;
+      }
+      break;
+    case 'organizerContactPhone':
+      if (!organizerContactPhone.value) {
+        errors.value.organizerContactPhone = 'Bitte eine Telefonnummer angeben';
+      } else {
+        delete errors.value.organizerContactPhone;
+      }
+      break;
+    case 'organizerWebsiteUrl':
+      if (!organizerWebsiteUrl.value) {
+        errors.value.organizerWebsiteUrl = 'Bitte eine Website-URL angeben';
+      } else {
+        delete errors.value.organizerWebsiteUrl;
+      }
+      break;
+    case 'organizerStreet':
+      if (!organizerStreet.value) {
+        errors.value.organizerStreet = 'Bitte eine Straße angeben';
+      } else {
+        delete errors.value.organizerStreet;
+      }
+      break;
+    case 'organizerHouseNumber':
+      if (!organizerHouseNumber.value) {
+        errors.value.organizerHouseNumber = 'Bitte eine Hausnummer angeben';
+      } else {
+        delete errors.value.organizerHouseNumber;
+      }
+      break;
+    case 'organizerPostalCode':
+      if (!organizerPostalCode.value) {
+        errors.value.organizerPostalCode = 'Bitte eine Postleitzahl angeben';
+      } else {
+        delete errors.value.organizerPostalCode;
+      }
+      break;
+    case 'organizerCity':
+      if (!organizerCity.value) {
+        errors.value.organizerCity = 'Bitte eine Stadt angeben';
+      } else {
+        delete errors.value.organizerCity;
+      }
+      break;
+    case 'organizerCountryCode':
+      if (!organizerCountryCode.value) {
+        errors.value.organizerCountryCode = 'Bitte einen Ländercode angeben';
+      } else {
+        delete errors.value.organizerCountryCode;
+      }
+      break;
+    case 'organizerLatitude':
+      if (!organizerLatitude.value) {
+        errors.value.organizerLatitude = 'Bitte Breitengrad angeben';
+      } else {
+        delete errors.value.organizerLatitude;
+      }
+      break;
+    case 'organizerLongitude':
+      if (!organizerLongitude.value) {
+        errors.value.organizerLongitude = 'Bitte Längengrad angeben';
+      } else {
+        delete errors.value.organizerLongitude;
+      }
+      break;
+  }
 };
 
 // Form submit

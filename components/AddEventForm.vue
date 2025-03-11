@@ -4,18 +4,18 @@
 
     <div class="">
       <label class="block text-gray-700" for="eventTitle">Veranstaltungs Titel</label>
-      <input type="text" id="eventTitle" name="eventTitle" class="mt-1 p-2 w-full border rounded-xs" v-model="eventTitle" required>
+      <input type="text" id="eventTitle" name="eventTitle" class="mt-1 p-2 w-full border rounded-xs" v-model="eventTitle" @input="validateField('eventTitle')">
       <p v-if="errors.eventTitle" class="text-red-600">{{ errors.eventTitle }}</p>
     </div>
     <div>
       <label class="block text-gray-700" for="eventDescription">Veranstaltungs Beschreibung</label>
-      <textarea id="eventDescription" name="eventDescription" rows="4" class="mt-1 p-2 w-full border rounded-xs" v-model="eventDescription" required></textarea>
+      <textarea id="eventDescription" name="eventDescription" rows="4" class="mt-1 p-2 w-full border rounded-xs" v-model="eventDescription" @input="validateField('eventDescription')"></textarea>
       <p v-if="errors.eventDescription" class="text-red-600">{{ errors.eventDescription }}</p>
     </div>
     <div class="grid grid-cols-12 gap-4 mb-4">
       <div class="col-span-6">
         <label class="block text-gray-700" for="eventDateStart">Veranstaltungs Beginn</label>
-        <input type="datetime-local" name="eventDateStart" class="mt-1 p-2 w-full border rounded-xs" v-model="eventDateStart" required>
+        <input type="datetime-local" name="eventDateStart" class="mt-1 p-2 w-full border rounded-xs" v-model="eventDateStart" @input="validateField('eventDateStart')">
         <p v-if="errors.eventDateStart" class="text-red-600">{{ errors.eventDateStart }}</p>
       </div>
       <div class="col-span-6">
@@ -25,59 +25,41 @@
     </div>
 
     <div class="grid grid-cols-12 gap-4">
+      <!-- Organizer ID -->
+      <div class="col-span-4">
+        <label class="block text-gray-700" for="organizer">Veranstalter</label>
+        <select class="bg-white mt-1 p-3 w-full border rounded-xs" id="organizer" v-model="selectedOrganizer" @change="validateField('selectedOrganizer')">
+          <option selected value="">Bitte auswählen</option>
+          <option v-for="organizer in organizers" :key="organizer.organizer_id" :value="organizer.organizer_id">
+            {{ organizer.organizer_name }}
+          </option>
+        </select>
+        <p v-if="errors.selectedOrganizer" class="text-red-600">{{ errors.selectedOrganizer }}</p>
+      </div>
+
       <!-- Venue ID -->
-      <div class="col-span-8">
-        <label class="block text-gray-700" for="venue">Venue</label>
-        <select class="bg-white mt-1 p-3 w-full border rounded-xs" id="venue" v-model="selectedVenue">
+      <div class="col-span-4">
+        <label class="block text-gray-700" for="venue">Veranstaltungsort</label>
+        <select class="bg-white mt-1 p-3 w-full border rounded-xs" id="venue" v-model="selectedVenue" @change="fetchSpaces; validateField('selectedVenue')">
           <option selected value="">Bitte auswählen</option>
           <option v-for="venue in venues" :key="venue.venue_id" :value="venue.venue_id">
             {{ venue.venue_name }}
           </option>
         </select>
-        <p v-if="errors.venueId" class="text-red-600">{{ errors.venueId }}</p>
+        <p v-if="errors.selectedVenue" class="text-red-600">{{ errors.selectedVenue }}</p>
       </div>
 
-      <!-- Venue Type -->
+      <!-- Space -->
       <div class="col-span-4">
-        <label for="venueType">Venue Type</label>
-        <select class="bg-white mt-1 p-3 w-full border rounded-xs" id="venueType" v-model="selectedVenueType">
-          <option selected value="">Bitte auswählen</option>
-          <option v-for="venueType in venueTypes" :key="venueType.venue_type_id" :value="venueType.venue_type_id">
-            {{ venueType.venue_type_name }}
+        <label for="space">Space</label>
+        <select class="bg-white mt-1 p-3 w-full border rounded-xs" id="space" v-model="selectedSpace" :disabled="spaces.length === 0" @change="validateField('selectedSpace')">
+          <option v-if="spaces.length === 0" value="" selected>---</option>
+          <option v-else value="" selected>Bitte auswählen</option>
+          <option v-for="space in spaces" :key="space.id" :value="space.id">
+            {{ space.name }}
           </option>
-        </select>  
-    </div>
-   </div>
-
-    <div class="grid grid-cols-12 gap-4">
-      <!-- Venue Street -->
-      <div class="col-span-9">
-        <label class="block text-gray-700" for="venue_street">Straße</label>
-        <input type="text" id="venue_street" name="venue_street" class="mt-1 p-2 w-full border rounded-xs" v-model="venueStreet">
-        <p v-if="errors.venueStreet" class="text-red-600">{{ errors.venueStreet }}</p>
-      </div>
-
-      <!-- Venue House Number -->
-      <div class="col-span-3">
-        <label class="block text-gray-700" for="venue_house_number">Hausnummer</label>
-        <input type="text" id="venue_house_number" name="venue_house_number" class="mt-1 p-2 w-full border rounded-xs" v-model="venueHouseNumber">
-        <p v-if="errors.venueHouseNumber" class="text-red-600">{{ errors.venueHouseNumber }}</p>
-      </div>
-    </div>
-
-    <div class="grid grid-cols-12 gap-4">
-      <!-- Venue Postal Code -->
-      <div class="col-span-4">
-        <label class="block text-gray-700" for="venue_postal_code">Postleitzahl</label>
-        <input type="text" id="venue_postal_code" name="venue_postal_code" class="mt-1 p-2 w-full border rounded-xs" v-model="venuePostalCode">
-        <p v-if="errors.venuePostalCode" class="text-red-600">{{ errors.venuePostalCode }}</p>
-      </div>
-
-      <!-- Venue City -->
-      <div class="col-span-8">
-        <label class="block text-gray-700" for="venue_city">Stadt</label>
-        <input type="text" id="venue_city" name="venue_city" class="mt-1 p-2 w-full border rounded-xs" v-model="venueCity">
-        <p v-if="errors.venueCity" class="text-red-600">{{ errors.venueCity }}</p>
+        </select>
+        <p v-if="errors.selectedSpace" class="text-red-600">{{ errors.selectedSpace }}</p>
       </div>
     </div>
 
@@ -86,102 +68,151 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useApi } from '@/composables/useApi'
 
 const eventTitle = ref('')
 const eventDescription = ref('')
 const eventDateStart = ref('')
-const eventDateEnd = ref('') 
-const venueId = ref('')
+const eventDateEnd = ref('')
 const venueName = ref('')
-const venueType = ref('')
-const venueStreet = ref('')
-const venueHouseNumber = ref('')
-const venuePostalCode = ref('')
-const venueCity = ref('')
 const errors = ref({})
 
 // Define reactive variables for dropdowns
+const organizers = ref([])
 const venues = ref([])
-const venueTypes = ref([])
+const spaces = ref([])
 
 // Selected values
+const selectedOrganizer = ref("")
 const selectedVenue = ref("")
-const selectedVenueType = ref("")
+const selectedSpace = ref("")
 
 // Fetch function
 const fetchData = async (url, targetArray) => {
   try {
-    const response = await fetch(url)
-    const data = await response.json()
+    const { fetchApi } = useApi()
+    const data = await fetchApi(url)
     targetArray.value = data
   } catch (error) {
     console.error(`Error fetching ${url}:`, error)
   }
 }
 
-// Fetch data when component is mounted
+// Fetch organizers and venues when component is mounted
 onMounted(() => {
+  fetchData("https://api.uranus.oklabflensburg.de/organizer/", organizers)
   fetchData("https://api.uranus.oklabflensburg.de/venue/", venues)
-  fetchData("https://api.uranus.oklabflensburg.de/venue/type/", venueTypes)
 })
 
-const handleSubmit = async () => {
+// Fetch spaces based on selected venue
+const fetchSpaces = async () => {
+  if (selectedVenue.value) {
+    const url = `https://api.uranus.oklabflensburg.de/space/filtered?venue_id=${selectedVenue.value}`
+    fetchData(url, spaces)
+  } else {
+    spaces.value = []
+  }
+}
+
+// Watch for changes to selectedVenue and fetch spaces accordingly
+watch(selectedVenue, fetchSpaces)
+
+// Form validation
+const validateForm = () => {
   errors.value = {}
-  if (!eventTitle.value) {
-    errors.value.eventTitle = 'Bitte einen Veranstaltungs Titel angeben'
+  validateField('eventTitle')
+  validateField('eventDescription')
+  validateField('eventDateStart')
+  validateField('selectedOrganizer')
+  validateField('selectedVenue')
+  if (spaces.value.length > 0) {
+    validateField('selectedSpace')
   }
-  if (!eventDescription.value) {
-    errors.value.eventDescription = 'Bitte eine Veranstaltungs Beschreibung angeben'
-  }
-  if (!eventDateStart.value) {
-    errors.value.eventDateStart = 'Bitte einen Veranstaltungs Beginn angeben'
-  }
-  if (!venueId.value) {
-    errors.value.venueId = 'Bitte eine Veranstaltungsort ID angeben'
-  }
-  if (!venueName.value) {
-    errors.value.venueName = 'Bitte einen Veranstaltungsort Namen angeben'
-  }
-  if (!venueStreet.value) {
-    errors.value.venueStreet = 'Bitte eine Straße des Veranstaltungsortes angeben'
-  }
-  if (!venuePostalCode.value) {
-    errors.value.venuePostalCode = 'Bitte eine Postleitzahl des Veranstaltungsortes angeben'
-  }
-  if (!venueCity.value) {
-    errors.value.venueCity = 'Bitte eine Stadt des Veranstaltungsortes angeben'
-  }
-  if (Object.keys(errors.value).length === 0) {
-    const body = {
-      title: eventTitle.value,
-      description: eventDescription.value,
-      date_start: eventDateStart.value,
-      date_end: eventDateEnd.value,
-      venue_id: venueId.value,
-      venue_name: venueName.value,
-      venue_type: venueType.value,
-      venue_street: venueStreet.value,
-      venue_house_number: venueHouseNumber.value,
-      venue_postal_code: venuePostalCode.value,
-      venue_city: venueCity.value,
-    }
+  validateField('venueName')
+}
 
-    try {
-      const { fetchApi } = useApi()
-      const data = await fetchApi('https://api.uranus.oklabflensburg.de/event/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-      })
+// Validate individual field
+const validateField = (field) => {
+  switch (field) {
+    case 'eventTitle':
+      if (!eventTitle.value) {
+        errors.value.eventTitle = 'Bitte einen Veranstaltungs Titel angeben'
+      } else {
+        delete errors.value.eventTitle
+      }
+      break
+    case 'eventDescription':
+      if (!eventDescription.value) {
+        errors.value.eventDescription = 'Bitte eine Veranstaltungs Beschreibung angeben'
+      } else {
+        delete errors.value.eventDescription
+      }
+      break
+    case 'eventDateStart':
+      if (!eventDateStart.value) {
+        errors.value.eventDateStart = 'Bitte einen Veranstaltungs Beginn angeben'
+      } else {
+        delete errors.value.eventDateStart
+      }
+      break
+    case 'selectedOrganizer':
+      if (!selectedOrganizer.value) {
+        errors.value.selectedOrganizer = 'Bitte einen Veranstalter auswählen'
+      } else {
+        delete errors.value.selectedOrganizer
+      }
+      break
+    case 'selectedVenue':
+      if (!selectedVenue.value) {
+        errors.value.selectedVenue = 'Bitte eine Veranstaltungsort ID angeben'
+      } else {
+        delete errors.value.selectedVenue
+      }
+      break
+    case 'selectedSpace':
+      if (!selectedSpace.value) {
+        errors.value.selectedSpace = 'Bitte einen Raum auswählen'
+      } else {
+        delete errors.value.selectedSpace
+      }
+      break
+  }
+}
 
-      console.log('Success:', data)
-    } catch (error) {
-      console.error('Error sending data:', error)
-    }
+const handleSubmit = async () => {
+  validateForm()
+
+  if (Object.keys(errors.value).length > 0) {
+    return
+  }
+
+  const body = {
+    event_title: eventTitle.value,
+    event_description: eventDescription.value,
+    event_date_start: eventDateStart.value,
+    event_date_end: eventDateEnd.value,
+    event_organizer_id: selectedOrganizer.value,
+    event_venue_id: selectedVenue.value,
+    event_venue_name: venueName.value,
+    event_space_id: selectedSpace.value
+  }
+
+  console.log('Body:', body)
+
+  try {
+    const { fetchApi } = useApi()
+    const data = await fetchApi('https://api.uranus.oklabflensburg.de/event/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    })
+
+    console.log('Success:', data)
+  } catch (error) {
+    console.error('Error sending data:', error)
   }
 }
 </script>
