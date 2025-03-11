@@ -5,5 +5,16 @@
 </template>
 
 <script setup>
+import { useHead } from '#imports'
 import Search from '~/components/Search.vue'
+
+useHead({
+  title: 'Home - Uranus',
+  meta: [
+    {
+      name: 'description',
+      content: 'Welcome to Uranus. Find and manage events easily.'
+    }
+  ]
+})
 </script>

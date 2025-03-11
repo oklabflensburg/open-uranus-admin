@@ -7,12 +7,13 @@ const routes = [
     path: "/",
     component: DefaultLayout,
     children: [
-      { path: '/', name: 'Home', component: () => import('@/views/Home.vue'), meta: { middleware: 'auth' }},
-      { path: '/signin', name: 'Signin', component: () => import('@/views/Signin.vue')},
-      { path: "dashboard", component: () => import('@/views/Dashboard.vue'), meta: { middleware: 'auth' }},
-      { path: "organizer", component: () => import('@/views/Organizer.vue'), meta: { middleware: 'auth' }},
-      { path: "venue", component: () => import('@/views/Venue.vue'), meta: { middleware: 'auth' }},
-      { path: "event", component: () => import('@/views/Event.vue'), meta: { middleware: 'auth' }}
+      { path: '/', name: 'Home', component: () => import('@/pages/index.vue'), meta: { middleware: 'auth' }},
+      { path: '/signin', name: 'Signin', component: () => import('@/pages/signin.vue')},
+      { path: '/signup', name: 'Signup', component: () => import('@/pages/signup.vue')},
+      { path: '/dashboard', name: 'Dashboard', component: () => import('@/pages/dashboard.vue'), meta: { middleware: 'auth' }},
+      { path: '/organizer', name: 'Organizer', component: () => import('@/pages/organizer.vue'), meta: { middleware: 'auth' }},
+      { path: '/venue', name: 'Venue', component: () => import('@/pages/venue.vue'), meta: { middleware: 'auth' }},
+      { path: '/event', name: 'Event', component: () => import('@/pages/event.vue'), meta: { middleware: 'auth' }}
     ],
   },
 ]

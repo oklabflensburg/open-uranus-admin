@@ -1,17 +1,20 @@
 <template>
   <div class="max-w-screen-xl mx-auto bg-white p-3 md:p-6 rounded-xs shadow-lg">
-    <AddOrganizerForm />
+    <OrganizerForm />
   </div>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
-import AddOrganizerForm from '~/components/AddOrganizerForm.vue';
+<script setup>
+import { useHead } from '#imports'
+import OrganizerForm from '~/components/OrganizerForm.vue'
 
-
-export default defineComponent({
-  components: {
-    AddOrganizerForm
-  }
+useHead({
+  title: 'Organizer - Uranus',
+  meta: [
+    {
+      name: 'description',
+      content: 'Manage your event organizers.'
+    }
+  ]
 })
 </script>

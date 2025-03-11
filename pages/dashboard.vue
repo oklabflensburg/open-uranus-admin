@@ -8,9 +8,19 @@
 </template>
 
 <script setup>
-definePageMeta({ middleware: 'auth' })
-
+import { useHead } from '#imports'
 import { useAuth } from '@/composables/useAuth'
+
+useHead({
+  title: 'Dashboard - Uranus',
+  meta: [
+    {
+      name: 'description',
+      content: 'Manage your events and venues from the dashboard.'
+    }
+  ]
+})
+
 const { logout } = useAuth()
 
 const handleLogout = () => {

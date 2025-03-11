@@ -4,14 +4,17 @@
   </div>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
-import AddVenueForm from '~/components/AddVenueForm.vue'
+<script setup>
+import { useHead } from '#imports'
+import AddVenueForm from '~/components/VenueForm.vue'
 
-
-export default defineComponent({
-  components: {
-    AddVenueForm
-  }
+useHead({
+  title: 'Venue - Uranus',
+  meta: [
+    {
+      name: 'description',
+      content: 'Manage your event venues.'
+    }
+  ]
 })
 </script>
