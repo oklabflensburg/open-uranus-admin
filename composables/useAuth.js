@@ -66,7 +66,7 @@ export const useAuth = () => {
   }
 
   const refreshAccessToken = async () => {
-    const url = 'https://api.uranus.oklabflensburg.de/user/refresh'
+    const url = 'https://api.uranus.oklabflensburg.de/user/token/refresh'
 
     const formData = new URLSearchParams()
     formData.append('grant_type', 'refresh_token')
