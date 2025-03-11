@@ -259,18 +259,18 @@ const submitForm = async () => {
   }
 
   const body = {
-    name: organizerName.value,
-    description: organizerDescription.value,
-    contact_email: organizerContactEmail.value,
-    contact_phone: organizerContactPhone.value,
-    website_url: organizerWebsiteUrl.value,
-    street: organizerStreet.value,
-    house_number: organizerHouseNumber.value,
-    postal_code: organizerPostalCode.value,
-    city: organizerCity.value,
-    country_code: organizerCountryCode.value,
-    latitude: organizerLatitude.value,
-    longitude: organizerLongitude.value,
+    organizer_name: organizerName.value,
+    organizer_description: organizerDescription.value,
+    organizer_contact_email: organizerContactEmail.value,
+    organizer_contact_phone: organizerContactPhone.value,
+    organizer_website_url: organizerWebsiteUrl.value,
+    organizer_street: organizerStreet.value,
+    organizer_house_number: organizerHouseNumber.value,
+    organizer_postal_code: organizerPostalCode.value,
+    organizer_city: organizerCity.value,
+    organizer_country_code: organizerCountryCode.value,
+    organizer_latitude: organizerLatitude.value,
+    organizer_longitude: organizerLongitude.value,
   };
 
   try {
