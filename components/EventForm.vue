@@ -13,14 +13,19 @@
       <p v-if="errors.eventDescription" class="text-red-600">{{ errors.eventDescription }}</p>
     </div>
     <div class="grid grid-cols-12 gap-4 mb-4">
-      <div class="col-span-6">
+      <div class="col-span-4">
         <label class="block text-gray-700" for="eventDateStart">Veranstaltungs Beginn</label>
         <input type="datetime-local" name="eventDateStart" class="mt-1 p-2 w-full border rounded-xs" v-model="eventDateStart" @input="validateField('eventDateStart')">
         <p v-if="errors.eventDateStart" class="text-red-600">{{ errors.eventDateStart }}</p>
       </div>
-      <div class="col-span-6">
+      <div class="col-span-4">
         <label class="block text-gray-700" for="eventDateEnd">Veranstaltungs Ende</label>
         <input type="datetime-local" name="eventDateEnd" class="mt-1 p-2 w-full border rounded-xs" v-model="eventDateEnd">
+      </div>
+      <div class="col-span-4">
+        <label class="block text-gray-700" for="entryTime">Einlasszeit</label>
+        <input type="time" name="entryTime" class="mt-1 p-2 w-full border rounded-xs" v-model="entryTime" @input="validateField('entryTime')">
+        <p v-if="errors.entryTime" class="text-red-600">{{ errors.entryTime }}</p>
       </div>
     </div>
 
@@ -75,6 +80,7 @@ const eventTitle = ref('')
 const eventDescription = ref('')
 const eventDateStart = ref('')
 const eventDateEnd = ref('')
+const entryTime = ref('')
 const venueName = ref('')
 const errors = ref({})
 
@@ -191,7 +197,8 @@ const handleSubmit = async () => {
     event_title: eventTitle.value,
     event_description: eventDescription.value,
     event_date_start: eventDateStart.value,
-    event_date_end: eventDateEnd.value,
+    event_date_end: eventDateEnd.value || null,
+    entry_time: entryTime.value || null,
     event_organizer_id: parseInt(selectedOrganizer.value, 10),
     event_venue_id: parseInt(selectedVenue.value, 10),
     event_venue_name: venueName.value,
