@@ -42,7 +42,7 @@ router.beforeEach(async (to, from, next) => {
     }
   }
 
-  if (to.path === '/signin' && accessToken.value) {
+  if ((to.path === '/signin' || to.path === '/signup') && accessToken.value) {
     return next('/dashboard')
   }
 

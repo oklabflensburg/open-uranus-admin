@@ -26,7 +26,7 @@
 
       <div class="flex items-center justify-between">
         <div class="flex items-center">
-          <input id="remember_me" name="remember_me" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+          <input v-model="signin.rememberMe" id="remember_me" name="remember_me" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
           <label for="remember_me" class="ml-2 block text-sm text-gray-900">
             Remember me
           </label>
@@ -43,20 +43,27 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuth } from '@/composables/useAuth'
 
 const router = useRouter()
-const { login } = useAuth()
+const { login, isAuthenticated } = useAuth() // Ensure isAuthenticated is imported
 
 const signin = ref({
   emailAddress: '',
-  password: ''
+  password: '',
+  rememberMe: false
+})
+
+onMounted(() => {
+  if (isAuthenticated.value) {
+    router.push('/dashboard') // Redirect if already logged in
+  }
 })
 
 const handleSignIn = async () => {
-  const success = await login(signin.value.emailAddress, signin.value.password)
+  const success = await login(signin.value.emailAddress, signin.value.password, signin.value.rememberMe)
   if (success) {
     router.push('/dashboard') // Redirect after login
   } else {

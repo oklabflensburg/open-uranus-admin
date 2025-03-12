@@ -285,6 +285,21 @@ const submitForm = async () => {
     });
 
     console.log('Success:', data);
+    // Empty the form
+    organizerName.value = '';
+    organizerDescription.value = '';
+    organizerContactEmail.value = '';
+    organizerContactPhone.value = '';
+    organizerWebsiteUrl.value = '';
+    organizerStreet.value = '';
+    organizerHouseNumber.value = '';
+    organizerPostalCode.value = '';
+    organizerCity.value = '';
+    organizerCountryCode.value = '';
+    organizerLatitude.value = '';
+    organizerLongitude.value = '';
+    // Alert the response message
+    alert('Organizer created successfully!');
   } catch (error) {
     console.error('Error sending data:', error);
   }

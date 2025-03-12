@@ -68,8 +68,7 @@ import { useAuth } from '@/composables/useAuth'
 import { useRoute } from 'vue-router'
 
 const isOpen = ref(false)
-const { accessToken, logout } = useAuth()
-const isAuthenticated = computed(() => !!accessToken.value)
+const { accessToken, logout, isAuthenticated } = useAuth() // Ensure isAuthenticated is imported
 const route = useRoute()
 
 const isActive = (path) => {

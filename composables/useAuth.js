@@ -1,8 +1,11 @@
 import { useCookie } from '#app'
+import { computed } from 'vue'
 
 export const useAuth = () => {
   const accessToken = useCookie('access_token', { maxAge: 3600, httpOnly: false })
   const refreshToken = useCookie('refresh_token', { maxAge: 3600, httpOnly: false })
+
+  const isAuthenticated = computed(() => !!accessToken.value) // Add isAuthenticated
 
   const login = async (email, password) => {
     const url = 'https://api.uranus.oklabflensburg.de/user/signin'
@@ -99,5 +102,5 @@ export const useAuth = () => {
     refreshToken.value = null
   }
 
-  return { accessToken, refreshToken, login, signup, refreshAccessToken, logout }
+  return { accessToken, refreshToken, login, signup, refreshAccessToken, logout, isAuthenticated } // Return isAuthenticated
 }
