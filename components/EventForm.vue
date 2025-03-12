@@ -107,14 +107,14 @@ const fetchData = async (url, targetArray) => {
 
 // Fetch organizers and venues when component is mounted
 onMounted(() => {
-  fetchData("https://api.uranus.oklabflensburg.de/user/organizer/", organizers)
-  fetchData("https://api.uranus.oklabflensburg.de/venue/", venues)
+  fetchData('/user/organizer/', organizers)
+  fetchData('/venue/', venues)
 })
 
 // Fetch spaces based on selected venue
 const fetchSpaces = async () => {
   if (selectedVenue.value) {
-    const url = `https://api.uranus.oklabflensburg.de/space/filtered?venue_id=${selectedVenue.value}`
+    const url = `/space/filtered?venue_id=${selectedVenue.value}`
     fetchData(url, spaces)
   } else {
     spaces.value = []
@@ -209,7 +209,7 @@ const handleSubmit = async () => {
 
   try {
     const { fetchApi } = useApi()
-    const data = await fetchApi('https://api.uranus.oklabflensburg.de/event/', {
+    const data = await fetchApi('/event/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

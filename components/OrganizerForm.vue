@@ -96,166 +96,166 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
-import { useApi } from '@/composables/useApi';
+import { ref, watch } from 'vue'
+import { useApi } from '@/composables/useApi'
 
 // Reactive form data
-const organizerName = ref('');
-const organizerDescription = ref('');
-const organizerContactEmail = ref('');
-const organizerContactPhone = ref('');
-const organizerWebsiteUrl = ref('');
-const organizerStreet = ref('');
-const organizerHouseNumber = ref('');
-const organizerPostalCode = ref('');
-const organizerCity = ref('');
-const organizerCountryCode = ref('');
-const organizerLatitude = ref('');
-const organizerLongitude = ref('');
+const organizerName = ref('')
+const organizerDescription = ref('')
+const organizerContactEmail = ref('')
+const organizerContactPhone = ref('')
+const organizerWebsiteUrl = ref('')
+const organizerStreet = ref('')
+const organizerHouseNumber = ref('')
+const organizerPostalCode = ref('')
+const organizerCity = ref('')
+const organizerCountryCode = ref('')
+const organizerLatitude = ref('')
+const organizerLongitude = ref('')
 
-const errors = ref({});
+const errors = ref({})
 
 const getLocationData = async () => {
-  const url = `https://nominatim.oklabflensburg.de/search?q=${organizerStreet.value} ${organizerHouseNumber.value} ${organizerCity.value} ${organizerCountryCode.value} ${organizerPostalCode.value}&limit=1`;
+  const url = `https://nominatim.oklabflensburg.de/search?q=${organizerStreet.value} ${organizerHouseNumber.value} ${organizerCity.value} ${organizerCountryCode.value} ${organizerPostalCode.value}&limit=1`
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(url)
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error('Network response was not ok')
     }
 
-    const data = await response.json();
+    const data = await response.json()
     // Update latitude and longitude based on the fetched location data
     if (data && data[0]) {
-      organizerLatitude.value = parseFloat(data[0].lat).toFixed(7);
-      organizerLongitude.value = parseFloat(data[0].lon).toFixed(7);
+      organizerLatitude.value = parseFloat(data[0].lat).toFixed(7)
+      organizerLongitude.value = parseFloat(data[0].lon).toFixed(7)
     }
   } catch (error) {
-    console.error('Error fetching location data:', error);
+    console.error('Error fetching location data:', error)
   }
-};
+}
 
 // Watch for changes to the relevant fields
 watch([organizerStreet, organizerHouseNumber, organizerPostalCode, organizerCity, organizerCountryCode], () => {
-  getLocationData();
-});
+  getLocationData()
+})
 
 // Form validation
 const validateForm = () => {
-  errors.value = {};
+  errors.value = {}
 
-  if (!organizerName.value) errors.value.organizerName = 'Bitte einen Namen angeben';
-  if (!organizerDescription.value) errors.value.organizerDescription = 'Bitte eine Beschreibung angeben';
-  if (!organizerContactEmail.value) errors.value.organizerContactEmail = 'Bitte eine E-Mail-Adresse angeben';
-  if (!organizerContactPhone.value) errors.value.organizerContactPhone = 'Bitte eine Telefonnummer angeben';
-  if (!organizerWebsiteUrl.value) errors.value.organizerWebsiteUrl = 'Bitte eine Website-URL angeben';
-  if (!organizerStreet.value) errors.value.organizerStreet = 'Bitte eine Straße angeben';
-  if (!organizerHouseNumber.value) errors.value.organizerHouseNumber = 'Bitte eine Hausnummer angeben';
-  if (!organizerPostalCode.value) errors.value.organizerPostalCode = 'Bitte eine Postleitzahl angeben';
-  if (!organizerCity.value) errors.value.organizerCity = 'Bitte eine Stadt angeben';
-  if (!organizerCountryCode.value) errors.value.organizerCountryCode = 'Bitte einen Ländercode angeben';
-  if (!organizerLatitude.value) errors.value.organizerLatitude = 'Bitte Breitengrad angeben';
-  if (!organizerLongitude.value) errors.value.organizerLongitude = 'Bitte Längengrad angeben';
-};
+  if (!organizerName.value) errors.value.organizerName = 'Bitte einen Namen angeben'
+  if (!organizerDescription.value) errors.value.organizerDescription = 'Bitte eine Beschreibung angeben'
+  if (!organizerContactEmail.value) errors.value.organizerContactEmail = 'Bitte eine E-Mail-Adresse angeben'
+  if (!organizerContactPhone.value) errors.value.organizerContactPhone = 'Bitte eine Telefonnummer angeben'
+  if (!organizerWebsiteUrl.value) errors.value.organizerWebsiteUrl = 'Bitte eine Website-URL angeben'
+  if (!organizerStreet.value) errors.value.organizerStreet = 'Bitte eine Straße angeben'
+  if (!organizerHouseNumber.value) errors.value.organizerHouseNumber = 'Bitte eine Hausnummer angeben'
+  if (!organizerPostalCode.value) errors.value.organizerPostalCode = 'Bitte eine Postleitzahl angeben'
+  if (!organizerCity.value) errors.value.organizerCity = 'Bitte eine Stadt angeben'
+  if (!organizerCountryCode.value) errors.value.organizerCountryCode = 'Bitte einen Ländercode angeben'
+  if (!organizerLatitude.value) errors.value.organizerLatitude = 'Bitte Breitengrad angeben'
+  if (!organizerLongitude.value) errors.value.organizerLongitude = 'Bitte Längengrad angeben'
+}
 
 // Validate individual field
 const validateField = (field) => {
   switch (field) {
     case 'organizerName':
       if (!organizerName.value) {
-        errors.value.organizerName = 'Bitte einen Namen angeben';
+        errors.value.organizerName = 'Bitte einen Namen angeben'
       } else {
-        delete errors.value.organizerName;
+        delete errors.value.organizerName
       }
-      break;
+      break
     case 'organizerDescription':
       if (!organizerDescription.value) {
-        errors.value.organizerDescription = 'Bitte eine Beschreibung angeben';
+        errors.value.organizerDescription = 'Bitte eine Beschreibung angeben'
       } else {
-        delete errors.value.organizerDescription;
+        delete errors.value.organizerDescription
       }
-      break;
+      break
     case 'organizerContactEmail':
       if (!organizerContactEmail.value) {
-        errors.value.organizerContactEmail = 'Bitte eine E-Mail-Adresse angeben';
+        errors.value.organizerContactEmail = 'Bitte eine E-Mail-Adresse angeben'
       } else {
-        delete errors.value.organizerContactEmail;
+        delete errors.value.organizerContactEmail
       }
-      break;
+      break
     case 'organizerContactPhone':
       if (!organizerContactPhone.value) {
-        errors.value.organizerContactPhone = 'Bitte eine Telefonnummer angeben';
+        errors.value.organizerContactPhone = 'Bitte eine Telefonnummer angeben'
       } else {
-        delete errors.value.organizerContactPhone;
+        delete errors.value.organizerContactPhone
       }
-      break;
+      break
     case 'organizerWebsiteUrl':
       if (!organizerWebsiteUrl.value) {
-        errors.value.organizerWebsiteUrl = 'Bitte eine Website-URL angeben';
+        errors.value.organizerWebsiteUrl = 'Bitte eine Website-URL angeben'
       } else {
-        delete errors.value.organizerWebsiteUrl;
+        delete errors.value.organizerWebsiteUrl
       }
-      break;
+      break
     case 'organizerStreet':
       if (!organizerStreet.value) {
-        errors.value.organizerStreet = 'Bitte eine Straße angeben';
+        errors.value.organizerStreet = 'Bitte eine Straße angeben'
       } else {
-        delete errors.value.organizerStreet;
+        delete errors.value.organizerStreet
       }
-      break;
+      break
     case 'organizerHouseNumber':
       if (!organizerHouseNumber.value) {
-        errors.value.organizerHouseNumber = 'Bitte eine Hausnummer angeben';
+        errors.value.organizerHouseNumber = 'Bitte eine Hausnummer angeben'
       } else {
-        delete errors.value.organizerHouseNumber;
+        delete errors.value.organizerHouseNumber
       }
-      break;
+      break
     case 'organizerPostalCode':
       if (!organizerPostalCode.value) {
-        errors.value.organizerPostalCode = 'Bitte eine Postleitzahl angeben';
+        errors.value.organizerPostalCode = 'Bitte eine Postleitzahl angeben'
       } else {
-        delete errors.value.organizerPostalCode;
+        delete errors.value.organizerPostalCode
       }
-      break;
+      break
     case 'organizerCity':
       if (!organizerCity.value) {
-        errors.value.organizerCity = 'Bitte eine Stadt angeben';
+        errors.value.organizerCity = 'Bitte eine Stadt angeben'
       } else {
-        delete errors.value.organizerCity;
+        delete errors.value.organizerCity
       }
-      break;
+      break
     case 'organizerCountryCode':
       if (!organizerCountryCode.value) {
-        errors.value.organizerCountryCode = 'Bitte einen Ländercode angeben';
+        errors.value.organizerCountryCode = 'Bitte einen Ländercode angeben'
       } else {
-        delete errors.value.organizerCountryCode;
+        delete errors.value.organizerCountryCode
       }
-      break;
+      break
     case 'organizerLatitude':
       if (!organizerLatitude.value) {
-        errors.value.organizerLatitude = 'Bitte Breitengrad angeben';
+        errors.value.organizerLatitude = 'Bitte Breitengrad angeben'
       } else {
-        delete errors.value.organizerLatitude;
+        delete errors.value.organizerLatitude
       }
-      break;
+      break
     case 'organizerLongitude':
       if (!organizerLongitude.value) {
-        errors.value.organizerLongitude = 'Bitte Längengrad angeben';
+        errors.value.organizerLongitude = 'Bitte Längengrad angeben'
       } else {
-        delete errors.value.organizerLongitude;
+        delete errors.value.organizerLongitude
       }
-      break;
+      break
   }
-};
+}
 
 // Form submit
 const submitForm = async () => {
   // Validate form fields before submitting
-  validateForm();
+  validateForm()
 
   if (Object.keys(errors.value).length > 0) {
-    return;
+    return
   }
 
   const body = {
@@ -271,37 +271,37 @@ const submitForm = async () => {
     organizer_country_code: organizerCountryCode.value,
     organizer_latitude: organizerLatitude.value,
     organizer_longitude: organizerLongitude.value,
-  };
+  }
 
   try {
-    const { fetchApi } = useApi();
+    const { fetchApi } = useApi()
 
-    const data = await fetchApi('https://api.uranus.oklabflensburg.de/organizer/', {
+    const data = await fetchApi('/organizer/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
-    });
+    })
 
-    console.log('Success:', data);
+    console.log('Success:', data)
     // Empty the form
-    organizerName.value = '';
-    organizerDescription.value = '';
-    organizerContactEmail.value = '';
-    organizerContactPhone.value = '';
-    organizerWebsiteUrl.value = '';
-    organizerStreet.value = '';
-    organizerHouseNumber.value = '';
-    organizerPostalCode.value = '';
-    organizerCity.value = '';
-    organizerCountryCode.value = '';
-    organizerLatitude.value = '';
-    organizerLongitude.value = '';
+    organizerName.value = ''
+    organizerDescription.value = ''
+    organizerContactEmail.value = ''
+    organizerContactPhone.value = ''
+    organizerWebsiteUrl.value = ''
+    organizerStreet.value = ''
+    organizerHouseNumber.value = ''
+    organizerPostalCode.value = ''
+    organizerCity.value = ''
+    organizerCountryCode.value = ''
+    organizerLatitude.value = ''
+    organizerLongitude.value = ''
     // Alert the response message
-    alert('Organizer created successfully!');
+    alert('Organizer created successfully!')
   } catch (error) {
-    console.error('Error sending data:', error);
+    console.error('Error sending data:', error)
   }
-};
+}
 </script>

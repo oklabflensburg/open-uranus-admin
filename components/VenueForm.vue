@@ -151,7 +151,7 @@ const submitForm = async () => {
 
   try {
     const { fetchApi } = useApi()
-    const data = await fetchApi('https://api.uranus.oklabflensburg.de/venue/', {
+    const data = await fetchApi('/venue/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

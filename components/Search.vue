@@ -34,39 +34,40 @@
 
 
 <script setup>
-import { ref } from 'vue';
+import { ref } from 'vue'
+import { useApi } from '@/composables/useApi'
 
 // Define reactive variables for dropdowns
-const venues = ref([]);
-const eventTypes = ref([]);
-const venueTypes = ref([]);
-const spaceTypes = ref([]);
-const genreTypes = ref([]);
+const venues = ref([])
+const eventTypes = ref([])
+const venueTypes = ref([])
+const spaceTypes = ref([])
+const genreTypes = ref([])
 
 // Selected values
-const selectedVenue = ref("");
-const selectedEventType = ref("");
-const selectedVenueType = ref("");
-const selectedSpaceType = ref("");
-const selectedGenreType = ref("");
+const selectedVenue = ref('')
+const selectedEventType = ref('')
+const selectedVenueType = ref('')
+const selectedSpaceType = ref('')
+const selectedGenreType = ref('')
 
 // Fetch function
 const fetchData = async (url, targetArray) => {
   try {
-    const response = await fetch(url);
-    const data = await response.json();
-    targetArray.value = data;
+    const { fetchApi } = useApi()
+    const data = await fetchApi(url)
+    targetArray.value = data
   } catch (error) {
-    console.error(`Error fetching ${url}:`, error);
+    console.error(`Error fetching ${url}:`, error)
   }
-};
+}
 
 // Fetch data when component is mounted
 onMounted(() => {
-  fetchData("https://api.uranus.oklabflensburg.de/venue/", venues);
-  fetchData("https://api.uranus.oklabflensburg.de/event/type/", eventTypes);
-  fetchData("https://api.uranus.oklabflensburg.de/venue/type/", venueTypes);
-  fetchData("https://api.uranus.oklabflensburg.de/space/type/", spaceTypes);
-  fetchData("https://api.uranus.oklabflensburg.de/genre/type/", genreTypes);
-});
+  fetchData('/venue/', venues)
+  fetchData('/event/type/', eventTypes)
+  fetchData('/venue/type/', venueTypes)
+  fetchData('/space/type/', spaceTypes)
+  fetchData('/genre/type/', genreTypes)
+})
 </script>

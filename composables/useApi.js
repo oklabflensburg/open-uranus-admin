@@ -1,9 +1,12 @@
 import { useAuth } from '@/composables/useAuth'
+import { useRuntimeConfig } from '#app'
 
 export const useApi = () => {
   const { accessToken, refreshAccessToken, logout } = useAuth()
+  const config = useRuntimeConfig()
+  const API_BASE_URL = config.public.apiBaseUrl
 
-  const fetchApi = async (url, options = {}) => {
+  const fetchApi = async (endpoint, options = {}) => {
     if (!accessToken.value) {
       const refreshed = await refreshAccessToken()
 
@@ -14,7 +17,7 @@ export const useApi = () => {
     }
 
     try {
-      return await $fetch(url, {
+      return await $fetch(`${API_BASE_URL}${endpoint}`, {
         ...options,
         headers: {
           Authorization: `Bearer ${accessToken.value}`,
@@ -30,7 +33,7 @@ export const useApi = () => {
           throw new Error('Not authenticated')
         }
 
-        return await $fetch(url, {
+        return await $fetch(`${API_BASE_URL}${endpoint}`, {
           ...options,
           headers: {
             Authorization: `Bearer ${accessToken.value}`,

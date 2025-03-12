@@ -7,6 +7,7 @@
         <div v-for="organizer in organizers" :key="organizer.organizer_id" class="bg-gray-100 p-4 rounded-lg shadow-md">
           <h3 class="text-lg font-semibold">{{ organizer.organizer_name }}</h3>
           <p class="text-gray-700">Darf bearbeiten: {{ organizer.can_edit }}</p>
+          <button @click="deleteOrganizer(organizer.organizer_id)" class="hidden mt-2 bg-red-500 text-white py-1 px-3 rounded">Delete</button>
         </div>
       </div>
     </div>
@@ -18,6 +19,7 @@
         <div v-for="venue in venues" :key="venue.venue_id" class="bg-gray-100 p-4 rounded-lg shadow-md">
           <h3 class="text-lg font-semibold">{{ venue.venue_name }}</h3>
           <p class="text-gray-700">Darf bearbeiten: {{ venue.can_edit }}</p>
+          <button @click="deleteVenue(venue.venue_id)" class="hidden mt-2 bg-red-500 text-white py-1 px-3 rounded">Delete</button>
         </div>
       </div>
     </div>
@@ -29,6 +31,7 @@
         <div v-for="event in events" :key="event.event_id" class="bg-gray-100 p-4 rounded-lg shadow-md">
           <h3 class="text-lg font-semibold">{{ event.event_title }}</h3>
           <p class="text-gray-700">Darf bearbeiten: {{ event.can_edit }}</p>
+          <button @click="deleteEvent(event.event_id)" class="hidden mt-2 bg-red-500 text-white py-1 px-3 rounded">Delete</button>
         </div>
       </div>
     </div>
@@ -46,7 +49,7 @@ const events = ref([])
 
 const fetchVenues = async () => {
   try {
-    const data = await fetchApi('https://api.uranus.oklabflensburg.de/user/venue')
+    const data = await fetchApi('/user/venue')
     venues.value = data
   } catch (error) {
     console.error('Error fetching venues:', error)
@@ -55,7 +58,7 @@ const fetchVenues = async () => {
 
 const fetchOrganizers = async () => {
   try {
-    const data = await fetchApi('https://api.uranus.oklabflensburg.de/user/organizer')
+    const data = await fetchApi('/user/organizer')
     organizers.value = data
   } catch (error) {
     console.error('Error fetching organizers:', error)
@@ -64,10 +67,37 @@ const fetchOrganizers = async () => {
 
 const fetchEvents = async () => {
   try {
-    const data = await fetchApi('https://api.uranus.oklabflensburg.de/user/event')
+    const data = await fetchApi('/user/event')
     events.value = data
   } catch (error) {
     console.error('Error fetching events:', error)
+  }
+}
+
+const deleteOrganizer = async (id) => {
+  try {
+    await fetchApi(`/organizer/${id}`, { method: 'DELETE' })
+    organizers.value = organizers.value.filter(organizer => organizer.organizer_id !== id)
+  } catch (error) {
+    console.error('Error deleting organizer:', error)
+  }
+}
+
+const deleteEvent = async (id) => {
+  try {
+    await fetchApi(`/event/${id}`, { method: 'DELETE' })
+    events.value = events.value.filter(event => event.event_id !== id)
+  } catch (error) {
+    console.error('Error deleting event:', error)
+  }
+}
+
+const deleteVenue = async (id) => {
+  try {
+    await fetchApi(`/venue/${id}`, { method: 'DELETE' })
+    venues.value = venues.value.filter(venue => venue.venue_id !== id)
+  } catch (error) {
+    console.error('Error deleting venue:', error)
   }
 }
 

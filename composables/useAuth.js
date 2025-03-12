@@ -1,15 +1,16 @@
-import { useCookie } from '#app'
+import { useCookie, useRuntimeConfig } from '#app'
 import { computed } from 'vue'
 
 export const useAuth = () => {
   const accessToken = useCookie('access_token', { maxAge: 3600, httpOnly: false })
   const refreshToken = useCookie('refresh_token', { maxAge: 3600, httpOnly: false })
+  const config = useRuntimeConfig()
+  const apiBaseUrl = config.public.apiBaseUrl
 
-  const isAuthenticated = computed(() => !!accessToken.value) // Add isAuthenticated
+  const isAuthenticated = computed(() => !!accessToken.value)
 
   const login = async (email, password) => {
-    const url = 'https://api.uranus.oklabflensburg.de/user/signin'
-
+    const url = `${apiBaseUrl}/user/signin`
     const formData = new URLSearchParams()
 
     formData.append('grant_type', 'password')
@@ -38,7 +39,8 @@ export const useAuth = () => {
   }
 
   const signup = async (signupData) => {
-    const url = 'https://api.uranus.oklabflensburg.de/user/signup'
+    const url = `${apiBaseUrl}/user/signup`
+    console.log('Signup URL:', url) // Debugging line
 
     const body = {
       first_name: signupData.firstName,
@@ -69,7 +71,8 @@ export const useAuth = () => {
   }
 
   const refreshAccessToken = async () => {
-    const url = 'https://api.uranus.oklabflensburg.de/user/token/refresh'
+    const url = `${apiBaseUrl}/user/token/refresh`
+    console.log('Refresh Token URL:', url) // Debugging line
 
     const body = {
       grant_type: 'refresh_token',
@@ -102,5 +105,5 @@ export const useAuth = () => {
     refreshToken.value = null
   }
 
-  return { accessToken, refreshToken, login, signup, refreshAccessToken, logout, isAuthenticated } // Return isAuthenticated
+  return { accessToken, refreshToken, login, signup, refreshAccessToken, logout, isAuthenticated }
 }

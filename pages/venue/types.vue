@@ -25,8 +25,10 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useApi } from '@/composables/useApi'
 import AddTypeForm from '@/components/AddTypeForm.vue'
 
+const { fetchApi } = useApi()
 const venues = ref([])
 const selectedVenue = ref(null)
 const showAddForm = ref(false)
@@ -34,8 +36,8 @@ const newVenue = ref({ name_en: '', name_de: '', name_da: '' })
 
 const fetchVenueTypes = async () => {
   try {
-    const response = await fetch('https://api.uranus.oklabflensburg.de/venue/type/')
-    venues.value = await response.json()
+    const data = await fetchApi('/venue/type/')
+    venues.value = data
   } catch (error) {
     console.error('Error fetching venues:', error)
   }
