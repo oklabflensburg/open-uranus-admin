@@ -128,8 +128,8 @@ const getLocationData = async () => {
     const data = await response.json();
     // Update latitude and longitude based on the fetched location data
     if (data && data[0]) {
-      organizerLatitude.value = data[0].lat;
-      organizerLongitude.value = data[0].lon;
+      organizerLatitude.value = parseFloat(data[0].lat).toFixed(7);
+      organizerLongitude.value = parseFloat(data[0].lon).toFixed(7);
     }
   } catch (error) {
     console.error('Error fetching location data:', error);
