@@ -22,6 +22,17 @@
           <nuxt-link to="/organizer" class="px-3 py-2 rounded hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/organizer') }" v-if="isAuthenticated">Veranstalter</nuxt-link>
           <nuxt-link to="/venue" class="px-3 py-2 rounded hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/venue') }" v-if="isAuthenticated">Veranstaltungsort</nuxt-link>
           <nuxt-link to="/event" class="px-3 py-2 rounded hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/event') }" v-if="isAuthenticated">Veranstaltung</nuxt-link>
+          <div v-if="isAuthenticated" class="relative group">
+            <button class="px-3 py-2 rounded hover:bg-gray-700 focus:outline-none">Typen Einstellungen</button>
+            <div class="w-64 absolute hidden group-hover:block bg-gray-800 rounded shadow-lg">
+              <nuxt-link to="/venue/types" class="block px-4 py-2 hover:bg-gray-700">Veranstaltungsort Typen</nuxt-link>
+              <nuxt-link to="/space/types" class="block px-4 py-2 hover:bg-gray-700">Veranstaltungsraum Typen</nuxt-link>
+              <nuxt-link to="/event/types" class="block px-4 py-2 hover:bg-gray-700">Veranstaltungs Typen</nuxt-link>
+              <nuxt-link to="/genre/types" class="block px-4 py-2 hover:bg-gray-700">Genre Typen</nuxt-link>
+              <nuxt-link to="/licence/types" class="block px-4 py-2 hover:bg-gray-700">Lizenz Typen</nuxt-link>
+              <nuxt-link to="/image/types" class="block px-4 py-2 hover:bg-gray-700">Bild Typen</nuxt-link>
+            </div>
+          </div>
           <nuxt-link to="/signin" class="px-3 py-2 rounded hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/signin') }" v-if="!isAuthenticated">Anmelden</nuxt-link>
           <button @click="handleLogout" class="px-3 py-2 rounded hover:bg-gray-700" v-if="isAuthenticated">Abmelden</button>
         </div>
@@ -34,6 +45,17 @@
       <nuxt-link to="/organizer" class="block px-4 py-2 hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/organizer') }" v-if="isAuthenticated">Veranstalter</nuxt-link>
       <nuxt-link to="/venue" class="block px-4 py-2 hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/venue') }" v-if="isAuthenticated">Veranstaltungsort</nuxt-link>
       <nuxt-link to="/event" class="block px-4 py-2 hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/event') }" v-if="isAuthenticated">Veranstaltung</nuxt-link>
+      <div v-if="isAuthenticated" class="relative group">
+        <button class="block px-4 py-2 hover:bg-gray-700 focus:outline-none">Typen Einstellungen</button>
+        <div class="bg-gray-800 rounded shadow-lg">
+          <nuxt-link to="/venue/types" class="block px-4 py-2 hover:bg-gray-700">Veranstaltungsort Typen</nuxt-link>
+          <nuxt-link to="/space/types" class="block px-4 py-2 hover:bg-gray-700">Veranstaltungsraum Typen</nuxt-link>
+          <nuxt-link to="/event/types" class="block px-4 py-2 hover:bg-gray-700">Veranstaltungs Typen</nuxt-link>
+          <nuxt-link to="/genre/types" class="block px-4 py-2 hover:bg-gray-700">Genre Typen</nuxt-link>
+          <nuxt-link to="/licence/types" class="block px-4 py-2 hover:bg-gray-700">Lizenz Typen</nuxt-link>
+          <nuxt-link to="/image/types" class="block px-4 py-2 hover:bg-gray-700">Bild Typen</nuxt-link>
+        </div>
+      </div>
       <nuxt-link to="/signin" class="block px-4 py-2 hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/signin') }" v-if="!isAuthenticated">Anmelden</nuxt-link>
       <button @click="handleLogout" class="block px-4 py-2 hover:bg-gray-700" v-if="isAuthenticated">Abmelden</button>
     </div>

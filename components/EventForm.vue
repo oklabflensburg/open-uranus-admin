@@ -107,7 +107,7 @@ const fetchData = async (url, targetArray) => {
 
 // Fetch organizers and venues when component is mounted
 onMounted(() => {
-  fetchData("https://api.uranus.oklabflensburg.de/organizer/", organizers)
+  fetchData("https://api.uranus.oklabflensburg.de/user/organizer/", organizers)
   fetchData("https://api.uranus.oklabflensburg.de/venue/", venues)
 })
 
