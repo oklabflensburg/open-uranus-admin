@@ -192,10 +192,10 @@ const handleSubmit = async () => {
     event_description: eventDescription.value,
     event_date_start: eventDateStart.value,
     event_date_end: eventDateEnd.value,
-    event_organizer_id: selectedOrganizer.value,
-    event_venue_id: selectedVenue.value,
+    event_organizer_id: parseInt(selectedOrganizer.value, 10),
+    event_venue_id: parseInt(selectedVenue.value, 10),
     event_venue_name: venueName.value,
-    event_space_id: selectedSpace.value
+    event_space_id: parseInt(selectedSpace.value, 10)
   }
 
   console.log('Body:', body)

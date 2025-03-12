@@ -68,17 +68,18 @@ export const useAuth = () => {
   const refreshAccessToken = async () => {
     const url = 'https://api.uranus.oklabflensburg.de/user/token/refresh'
 
-    const formData = new URLSearchParams()
-    formData.append('grant_type', 'refresh_token')
-    formData.append('refresh_token', refreshToken.value)
-    formData.append('client_id', 'string') // Remove if not needed
-    formData.append('client_secret', 'string')
+    const body = {
+      grant_type: 'refresh_token',
+      refresh_token: refreshToken.value,
+      client_id: 'string', // Remove if not needed
+      client_secret: 'string'
+    }
 
     try {
       const response = await $fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: formData
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
       })
 
       if (response.access_token) {
