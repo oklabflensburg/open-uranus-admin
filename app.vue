@@ -4,7 +4,6 @@
   </NuxtLayout>
 </template>
 
-<script setup lang="ts">
-import { NuxtPage } from '#components';
-
+<script setup>
+// Global middleware is handled by middleware/auth.js
 </script>

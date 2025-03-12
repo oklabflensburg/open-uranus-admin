@@ -8,6 +8,10 @@
 import { useHead } from '#imports'
 import AddVenueForm from '~/components/VenueForm.vue'
 
+definePageMeta({
+  middleware: ['auth']
+})
+
 useHead({
   title: 'Venue - Uranus',
   meta: [

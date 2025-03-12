@@ -14,7 +14,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useHead } from '#imports'
-import { useAuth } from '@/composables/useAuth'
 import { useApi } from '@/composables/useApi'
 
 useHead({
@@ -27,14 +26,8 @@ useHead({
   ]
 })
 
-const { logout } = useAuth()
 const { fetchApi } = useApi()
 const venues = ref([])
-
-const handleLogout = () => {
-  logout()
-  navigateTo('/signin')
-}
 
 const fetchVenues = async () => {
   try {

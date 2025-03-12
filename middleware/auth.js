@@ -1,7 +1,10 @@
-export default defineNuxtRouteMiddleware((to, from) => {
-  const { accessToken } = useAuth()
+import { useAuth } from '~/composables/useAuth'
 
-  if (!accessToken.value && to.path !== '/signin') {
-    return navigateTo('/signin') // Redirect if not authenticated
+export default defineNuxtRouteMiddleware((to) => {
+  const { accessToken } = useAuth()
+  const publicPages = ['/signin', '/signup']
+
+  if (!accessToken.value && !publicPages.includes(to.path)) {
+    return navigateTo('/signin')
   }
 })

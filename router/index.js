@@ -23,13 +23,21 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach((to, from, next) => {
-  const { accessToken } = useAuth()
+router.beforeEach(async (to, from, next) => {
+  const { accessToken, refreshAccessToken, logout } = useAuth()
 
-  if (to.matched.some(record => record.meta.middleware === 'auth') && !accessToken.value) {
-    if (to.path !== '/signin') {
-      return next('/signin')
+  if (to.matched.some(record => record.meta.middleware === 'auth')) {
+    if (!accessToken.value) {
+      const refreshed = await refreshAccessToken()
+      if (!refreshed) {
+        logout()
+        return next('/signin')
+      }
     }
+  }
+
+  if (to.path === '/signin' && accessToken.value) {
+    return next('/dashboard')
   }
 
   next()
