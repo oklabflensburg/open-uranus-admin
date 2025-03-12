@@ -27,7 +27,7 @@
       <div v-if="events.length === 0" class="text-gray-500">Keine Veranstaltungen gefunden.</div>
       <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div v-for="event in events" :key="event.event_id" class="bg-gray-100 p-4 rounded-lg shadow-md">
-          <h3 class="text-lg font-semibold">{{ event.event_name }}</h3>
+          <h3 class="text-lg font-semibold">{{ event.event_title }}</h3>
           <p class="text-gray-700">Darf bearbeiten: {{ event.can_edit }}</p>
         </div>
       </div>
