@@ -205,8 +205,6 @@ const handleSubmit = async () => {
     event_space_id: parseInt(selectedSpace.value, 10)
   }
 
-  console.log('Body:', body)
-
   try {
     const { fetchApi } = useApi()
     const data = await fetchApi('/event/', {

@@ -38,15 +38,16 @@
     "rememberMe": "Remember me",
     "signIn": "Sign In",
     "loginFailed": "Login failed! Check your credentials.",
-    "organizers": "Organizers",
-    "noOrganizersFound": "No organizers found.",
-    "venues": "Venues",
-    "noVenuesFound": "No venues found.",
-    "events": "Events",
-    "noEventsFound": "No events found.",
-    "canEdit": "Can edit",
-    "delete": "Delete",
-
+    "dashboard": {
+      "organizers": "Veranstalter",
+      "noOrganizersFound": "Keine Veranstalter gefunden.",
+      "venues": "Veranstaltungsorte",
+      "noVenuesFound": "Keine Veranstaltungsorte gefunden.",
+      "events": "Veranstaltungen",
+      "noEventsFound": "Keine Veranstaltungen gefunden.",
+      "canEdit": "Darf bearbeiten",
+      "delete": "Löschen"
+    },
   "organizerForm": {
     "title": "Organizer",
     "name": "Name",
