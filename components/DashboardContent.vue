@@ -4,13 +4,13 @@
     <section>
       <h2 class="text-2xl font-bold mb-4">{{ $t('dashboard.organizers') }}</h2>
       <p v-if="organizers.length === 0" class="text-gray-500">{{ $t('dashboard.noOrganizersFound') }}</p>
-      
+
       <ul v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <li v-for="organizer in organizers" :key="organizer.organizer_id" class="bg-white p-4 rounded-lg shadow-md border border-gray-200">
           <h3 class="text-lg font-semibold text-gray-900">{{ organizer.organizer_name }}</h3>
           <p class="text-gray-700">{{ $t('dashboard.canEdit') }}: <span class="font-medium">{{ organizer.can_edit }}</span></p>
-          <button 
-            @click="deleteOrganizer(organizer.organizer_id)" 
+          <button
+            @click="deleteOrganizer(organizer.organizer_id)"
             class="mt-3 bg-gray-100 text-gray-900 py-1 px-3 rounded hover:bg-gray-700 hover:text-gray-100 transition"
           >
             {{ $t('dashboard.delete') }}
@@ -23,21 +23,22 @@
     <section>
       <h2 class="text-2xl font-bold mb-4">{{ $t('dashboard.venues') }}</h2>
       <p v-if="venues.length === 0" class="text-gray-500">{{ $t('dashboard.noVenuesFound') }}</p>
-      
+
       <ul v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <li v-for="venue in venues" :key="venue.venue_id" class="bg-white p-4 rounded-lg shadow-md border border-gray-200">
           <h3 class="text-lg font-semibold text-gray-900">{{ venue.venue_name }}</h3>
           <p class="text-gray-700">{{ $t('dashboard.canEdit') }}: <span class="font-medium">{{ venue.can_edit }}</span></p>
-          
+
           <div class="mt-4 flex gap-2">
-            <button class="bg-gray-100 text-gray-900 py-1 px-3 rounded hover:bg-gray-700 hover:text-gray-100 transition">
+            <nuxt-link :to="localePath({ name: 'space-id', params: { id: venue.venue_id } })"
+                       class="bg-gray-100 text-gray-900 py-1 px-3 rounded hover:bg-gray-700 hover:text-gray-100 transition">
               Raum hinzufügen
-            </button>
+            </nuxt-link>
             <button class="bg-gray-100 text-gray-900 py-1 px-3 rounded hover:bg-gray-700 hover:text-gray-100 transition">
               Bearbeiten
             </button>
-            <button 
-              @click="deleteVenue(venue.venue_id)" 
+            <button
+              @click="deleteVenue(venue.venue_id)"
               class="bg-gray-100 text-gray-900 py-1 px-3 rounded hover:bg-gray-700 hover:text-gray-100 transition"
             >
               {{ $t('dashboard.delete') }}
@@ -56,9 +57,9 @@
         <li v-for="event in events" :key="event.event_id" class="bg-white p-4 rounded-lg shadow-md border border-gray-200">
           <h3 class="text-lg font-semibold text-gray-900">{{ event.event_title }}</h3>
           <p class="text-gray-700">{{ $t('dashboard.canEdit') }}: <span class="font-medium">{{ event.can_edit }}</span></p>
-          
-          <button 
-            @click="deleteEvent(event.event_id)" 
+
+          <button
+            @click="deleteEvent(event.event_id)"
             class="mt-3 bg-gray-100 text-gray-900 py-1 px-3 rounded hover:bg-gray-700 hover:text-gray-100 transition"
           >
             {{ $t('dashboard.delete') }}
@@ -72,6 +73,8 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useApi } from '@/composables/useApi'
+import {useLocalePath} from "#i18n";
+const localePath = useLocalePath()
 
 const { fetchApi } = useApi()
 const venues = ref([])

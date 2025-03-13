@@ -15,7 +15,7 @@
         <label class="block text-gray-700" for="venueId">Veranstaltungsort</label>
         <select id="venueId" class="bg-white mt-1 p-3 w-full border rounded-xs" v-model="formData.venue_id">
           <option selected value="">Bitte auswählen</option>
-          <option v-for="venue in venues" :key="venue.veneu_id" :value="venue.veneu_id">
+          <option v-for="venue in venues" :key="venue.venue_id" :value="venue.venue_id">
             {{ venue.venue_name }}
           </option>
         </select>
@@ -33,7 +33,7 @@
         </select>
       </div>
     </div>
-    
+
     <div class="grid grid-cols-12 gap-4 mb-4">
       <!-- Total Capacity -->
       <div class="col-span-4">
@@ -86,6 +86,11 @@ const errors = ref({})
 const venues = ref([])
 const spaceTypes = ref([])
 
+// Get parameters from url
+import { useRoute } from 'vue-router';
+const route = useRoute();
+const venueId = route.params.id;
+
 // Form validation
 const validateForm = () => {
   errors.value = {}
@@ -128,5 +133,8 @@ const submitForm = async () => {
 onMounted(() => {
   fetchData('/space/type/?lang=de', spaceTypes)
   fetchData('/user/venue/', venues)
+  if (venueId) {
+    formData.value.venue_id = venueId; // Preselect the option if venueId is provided
+  }
 })
 </script>
