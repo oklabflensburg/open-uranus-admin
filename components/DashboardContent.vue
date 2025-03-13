@@ -28,6 +28,10 @@
         <li v-for="venue in venues" :key="venue.venue_id" class="bg-white p-4 rounded-lg shadow-md border border-gray-200">
           <h3 class="text-lg font-semibold text-gray-900">{{ venue.venue_name }}</h3>
           <p class="text-gray-700">{{ $t('dashboard.canEdit') }}: <span class="font-medium">{{ venue.can_edit }}</span></p>
+          <ul id="organizerDetails" class="text-gray-700 mt-4">
+            <li>{{ $t('dashboard.countSpaces') }}: {{ venue.stats.count_space }}</li>
+            <li>{{ $t('dashboard.countEvents') }}: {{ venue.stats.count_event }}</li>
+          </ul>
 
           <div class="mt-4 flex gap-2">
             <nuxt-link :to="localePath({ name: 'space-id', params: { id: venue.venue_id } })"
@@ -67,6 +71,41 @@
         </li>
       </ul>
     </section>
+
+    <section>
+      <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-200 text-gray-600 uppercase text-sm">
+                        <th class="p-3 border">Datum</th>
+                        <th class="p-3 border">Titel</th>
+                        <th class="p-3 border">Ort</th>
+                        <th class="p-3 border">Verantwortlich</th>
+                    </tr>
+                </thead>
+                <tbody class="text-gray-700">
+                    <tr class="border-b hover:bg-gray-100">
+                        <td class="p-3 border">12.03.2025</td>
+                        <td class="p-3 border">Konzert A</td>
+                        <td class="p-3 border">Berlin</td>
+                        <td class="p-3 border">Max Mustermann</td>
+                    </tr>
+                    <tr class="border-b hover:bg-gray-100">
+                        <td class="p-3 border">18.04.2025</td>
+                        <td class="p-3 border">Theaterstück B</td>
+                        <td class="p-3 border">Hamburg</td>
+                        <td class="p-3 border">Anna Beispiel</td>
+                    </tr>
+                    <tr class="border-b hover:bg-gray-100">
+                        <td class="p-3 border">05.05.2025</td>
+                        <td class="p-3 border">Festival C</td>
+                        <td class="p-3 border">München</td>
+                        <td class="p-3 border">Tom Test</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
   </div>
 </template>
 
@@ -85,6 +124,12 @@ const fetchVenues = async () => {
   try {
     const data = await fetchApi('/user/venue')
     venues.value = data
+
+    // Fetch stats for each venue
+    for (const venue of venues.value) {
+      const stats = await fetchVenueStats(venue.venue_id)
+      venue.stats = stats
+    }
   } catch (error) {
     console.error('Error fetching venues:', error)
   }
@@ -94,6 +139,16 @@ const fetchOrganizers = async () => {
   try {
     const data = await fetchApi('/user/organizer')
     organizers.value = data
+  } catch (error) {
+    console.error('Error fetching organizers:', error)
+  }
+}
+
+
+const fetchVenueStats = async (venueId) => {
+  try {
+    const data = await fetchApi(`/venue/stats/?venue_id=${venueId}`)
+    return data
   } catch (error) {
     console.error('Error fetching organizers:', error)
   }

@@ -39,11 +39,15 @@
     "signIn": "Anmelden",
     "loginFailed": "Anmeldung fehlgeschlagen! Überprüfen Sie Ihre Anmeldeinformationen.",
     "dashboard": {
-      "organizers": "Veranstalter",
+      "countSpaces": "Anzahl der Veranstaltungsräume",
+      "countVenues": "Anzahl der Veranstaltungsorte",
+      "countEvents": "Anzahl der Veranstaltungen",
+      "countOrganizers": "Anzahl der Veranstalter",
+      "organizers": "Deine Organisationen",
       "noOrganizersFound": "Keine Veranstalter gefunden.",
-      "venues": "Veranstaltungsorte",
+      "venues": "Weitere Organisationen deren Inhalte Du bearbeiten kannst",
       "noVenuesFound": "Keine Veranstaltungsorte gefunden.",
-      "events": "Veranstaltungen",
+      "events": "Von dir erstellte Veranstaltungen",
       "noEventsFound": "Keine Veranstaltungen gefunden.",
       "canEdit": "Darf bearbeiten",
       "delete": "Löschen"
