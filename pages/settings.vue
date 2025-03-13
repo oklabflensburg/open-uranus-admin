@@ -1,30 +1,42 @@
 <template>
   <div class="max-w-screen-xl mx-auto bg-white p-3 md:p-6 rounded-xs shadow-lg">
-    Einstellungen
+    <h2 class="text-xl font-bold">{{ $t('settings.title') }}</h2>
 
-    <div class="relative group">
-      <button class="px-3 py-2 rounded hover:bg-gray-100 focus:outline-none">{{ $t('menu.language') }}</button>
-      <div class="cursor-pointer w-64 absolute hidden group-hover:block bg-gray-200 rounded shadow-lg">
-        <div v-for="locale in locales" :key="locale.code" class="cursor-pointer block px-4 py-2 hover:bg-gray-100" @click="setLocale(locale.code)">
-          {{ locale.name }}
-        </div>
-      </div>
+    <!-- Language Switcher -->
+    <div class="flex space-x-2 mt-4">
+      <button
+        v-for="localeItem in locales"
+        :key="localeItem.code"
+        @click="setLocale(localeItem.code)"
+        :class="{
+          'bg-blue-500 text-white': locale.value === localeItem.code,
+          'bg-gray-200 text-gray-700': locale.value !== localeItem.code
+        }"
+        class="px-4 py-2 rounded focus:outline-none hover:bg-blue-400"
+      >
+        {{ localeItem.name }}
+      </button>
     </div>
   </div>
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { useHead } from '#imports'
-import { useI18n } from 'vue-i18n'
-import { useRuntimeConfig } from '#app'
+import { useRuntimeConfig, useRouter } from '#app'
+import { useI18n } from 'vue-i18n' 
+import { useLocalePath } from '#i18n'
 
 const { locale } = useI18n()
+const localePath = useLocalePath() 
 const config = useRuntimeConfig()
+const router = useRouter()
 
 const locales = ref(config.public.i18n.locales)
 
 const setLocale = (localeCode) => {
   locale.value = localeCode
+  router.push(localePath('/settings'))
 }
 
 useHead({

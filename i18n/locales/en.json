@@ -18,6 +18,10 @@
       "about": "About",
       "logout": "Logout"
     },
+    "settings": {
+      "title": "Settings",
+      "language": "Language"
+    },
     "uranusAdminPanel": "Uranus Admin Panel",
     "alreadyHaveAccount": "Already have an account? Sign in",
     "username": "Username",
@@ -41,5 +45,37 @@
     "events": "Events",
     "noEventsFound": "No events found.",
     "canEdit": "Can edit",
-    "delete": "Delete"
+    "delete": "Delete",
+
+  "organizerForm": {
+    "title": "Organizer",
+    "name": "Name",
+    "description": "Description",
+    "contactEmail": "Contact Email",
+    "contactPhone": "Contact Phone",
+    "websiteUrl": "Website URL",
+    "street": "Street",
+    "houseNumber": "House Number",
+    "postalCode": "Postal Code",
+    "city": "City",
+    "countryCode": "Country Code",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "submitButton": "Add Organizer",
+    "successMessage": "Organizer created successfully!",
+    "errors": {
+      "name": "Please provide a name",
+      "description": "Please provide a description",
+      "contactEmail": "Please provide an email address",
+      "contactPhone": "Please provide a phone number",
+      "websiteUrl": "Please provide a website URL",
+      "street": "Please provide a street",
+      "houseNumber": "Please provide a house number",
+      "postalCode": "Please provide a postal code",
+      "city": "Please provide a city",
+      "countryCode": "Please provide a country code",
+      "latitude": "Please provide a latitude",
+      "longitude": "Please provide a longitude"
+    }
+  }
   }

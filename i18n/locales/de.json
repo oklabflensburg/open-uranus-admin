@@ -18,6 +18,10 @@
       "about": "Über",
       "logout": "Abmelden"
     },
+    "settings": {
+      "title": "Einstellungen",
+      "language": "Sprache"
+    },
     "uranusAdminPanel": "Uranus Admin Panel",
     "alreadyHaveAccount": "Bereits ein Konto? Anmelden",
     "username": "Benutzername",
@@ -41,5 +45,36 @@
     "events": "Veranstaltungen",
     "noEventsFound": "Keine Veranstaltungen gefunden.",
     "canEdit": "Darf bearbeiten",
-    "delete": "Löschen"
+    "delete": "Löschen",
+    "organizerForm": {
+      "title": "Veranstalter",
+      "name": "Name",
+      "description": "Beschreibung",
+      "contactEmail": "Kontakt E-Mail",
+      "contactPhone": "Kontakt Telefon",
+      "websiteUrl": "Website URL",
+      "street": "Straße",
+      "houseNumber": "Hausnummer",
+      "postalCode": "Postleitzahl",
+      "city": "Stadt",
+      "countryCode": "Ländercode",
+      "latitude": "Breitengrad",
+      "longitude": "Längengrad",
+      "submitButton": "Organisator hinzufügen",
+      "successMessage": "Organisator erfolgreich erstellt!",
+      "errors": {
+        "name": "Bitte einen Namen angeben",
+        "description": "Bitte eine Beschreibung angeben",
+        "contactEmail": "Bitte eine E-Mail-Adresse angeben",
+        "contactPhone": "Bitte eine Telefonnummer angeben",
+        "websiteUrl": "Bitte eine Website-URL angeben",
+        "street": "Bitte eine Straße angeben",
+        "houseNumber": "Bitte eine Hausnummer angeben",
+        "postalCode": "Bitte eine Postleitzahl angeben",
+        "city": "Bitte eine Stadt angeben",
+        "countryCode": "Bitte einen Ländercode angeben",
+        "latitude": "Bitte Breitengrad angeben",
+        "longitude": "Bitte Längengrad angeben"
+      }
+    }
   }
