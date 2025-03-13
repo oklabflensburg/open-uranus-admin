@@ -11,6 +11,7 @@ const routes = [
       { path: '/signin', name: 'Signin', component: () => import('@/pages/signin.vue')},
       { path: '/signup', name: 'Signup', component: () => import('@/pages/signup.vue')},
       { path: '/dashboard', name: 'Dashboard', component: () => import('@/pages/dashboard.vue'), meta: { middleware: 'auth' }},
+      { path: '/settings', name: 'Settings', component: () => import('@/pages/settings.vue'), meta: { middleware: 'auth' }},
       { path: '/organizer', name: 'Organizer', component: () => import('@/pages/organizer.vue'), meta: { middleware: 'auth' }},
       { path: '/venue', name: 'Venue', component: () => import('~/pages/venue/index.vue'), meta: { middleware: 'auth' }},
       { path: '/event', name: 'Event', component: () => import('~/pages/event/index.vue'), meta: { middleware: 'auth' }},

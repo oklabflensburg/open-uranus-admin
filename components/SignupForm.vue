@@ -2,53 +2,54 @@
   <div class="w-full space-y-8">
     <div class="text-center">
       <h2 class="text-3xl font-extrabold text-gray-900">
-        Uranus Admin Panel
+        {{ $t('uranusAdminPanel') }}
       </h2>
     </div>
 
-    <!-- Toggle between sign-up and sign-in -->
-    <div class="text-center space-x-4">
-      <nuxt-link :to="'/signin'" class="text-blue-500">Bereits ein Konto? Anmelden</nuxt-link>
-    </div>
+    <h2 class="text-2xl font-medium">{{ $t('register') }}</h2>
 
     <!-- Sign-Up Form -->
     <form @submit.prevent="handleSignUp" class="mt-8 space-y-6">
       <div class="rounded-md shadow-sm space-y-4">
         <div class="mt-4">
-          <label for="username" class="sr-only">Username</label>
-          <input v-model="signupData.username" id="username" name="username" type="text" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Username">
+          <label for="username" class="sr-only">{{ $t('username') }}</label>
+          <input v-model="signupData.username" id="username" name="username" type="text" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" :placeholder="$t('username')">
         </div>
         <div class="mt-4">
-          <label for="emailAddress" class="sr-only">Email</label>
-          <input v-model="signupData.emailAddress" id="emailAddress" name="emailAddress" type="email" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Email address">
+          <label for="emailAddress" class="sr-only">{{ $t('email') }}</label>
+          <input v-model="signupData.emailAddress" id="emailAddress" name="emailAddress" type="email" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" :placeholder="$t('emailAddress')">
         </div>
         <div class="grid grid-cols-12 gap-4">
         <div class="col-span-6">
-          <label for="firstName" class="sr-only">First Name</label>
-          <input v-model="signupData.firstName" id="firstName" name="firstName" type="text" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="First Name">
+          <label for="firstName" class="sr-only">{{ $t('firstName') }}</label>
+          <input v-model="signupData.firstName" id="firstName" name="firstName" type="text" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" :placeholder="$t('firstName')">
         </div>
         <div class="col-span-6">
-          <label for="lastName" class="sr-only">Last Name</label>
-          <input v-model="signupData.lastName" id="lastName" name="lastName" type="text" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Last Name">
+          <label for="lastName" class="sr-only">{{ $t('lastName') }}</label>
+          <input v-model="signupData.lastName" id="lastName" name="lastName" type="text" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" :placeholder="$t('lastName')">
         </div>
       </div>
 
       <div class="grid grid-cols-12 gap-4">
         <div class="col-span-6">
-          <label for="password" class="sr-only">Password</label>
-          <input v-model="signupData.password" id="password" name="password" type="password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Password">
+          <label for="password" class="sr-only">{{ $t('password') }}</label>
+          <input v-model="signupData.password" id="password" name="password" type="password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" :placeholder="$t('password')">
         </div>
         <div class="col-span-6">
-          <label for="confirmPassword" class="sr-only">Confirm Password</label>
-          <input v-model="signupData.confirmPassword" id="confirmPassword" name="confirmPassword" type="password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Confirm Password">
+          <label for="confirmPassword" class="sr-only">{{ $t('confirmPassword') }}</label>
+          <input v-model="signupData.confirmPassword" id="confirmPassword" name="confirmPassword" type="password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" :placeholder="$t('confirmPassword')">
         </div>
       </div>
       </div>
 
       <div class="flex items-center justify-end">
         <button type="submit" class="group relative flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-500 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-          Registrieren
+          {{ $t('register') }}
         </button>
+      </div>
+
+      <div class="text-right space-x-4">
+        <nuxt-link :to="'/signin'" class="text-blue-500">{{ $t('alreadyHaveAccount') }}</nuxt-link>
       </div>
     </form>
   </div>
@@ -74,7 +75,7 @@ const signupData = ref({
 
 const handleSignUp = async () => {
   if (signupData.value.password !== signupData.value.confirmPassword) {
-    alert('Passwords do not match!')
+    alert($t('passwordsDoNotMatch'))
     return
   }
 
@@ -82,7 +83,7 @@ const handleSignUp = async () => {
   if (success) {
     router.push('/dashboard') // Redirect after signup
   } else {
-    alert('Signup failed! Check your credentials.')
+    alert($t('signupFailed'))
   }
 }
 </script>

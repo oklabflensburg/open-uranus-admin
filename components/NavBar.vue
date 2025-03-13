@@ -18,57 +18,67 @@
 
         <!-- Desktop Menu -->
         <div class="hidden sm:flex items-center space-x-4">
-          <nuxt-link to="/dashboard" class="px-3 py-2 rounded hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/dashboard') }" v-if="isAuthenticated">Dashboard</nuxt-link>
-          <nuxt-link to="/organizer" class="px-3 py-2 rounded hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/organizer') }" v-if="isAuthenticated">Veranstalter</nuxt-link>
-          <nuxt-link to="/venue" class="px-3 py-2 rounded hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/venue') }" v-if="isAuthenticated">Veranstaltungsort</nuxt-link>
-          <nuxt-link to="/event" class="px-3 py-2 rounded hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/event') }" v-if="isAuthenticated">Veranstaltung</nuxt-link>
+          <nuxt-link to="/dashboard" class="px-3 py-2 rounded hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/dashboard') }" v-if="isAuthenticated">{{ $t('menu.dashboard') }}</nuxt-link>
+          <nuxt-link to="/organizer" class="px-3 py-2 rounded hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/organizer') }" v-if="isAuthenticated">{{ $t('menu.organizer') }}</nuxt-link>
+          <nuxt-link to="/venue" class="px-3 py-2 rounded hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/venue') }" v-if="isAuthenticated">{{ $t('menu.venue') }}</nuxt-link>
+          <nuxt-link to="/event" class="px-3 py-2 rounded hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/event') }" v-if="isAuthenticated">{{ $t('menu.event') }}</nuxt-link>
           <div v-if="isAuthenticated" class="relative group">
-            <button class="px-3 py-2 rounded hover:bg-gray-700 focus:outline-none">Typen Einstellungen</button>
+            <button class="px-3 py-2 rounded hover:bg-gray-700 focus:outline-none">{{ $t('menu.typeSettings') }}</button>
             <div class="w-64 absolute hidden group-hover:block bg-gray-800 rounded shadow-lg">
-              <nuxt-link to="/venue/types" class="block px-4 py-2 hover:bg-gray-700">Veranstaltungsort Typen</nuxt-link>
-              <nuxt-link to="/space/types" class="block px-4 py-2 hover:bg-gray-700">Veranstaltungsraum Typen</nuxt-link>
-              <nuxt-link to="/event/types" class="block px-4 py-2 hover:bg-gray-700">Veranstaltungs Typen</nuxt-link>
-              <nuxt-link to="/genre/types" class="block px-4 py-2 hover:bg-gray-700">Genre Typen</nuxt-link>
-              <nuxt-link to="/licence/types" class="block px-4 py-2 hover:bg-gray-700">Lizenz Typen</nuxt-link>
-              <nuxt-link to="/image/types" class="block px-4 py-2 hover:bg-gray-700">Bild Typen</nuxt-link>
+              <nuxt-link to="/venue/types" class="block px-4 py-2 hover:bg-gray-700">{{ $t('menu.venueTypes') }}</nuxt-link>
+              <nuxt-link to="/space/types" class="block px-4 py-2 hover:bg-gray-700">{{ $t('menu.spaceTypes') }}</nuxt-link>
+              <nuxt-link to="/event/types" class="block px-4 py-2 hover:bg-gray-700">{{ $t('menu.eventTypes') }}</nuxt-link>
+              <nuxt-link to="/genre/types" class="block px-4 py-2 hover:bg-gray-700">{{ $t('menu.genreTypes') }}</nuxt-link>
+              <nuxt-link to="/licence/types" class="block px-4 py-2 hover:bg-gray-700">{{ $t('menu.licenceTypes') }}</nuxt-link>
+              <nuxt-link to="/image/types" class="block px-4 py-2 hover:bg-gray-700">{{ $t('menu.imageTypes') }}</nuxt-link>
             </div>
           </div>
-          <nuxt-link to="/signin" class="px-3 py-2 rounded hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/signin') }" v-if="!isAuthenticated">Anmelden</nuxt-link>
-          <button @click="handleLogout" class="px-3 py-2 rounded hover:bg-gray-700" v-if="isAuthenticated">Abmelden</button>
+          <nuxt-link to="/signin" class="px-3 py-2 rounded hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/signin') }" v-if="!isAuthenticated">{{ $t('menu.signin') }}</nuxt-link>
+          <div v-if="isAuthenticated" class="relative group">
+            <button class="flex items-center px-3 py-2 rounded hover:bg-gray-700 focus:outline-none">
+              <img src="https://i.pravatar.cc/40" alt="Profile" class="w-8 h-8 rounded-full mr-2">
+              <span class="fi fis fi-de w-8 h-8 rounded-full mr-2"></span>
+              <span>{{ $t('menu.profile') }}</span>
+            </button>
+            <div class="w-full absolute hidden group-hover:block bg-gray-800 rounded shadow-lg">
+              <nuxt-link to="/settings" class="block px-4 py-2 hover:bg-gray-700">{{ $t('menu.settings') }}</nuxt-link>
+              <button @click="handleLogout" class="block w-full text-left px-4 py-2 hover:bg-gray-700">{{ $t('menu.logout') }}</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Mobile Menu Dropdown -->
     <div v-if="isOpen" class="sm:hidden bg-gray-800">
-      <nuxt-link to="/dashboard" class="block px-4 py-2 hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/dashboard') }" v-if="isAuthenticated">Dashboard</nuxt-link>
-      <nuxt-link to="/organizer" class="block px-4 py-2 hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/organizer') }" v-if="isAuthenticated">Veranstalter</nuxt-link>
-      <nuxt-link to="/venue" class="block px-4 py-2 hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/venue') }" v-if="isAuthenticated">Veranstaltungsort</nuxt-link>
-      <nuxt-link to="/event" class="block px-4 py-2 hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/event') }" v-if="isAuthenticated">Veranstaltung</nuxt-link>
+      <nuxt-link to="/dashboard" class="block px-4 py-2 hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/dashboard') }" v-if="isAuthenticated">{{ $t('menu.dashboard') }}</nuxt-link>
+      <nuxt-link to="/organizer" class="block px-4 py-2 hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/organizer') }" v-if="isAuthenticated">{{ $t('menu.organizer') }}</nuxt-link>
+      <nuxt-link to="/venue" class="block px-4 py-2 hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/venue') }" v-if="isAuthenticated">{{ $t('menu.venue') }}</nuxt-link>
+      <nuxt-link to="/event" class="block px-4 py-2 hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/event') }" v-if="isAuthenticated">{{ $t('menu.event') }}</nuxt-link>
       <div v-if="isAuthenticated" class="relative group">
-        <button class="block px-4 py-2 hover:bg-gray-700 focus:outline-none">Typen Einstellungen</button>
+        <button class="block px-4 py-2 hover:bg-gray-700 focus:outline-none">{{ $t('menu.typeSettings') }}</button>
         <div class="bg-gray-800 rounded shadow-lg">
-          <nuxt-link to="/venue/types" class="block px-4 py-2 hover:bg-gray-700">Veranstaltungsort Typen</nuxt-link>
-          <nuxt-link to="/space/types" class="block px-4 py-2 hover:bg-gray-700">Veranstaltungsraum Typen</nuxt-link>
-          <nuxt-link to="/event/types" class="block px-4 py-2 hover:bg-gray-700">Veranstaltungs Typen</nuxt-link>
-          <nuxt-link to="/genre/types" class="block px-4 py-2 hover:bg-gray-700">Genre Typen</nuxt-link>
-          <nuxt-link to="/licence/types" class="block px-4 py-2 hover:bg-gray-700">Lizenz Typen</nuxt-link>
-          <nuxt-link to="/image/types" class="block px-4 py-2 hover:bg-gray-700">Bild Typen</nuxt-link>
+          <nuxt-link to="/venue/types" class="block px-4 py-2 hover:bg-gray-700">{{ $t('menu.venueTypes') }}</nuxt-link>
+          <nuxt-link to="/space/types" class="block px-4 py-2 hover:bg-gray-700">{{ $t('menu.spaceTypes') }}</nuxt-link>
+          <nuxt-link to="/event/types" class="block px-4 py-2 hover:bg-gray-700">{{ $t('menu.eventTypes') }}</nuxt-link>
+          <nuxt-link to="/genre/types" class="block px-4 py-2 hover:bg-gray-700">{{ $t('menu.genreTypes') }}</nuxt-link>
+          <nuxt-link to="/licence/types" class="block px-4 py-2 hover:bg-gray-700">{{ $t('menu.licenceTypes') }}</nuxt-link>
+          <nuxt-link to="/image/types" class="block px-4 py-2 hover:bg-gray-700">{{ $t('menu.imageTypes') }}</nuxt-link>
         </div>
       </div>
-      <nuxt-link to="/signin" class="block px-4 py-2 hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/signin') }" v-if="!isAuthenticated">Anmelden</nuxt-link>
-      <button @click="handleLogout" class="block px-4 py-2 hover:bg-gray-700" v-if="isAuthenticated">Abmelden</button>
+      <nuxt-link to="/signin" class="block px-4 py-2 hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/signin') }" v-if="!isAuthenticated">{{ $t('menu.signin') }}</nuxt-link>
+      <button @click="handleLogout" class="block px-4 py-2 hover:bg-gray-700" v-if="isAuthenticated">{{ $t('menu.logout') }}</button>
     </div>
   </nav>
 </template>
 
 <script setup>
-import { ref, computed } from "vue"
+import { ref, onMounted } from "vue"
 import { useAuth } from '@/composables/useAuth'
 import { useRoute } from 'vue-router'
 
 const isOpen = ref(false)
-const { accessToken, logout, isAuthenticated } = useAuth() // Ensure isAuthenticated is imported
+const { logout, isAuthenticated } = useAuth()
 const route = useRoute()
 
 const isActive = (path) => {
@@ -79,4 +89,8 @@ const handleLogout = () => {
   logout()
   navigateTo('/signin')
 }
+
+onMounted(() => {
+  console.log('NavBar mounted')
+});
 </script>

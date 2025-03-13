@@ -1,37 +1,37 @@
 <template>
   <div class="max-w-screen-xl mx-auto bg-white p-3 md:p-6 rounded-xs shadow-lg">
     <div class="mb-12">
-      <h2 class="text-2xl font-bold mb-4">Veranstalter</h2>
-      <div v-if="organizers.length === 0" class="text-gray-500">Keine Veranstalter gefunden.</div>
+      <h2 class="text-2xl font-bold mb-4">{{ $t('organizers') }}</h2>
+      <div v-if="organizers.length === 0" class="text-gray-500">{{ $t('noOrganizersFound') }}</div>
       <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div v-for="organizer in organizers" :key="organizer.organizer_id" class="bg-gray-100 p-4 rounded-lg shadow-md">
           <h3 class="text-lg font-semibold">{{ organizer.organizer_name }}</h3>
-          <p class="text-gray-700">Darf bearbeiten: {{ organizer.can_edit }}</p>
-          <button @click="deleteOrganizer(organizer.organizer_id)" class="hidden mt-2 bg-red-500 text-white py-1 px-3 rounded">Delete</button>
+          <p class="text-gray-700">{{ $t('canEdit') }}: {{ organizer.can_edit }}</p>
+          <button @click="deleteOrganizer(organizer.organizer_id)" class="hidden mt-2 bg-red-500 text-white py-1 px-3 rounded">{{ $t('delete') }}</button>
         </div>
       </div>
     </div>
 
     <div class="mb-12">
-      <h2 class="text-2xl font-bold mb-4">Veranstaltungsorte</h2>
-      <div v-if="venues.length === 0" class="text-gray-500">Keine Veranstaltungsorte gefunden.</div>
+      <h2 class="text-2xl font-bold mb-4">{{ $t('venues') }}</h2>
+      <div v-if="venues.length === 0" class="text-gray-500">{{ $t('noVenuesFound') }}</div>
       <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div v-for="venue in venues" :key="venue.venue_id" class="bg-gray-100 p-4 rounded-lg shadow-md">
           <h3 class="text-lg font-semibold">{{ venue.venue_name }}</h3>
-          <p class="text-gray-700">Darf bearbeiten: {{ venue.can_edit }}</p>
-          <button @click="deleteVenue(venue.venue_id)" class="hidden mt-2 bg-red-500 text-white py-1 px-3 rounded">Delete</button>
+          <p class="text-gray-700">{{ $t('canEdit') }}: {{ venue.can_edit }}</p>
+          <button @click="deleteVenue(venue.venue_id)" class="hidden mt-2 bg-red-500 text-white py-1 px-3 rounded">{{ $t('delete') }}</button>
         </div>
       </div>
     </div>
 
     <div>
-      <h2 class="text-2xl font-bold mb-4">Veranstaltungen</h2>
-      <div v-if="events.length === 0" class="text-gray-500">Keine Veranstaltungen gefunden.</div>
+      <h2 class="text-2xl font-bold mb-4">{{ $t('events') }}</h2>
+      <div v-if="events.length === 0" class="text-gray-500">{{ $t('noEventsFound') }}</div>
       <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div v-for="event in events" :key="event.event_id" class="bg-gray-100 p-4 rounded-lg shadow-md">
           <h3 class="text-lg font-semibold">{{ event.event_title }}</h3>
-          <p class="text-gray-700">Darf bearbeiten: {{ event.can_edit }}</p>
-          <button @click="deleteEvent(event.event_id)" class="hidden mt-2 bg-red-500 text-white py-1 px-3 rounded">Delete</button>
+          <p class="text-gray-700">{{ $t('canEdit') }}: {{ event.can_edit }}</p>
+          <button @click="deleteEvent(event.event_id)" class="hidden mt-2 bg-red-500 text-white py-1 px-3 rounded">{{ $t('delete') }}</button>
         </div>
       </div>
     </div>
