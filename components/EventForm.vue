@@ -68,14 +68,19 @@
       </div>
     </div>
 
-    <button type="submit" id="addEventButton" class="mt-6 px-4 py-2 bg-green-500 text-white rounded-xs hover:bg-green-700 transition">Speichern</button>
+    <div class="text-right">
+      <button type="submit" id="addEventButton" class="mt-6 px-4 py-2 bg-green-500 text-white rounded-xs hover:bg-green-700 transition">Speichern</button>
+    </div>
   </form>
 </template>
 
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import { useApi } from '@/composables/useApi'
+import { useRoute } from 'vue-router';
+const route = useRoute();
 
+const venueId = route.params.id;
 const eventTitle = ref('')
 const eventDescription = ref('')
 const eventDateStart = ref('')
@@ -94,6 +99,18 @@ const selectedOrganizer = ref("")
 const selectedVenue = ref("")
 const selectedSpace = ref("")
 
+const body = {
+  event_title: eventTitle.value,
+  event_description: eventDescription.value,
+  event_date_start: eventDateStart.value,
+  event_date_end: eventDateEnd.value || null,
+  entry_time: entryTime.value || null,
+  event_organizer_id: parseInt(selectedOrganizer.value, 10),
+  event_venue_id: parseInt(selectedVenue.value, 10),
+  event_venue_name: venueName.value,
+  event_space_id: parseInt(selectedSpace.value, 10)
+}
+
 // Fetch function
 const fetchData = async (url, targetArray) => {
   try {
@@ -104,12 +121,6 @@ const fetchData = async (url, targetArray) => {
     console.error(`Error fetching ${url}:`, error)
   }
 }
-
-// Fetch organizers and venues when component is mounted
-onMounted(() => {
-  fetchData('/user/organizer/', organizers)
-  fetchData('/venue/', venues)
-})
 
 // Fetch spaces based on selected venue
 const fetchSpaces = async () => {
@@ -193,18 +204,6 @@ const handleSubmit = async () => {
     return
   }
 
-  const body = {
-    event_title: eventTitle.value,
-    event_description: eventDescription.value,
-    event_date_start: eventDateStart.value,
-    event_date_end: eventDateEnd.value || null,
-    entry_time: entryTime.value || null,
-    event_organizer_id: parseInt(selectedOrganizer.value, 10),
-    event_venue_id: parseInt(selectedVenue.value, 10),
-    event_venue_name: venueName.value,
-    event_space_id: parseInt(selectedSpace.value, 10)
-  }
-
   try {
     const { fetchApi } = useApi()
     const data = await fetchApi('/event/', {
@@ -220,4 +219,13 @@ const handleSubmit = async () => {
     console.error('Error sending data:', error)
   }
 }
+
+// Fetch organizers and venues when component is mounted
+onMounted(() => {
+  fetchData('/user/organizer/', organizers)
+  fetchData('/venue/', venues)
+  if (venueId) {
+    selectedVenue.value = venueId; // Preselect the option if venueId is provided
+  }
+})
 </script>

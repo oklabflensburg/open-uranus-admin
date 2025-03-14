@@ -3,7 +3,15 @@
   <!-- Organizers -->
   <section>
     <h2 class="text-2xl font-bold mb-4">{{ $t('dashboard.organizers') }}</h2>
-    <p v-if="organizers.length === 0" class="text-gray-500">{{ $t('dashboard.noOrganizersFound') }}</p>
+    <p v-if="organizers.length === 0" class="text-gray-500">{{ $t('dashboard.noOrganizersFound') }}
+      <button
+            @click="deleteOrganizer(organizer.organizer_id)"
+            class="mt-2 bg-gray-100 text-gray-900 py-1 px-3 hover:bg-gray-700 hover:text-white transition rounded"
+          >
+            Organisationen erstellen
+          </button>
+      Erstelle deine Organisationen und danach kannst du füge Orte hinzu.
+    </p>
 
     <ul v-else class="grid grid-cols-12 gap-4">
       <li v-for="organizer in organizers" :key="organizer.organizer_id" class="col-span-6 border border-gray-200">
@@ -47,15 +55,15 @@
               alt="Delete"
               class="cursor-pointer"
             />
-            </div>
+          </div>
         </div>
         <div class="p-3 bg-white text-gray-700">
           <p>{{ $t('dashboard.countSpaces') }}: {{ venue.stats.count_space }}</p>
           <p>{{ $t('dashboard.countEvents') }}: {{ venue.stats.count_event }}</p>
           <p>{{ $t('dashboard.canEdit') }}: {{ venue.can_edit }}</p>
           <div class="mt-2 flex gap-2">
-            <nuxt-link :to="localePath('event')"
-                       class="bg-gray-100 text-gray-900 py-1 px-3 hover:bg-gray-700 hover:text-white transition rounded">
+            <nuxt-link :to="localePath({ name: 'event-id', params: { id: venue.venue_id } })"
+              class="bg-gray-100 text-gray-900 py-1 px-3 hover:bg-gray-700 hover:text-white transition rounded">
               Event anlegen
             </nuxt-link>
             <nuxt-link :to="localePath({ name: 'space-id', params: { id: venue.venue_id } })"
