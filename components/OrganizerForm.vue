@@ -102,6 +102,8 @@ import { ref, watch } from 'vue'
 import { useApi } from '@/composables/useApi'
 import { useI18n } from 'vue-i18n'
 
+const router = useRouter()
+
 const { t } = useI18n()
 
 // Reactive form data
@@ -290,19 +292,7 @@ const submitForm = async () => {
     })
 
     console.log('Success:', data)
-    // Empty the form
-    organizerName.value = ''
-    organizerDescription.value = ''
-    organizerContactEmail.value = ''
-    organizerContactPhone.value = ''
-    organizerWebsiteUrl.value = ''
-    organizerStreet.value = ''
-    organizerHouseNumber.value = ''
-    organizerPostalCode.value = ''
-    organizerCity.value = ''
-    organizerCountryCode.value = ''
-    organizerLatitude.value = ''
-    organizerLongitude.value = ''
+    router.push('/dashboard')
     // Alert the response message
     alert(t('organizerForm.successMessage'))
   } catch (error) {

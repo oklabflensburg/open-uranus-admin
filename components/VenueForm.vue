@@ -85,6 +85,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useApi } from '@/composables/useApi'
+const router = useRouter()
 
 // Reactive form data
 const venueName = ref('')

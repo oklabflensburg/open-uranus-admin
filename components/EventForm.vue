@@ -75,10 +75,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, reactive } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useApi } from '@/composables/useApi'
-import { useRoute } from 'vue-router';
-const route = useRoute();
+
+const route = useRoute()
+const router = useRouter()
 
 const venueId = route.params.id;
 const eventTitle = ref('')
