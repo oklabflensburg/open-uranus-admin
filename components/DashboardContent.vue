@@ -11,8 +11,9 @@
           <span>{{ organizer.organizer_name }}</span>
         </div>
         <div class="p-3 bg-white text-gray-700">
-          <p>{{ $t('dashboard.countSpaces') }}: {{ organizer.stats.count_space }}</p>
           <p>{{ $t('dashboard.countVenues') }}: {{ organizer.stats.count_venue }}</p>
+          <p>{{ $t('dashboard.countSpaces') }}: {{ organizer.stats.count_space }}</p>
+          <p>{{ $t('dashboard.countEvents') }}: {{ organizer.stats.count_event }}</p>
           <p>{{ $t('dashboard.canEdit') }}: {{ organizer.can_edit }}</p>
           <button
             @click="deleteOrganizer(organizer.organizer_id)"
@@ -126,8 +127,9 @@ const fetchOrganizers = async () => {
     organizers.value = data.map(organizer => ({
       ...organizer,
       stats: {
-        count_space: 0,
+        count_event: 0,
         count_venue: 0,
+        count_space: 0
       }
     }))
 
