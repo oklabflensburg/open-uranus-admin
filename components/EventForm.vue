@@ -1,25 +1,25 @@
 <template>
   <form id="eventForm" class="space-y-4" @submit.prevent="handleSubmit">
-    <h2 class="text-2xl font-bold mb-4">Veranstaltung eintragen</h2>
+    <h2 class="text-2xl font-bold mb-4">Event anlegen</h2>
 
     <div class="">
-      <label class="block text-gray-700" for="eventTitle">Veranstaltungs Titel</label>
+      <label class="block text-gray-700" for="eventTitle">Titel</label>
       <input type="text" id="eventTitle" name="eventTitle" class="mt-1 p-2 w-full border rounded-xs" v-model="eventTitle" @input="validateField('eventTitle')">
       <p v-if="errors.eventTitle" class="text-red-600">{{ errors.eventTitle }}</p>
     </div>
     <div>
-      <label class="block text-gray-700" for="eventDescription">Veranstaltungs Beschreibung</label>
+      <label class="block text-gray-700" for="eventDescription">Beschreibung</label>
       <textarea id="eventDescription" name="eventDescription" rows="4" class="mt-1 p-2 w-full border rounded-xs" v-model="eventDescription" @input="validateField('eventDescription')"></textarea>
       <p v-if="errors.eventDescription" class="text-red-600">{{ errors.eventDescription }}</p>
     </div>
     <div class="grid grid-cols-12 gap-4 mb-4">
       <div class="col-span-4">
-        <label class="block text-gray-700" for="eventDateStart">Veranstaltungs Beginn</label>
+        <label class="block text-gray-700" for="eventDateStart">Beginn</label>
         <input type="datetime-local" name="eventDateStart" class="mt-1 p-2 w-full border rounded-xs" v-model="eventDateStart" @input="validateField('eventDateStart')">
         <p v-if="errors.eventDateStart" class="text-red-600">{{ errors.eventDateStart }}</p>
       </div>
       <div class="col-span-4">
-        <label class="block text-gray-700" for="eventDateEnd">Veranstaltungs Ende</label>
+        <label class="block text-gray-700" for="eventDateEnd">Ende</label>
         <input type="datetime-local" name="eventDateEnd" class="mt-1 p-2 w-full border rounded-xs" v-model="eventDateEnd">
       </div>
       <div class="col-span-4">

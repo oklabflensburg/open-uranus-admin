@@ -39,6 +39,9 @@
     "signIn": "Sign In",
     "loginFailed": "Login failed! Check your credentials.",
     "dashboard": {
+      "countSpaces": "Anzahl Räume",
+      "countVenues": "Anzahl Orte",
+      "countEvents": "Anzahl Events",
       "organizers": "Veranstalter",
       "noOrganizersFound": "Keine Veranstalter gefunden.",
       "venues": "Veranstaltungsorte",

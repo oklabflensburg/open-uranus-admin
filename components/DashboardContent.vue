@@ -35,25 +35,33 @@
       <li v-for="venue in venues" :key="venue.venue_id" class="col-span-6 border border-gray-200">
         <div class="flex justify-between items-center font-semibold text-sm text-gray-600 bg-gray-200 p-3">
           <span>{{ venue.venue_name }}</span>
+          <div class="flex gap-2">
+            <img
+              src="/public/icons/edit.svg"
+              alt="Edit"
+              class="cursor-pointer"
+            />
+            <img
+              @click="deleteVenue(venue.venue_id)"
+              src="/public/icons/delete.svg"
+              alt="Delete"
+              class="cursor-pointer"
+            />
+            </div>
         </div>
         <div class="p-3 bg-white text-gray-700">
           <p>{{ $t('dashboard.countSpaces') }}: {{ venue.stats.count_space }}</p>
           <p>{{ $t('dashboard.countEvents') }}: {{ venue.stats.count_event }}</p>
           <p>{{ $t('dashboard.canEdit') }}: {{ venue.can_edit }}</p>
           <div class="mt-2 flex gap-2">
+            <nuxt-link :to="localePath('event')"
+                       class="bg-gray-100 text-gray-900 py-1 px-3 hover:bg-gray-700 hover:text-white transition rounded">
+              Event anlegen
+            </nuxt-link>
             <nuxt-link :to="localePath({ name: 'space-id', params: { id: venue.venue_id } })"
                        class="bg-gray-100 text-gray-900 py-1 px-3 hover:bg-gray-700 hover:text-white transition rounded">
-              Raum hinzufügen
+              Raum anlegen
             </nuxt-link>
-            <button class="bg-gray-100 text-gray-900 py-1 px-3 hover:bg-gray-700 hover:text-white transition rounded">
-              Bearbeiten
-            </button>
-            <button
-              @click="deleteVenue(venue.venue_id)"
-              class="bg-gray-100 text-gray-900 py-1 px-3 hover:bg-gray-700 hover:text-white transition rounded"
-            >
-              {{ $t('dashboard.delete') }}
-            </button>
           </div>
         </div>
       </li>
