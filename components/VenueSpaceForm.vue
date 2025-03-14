@@ -143,7 +143,6 @@ const handleSubmit = async () => {
       body: bodyData,
     })
     router.push('/dashboard')
-    route.push('/dashboard')
   } catch (error) {
     console.error('Error submitting form:', error)
   }
