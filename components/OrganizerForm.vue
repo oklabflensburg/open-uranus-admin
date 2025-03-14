@@ -91,7 +91,9 @@
       </div>
     </div>
 
-    <button type="submit" class="mt-6 px-4 py-2 bg-green-500 text-white rounded-xs hover:bg-green-700 transition">{{ $t('organizerForm.submitButton') }}</button>
+    <div class="flex items-center justify-end">
+      <button type="submit" class="mt-6 px-4 py-2 bg-green-500 text-white rounded-xs hover:bg-green-700 transition">{{ $t('organizerForm.submitButton') }}</button>
+    </div>
   </form>
 </template>
 

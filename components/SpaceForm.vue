@@ -60,10 +60,12 @@
       <input type="url" id="url" class="mt-1 p-2 w-full border rounded-xs" v-model="formData.url">
     </div>
 
-    <!-- Submit Button -->
-    <button type="submit" class="mt-6 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-700 transition">
-      Raum hinzufügen
-    </button>
+    <div class="flex items-center justify-end">
+      <button type="submit" class="mt-6 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-700 transition">
+        Raum hinzufügen
+      </button>
+    </div>
+
   </form>
 </template>
 

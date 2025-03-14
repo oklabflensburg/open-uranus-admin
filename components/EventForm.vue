@@ -75,7 +75,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, reactive } from 'vue'
 import { useApi } from '@/composables/useApi'
 import { useRoute } from 'vue-router';
 const route = useRoute();
@@ -98,18 +98,6 @@ const spaces = ref([])
 const selectedOrganizer = ref("")
 const selectedVenue = ref("")
 const selectedSpace = ref("")
-
-const body = {
-  event_title: eventTitle.value,
-  event_description: eventDescription.value,
-  event_date_start: eventDateStart.value,
-  event_date_end: eventDateEnd.value || null,
-  entry_time: entryTime.value || null,
-  event_organizer_id: parseInt(selectedOrganizer.value, 10),
-  event_venue_id: parseInt(selectedVenue.value, 10),
-  event_venue_name: venueName.value,
-  event_space_id: parseInt(selectedSpace.value, 10)
-}
 
 // Fetch function
 const fetchData = async (url, targetArray) => {
@@ -204,6 +192,18 @@ const handleSubmit = async () => {
     return
   }
 
+  const bodyData = {
+    event_title: eventTitle.value,
+    event_description: eventDescription.value,
+    event_date_start: eventDateStart.value,
+    event_date_end: eventDateEnd.value,
+    entry_time: entryTime.value,
+    event_organizer_id: parseInt(selectedOrganizer.value, 10),
+    event_venue_id: parseInt(selectedVenue.value, 10),
+    event_venue_name: venueName.value,
+    event_space_id: parseInt(selectedSpace.value, 10)
+  }
+
   try {
     const { fetchApi } = useApi()
     const data = await fetchApi('/event/', {
@@ -211,10 +211,11 @@ const handleSubmit = async () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(body),
+      body: bodyData,
     })
 
     console.log('Success:', data)
+    router.push('/dashboard')
   } catch (error) {
     console.error('Error sending data:', error)
   }
@@ -225,7 +226,8 @@ onMounted(() => {
   fetchData('/user/organizer/', organizers)
   fetchData('/venue/', venues)
   if (venueId) {
-    selectedVenue.value = venueId; // Preselect the option if venueId is provided
+    // Preselect the option if venueId is provided
+    selectedVenue.value = venueId
   }
 })
 </script>

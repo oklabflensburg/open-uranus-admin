@@ -40,18 +40,28 @@ export const useAuth = () => {
 
   const signup = async (signupData) => {
     const url = `${apiBaseUrl}/user/signup`
-  
+
+    const body = {
+      username: signupData.username,
+      password: signupData.password
+    }
+
     try {
-      await $fetch(url, {
+      const response = await $fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: signupData, // No need to stringify
+        body: JSON.stringify(body)
       })
-  
-      return true
+
+      if (response.access_token) {
+        accessToken.value = response.access_token
+        refreshToken.value = response.refresh_token
+        return true
+      } else {
+        return response.detail || 'Signup failed'
+      }
     } catch (error) {
-      // Handle API error responses
-      return error.data.detail
+      return response.detail || 'Signup failed'
     }
   }
 

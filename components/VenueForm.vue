@@ -1,10 +1,10 @@
 <template>
   <form id="addVenueForm" class="space-y-6" @submit.prevent="submitForm">
-    <h2 class="text-2xl font-bold mb-4">Veranstaltungsort</h2>
+    <h2 class="text-2xl font-bold mb-4">Location</h2>
 
     <!-- Venue Name -->
     <div class="">
-      <label class="block text-gray-700" for="venueName">Name des Veranstaltungsort</label>
+      <label class="block text-gray-700" for="venueName">Name</label>
       <input type="text" id="venueName" name="venueName" class="mt-1 p-2 w-full border rounded-xs" v-model="venueName">
       <p v-if="errors.venueName" class="text-red-600">{{ errors.venueName }}</p>
     </div>
@@ -113,9 +113,10 @@ const getLocationData = async () => {
     // Parse the response as JSON
     const data = await response.json()
 
-    // Store the location data
-    venueLatitude.value = data[0]?.lat || ''
-    venueLongitude.value = data[0]?.lon || ''
+    if (data && data[0]) {
+      venueLatitude.value = parseFloat(data[0].lat).toFixed(6)
+      venueLongitude.value = parseFloat(data[0].lon).toFixed(6)
+    }
   } catch (error) {
     console.error('Error fetching location data:', error)
   }
@@ -159,8 +160,9 @@ const submitForm = async () => {
       body: JSON.stringify(body),
     })
 
-    console.log('Success:', data)
-    // Handle success, reset form, show message, etc.
+    if (data) {
+      router.push('/dashboard')
+    }
   } catch (error) {
     console.error('Error sending data:', error)
     // Handle network error

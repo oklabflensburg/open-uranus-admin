@@ -1,12 +1,12 @@
 <template>
   <div class="max-w-screen-xl mx-auto bg-white p-3 md:p-6 rounded-xs shadow-lg">
-    <SpaceForm />
+    <VenueSpaceForm />
   </div>
 </template>
 
 <script setup>
 import { useHead } from '#imports'
-import SpaceForm from '~/components/SpaceForm.vue'
+import VenueSpaceForm from '~/components/VenueSpaceForm.vue'
 
 useHead({
   title: 'Space - Uranus',

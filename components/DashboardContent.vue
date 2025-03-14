@@ -2,33 +2,40 @@
 <div class="max-w-screen-xl mx-auto bg-white p-3 md:p-6 space-y-12">
   <!-- Organizers -->
   <section>
+    <div class="bg-gray-100 p-3 rounded mb-12">
+      <h1 class="text-3xl mb-3">Willkommen auf deinem Uranus Dashboard</h1>
+      <p class="text-lg">Du kannst jetzt direkt loslegen und deine erste Organisation erstellen.</p>
+    </div>
     <h2 class="text-2xl font-bold mb-4">{{ $t('dashboard.organizers') }}</h2>
-    <p v-if="organizers.length === 0" class="text-gray-500">{{ $t('dashboard.noOrganizersFound') }}
-      <button
-            @click="deleteOrganizer(organizer.organizer_id)"
-            class="mt-2 bg-gray-100 text-gray-900 py-1 px-3 hover:bg-gray-700 hover:text-white transition rounded"
-          >
-            Organisationen erstellen
-          </button>
-      Erstelle deine Organisationen und danach kannst du füge Orte hinzu.
-    </p>
+    <div v-if="organizers.length === 0" class="text-gray-500">
+      <nuxt-link :to="localePath('organizer')"
+          class="bg-green-600 text-white py-2 px-4 hover:bg-green-800 hover:text-white transition rounded">
+          Organisationen erstellen
+      </nuxt-link>
+    </div>
 
     <ul v-else class="grid grid-cols-12 gap-4">
       <li v-for="organizer in organizers" :key="organizer.organizer_id" class="col-span-6 border border-gray-200">
         <div class="flex justify-between items-center font-semibold text-sm text-gray-600 bg-gray-200 p-3">
           <span>{{ organizer.organizer_name }}</span>
+
+          <div class="flex gap-2">
+            <img src="/public/icons/edit.svg" alt="Edit" class="cursor-pointer"/>
+            <img @click="deleteOrganizer(organizer.organizer_id)" src="/public/icons/delete.svg" alt="Delete" class="cursor-pointer"/>
+          </div>
         </div>
         <div class="p-3 bg-white text-gray-700">
           <p>{{ $t('dashboard.countVenues') }}: {{ organizer.stats.count_venue }}</p>
           <p>{{ $t('dashboard.countSpaces') }}: {{ organizer.stats.count_space }}</p>
           <p>{{ $t('dashboard.countEvents') }}: {{ organizer.stats.count_event }}</p>
           <p>{{ $t('dashboard.canEdit') }}: {{ organizer.can_edit }}</p>
-          <button
-            @click="deleteOrganizer(organizer.organizer_id)"
-            class="mt-2 bg-gray-100 text-gray-900 py-1 px-3 hover:bg-gray-700 hover:text-white transition rounded"
-          >
-            {{ $t('dashboard.delete') }}
-          </button>
+
+          <div class="mt-2 flex gap-2">
+            <nuxt-link :to="localePath({ name: 'venue-id', params: { id: organizer.organizer_id } })"
+              class="bg-gray-100 text-gray-900 py-1 px-3 hover:bg-gray-700 hover:text-white transition rounded">
+              Ort anlegen
+            </nuxt-link>
+          </div>
         </div>
       </li>
     </ul>
