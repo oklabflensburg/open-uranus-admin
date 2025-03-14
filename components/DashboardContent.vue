@@ -77,9 +77,9 @@
         </thead>
         <tbody class="text-gray-700">
           <tr v-for="event in events" :key="event.event_id" class="border-b hover:bg-gray-100">
-            <td class="p-3 border">12.03.2025</td>
+            <td class="p-3 border">{{ formatGermanDate(event.event_date_start_first) }}</td>
             <td class="p-3 border">{{ event.event_title }}</td>
-            <td class="p-3 border">Berlin</td>
+            <td class="p-3 border">{{ event.event_venue_name }}</td>
             <td class="p-3 border">{{ event.can_edit === true ? 'Ja' : 'Nein' }}</td>
           </tr>
         </tbody>
@@ -100,6 +100,17 @@ const { fetchApi } = useApi()
 const venues = ref([])
 const organizers = ref([])
 const events = ref([])
+
+const formatGermanDate = (isoString) => {
+  if (!isoString) return '';
+  return new Intl.DateTimeFormat('de-DE', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(new Date(isoString))
+}
 
 const fetchVenues = async () => {
   try {
