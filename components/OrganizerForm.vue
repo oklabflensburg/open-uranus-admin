@@ -1,5 +1,5 @@
 <template>
-  <form id="addOrganizerForm" class="space-y-6" @submit.prevent="submitForm">
+  <form id="addOrganizerForm" class="space-y-6" @submit.prevent="handleSubmit">
     <h2 class="text-2xl font-bold mb-4">{{ $t('organizerForm.title') }}</h2>
 
     <!-- Name -->
@@ -103,7 +103,6 @@ import { useApi } from '@/composables/useApi'
 import { useI18n } from 'vue-i18n'
 
 const router = useRouter()
-
 const { t } = useI18n()
 
 // Reactive form data
@@ -257,7 +256,7 @@ const validateField = (field) => {
 }
 
 // Form submit
-const submitForm = async () => {
+const handleSubmit = async () => {
   // Validate form fields before submitting
   validateForm()
 
@@ -267,6 +266,7 @@ const submitForm = async () => {
 
   const body = {
     organizer_name: organizerName.value,
+    organizer_id: organizerId,
     organizer_description: organizerDescription.value,
     organizer_contact_email: organizerContactEmail.value,
     organizer_contact_phone: organizerContactPhone.value,
@@ -293,8 +293,6 @@ const submitForm = async () => {
 
     console.log('Success:', data)
     router.push('/dashboard')
-    // Alert the response message
-    alert(t('organizerForm.successMessage'))
   } catch (error) {
     console.error('Error sending data:', error)
   }

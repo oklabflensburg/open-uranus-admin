@@ -85,7 +85,11 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useApi } from '@/composables/useApi'
+const route = useRoute()
 const router = useRouter()
+
+const { t } = useI18n()
+const organizerId = route.params.id
 
 // Reactive form data
 const venueName = ref('')
@@ -141,6 +145,7 @@ const submitForm = async () => {
 
   // Prepare data to send
   const body = {
+    venue_organizer_id: parseInt(organizerId, 10),
     venue_name: venueName.value,
     venue_street: venueStreet.value,
     venue_house_number: venueHouseNumber.value,
