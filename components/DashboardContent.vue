@@ -4,7 +4,8 @@
     <section>
       <div class="bg-gray-100 p-3 rounded mb-12">
         <h1 class="text-3xl mb-3">{{ $t('dashboard.welcomeMessage') }}</h1>
-        <p class="text-lg">{{ $t('dashboard.welcomeDescription') }}</p>
+        <p v-if="organizers.length === 0" class="text-lg">{{ $t('dashboard.welcomeDescription') }}</p>
+        <p v-else>Du bist in deinem Dashboard</p>
       </div>
       <h2 class="text-2xl font-bold mb-4">{{ $t('dashboard.organizers') }}</h2>
       <div v-if="organizers.length === 0" class="text-gray-500">
@@ -16,19 +17,23 @@
           <div class="flex justify-between items-center font-semibold text-sm text-gray-600 bg-gray-200 p-3">
             <span>{{ organizer.organizer_name }}</span>
 
-            <div class="flex gap-2">
+            <div v-if="organizer.can_edit" class="flex gap-2">
               <img src="/public/icons/edit.svg" alt="Edit" class="cursor-pointer"/>
               <img @click="deleteOrganizer(organizer.organizer_id)" src="/public/icons/delete.svg" alt="Delete" class="cursor-pointer"/>
             </div>
           </div>
           <div class="p-3 bg-white text-gray-700">
-            <p>{{ $t('dashboard.countVenues') }}: {{ organizer.stats.count_venues }}</p>
-            <p>{{ $t('dashboard.countSpaces') }}: {{ organizer.stats.count_spaces }}</p>
-            <p>{{ $t('dashboard.countEvents') }}: {{ organizer.stats.count_events }}</p>
-            <p>{{ $t('dashboard.canEdit') }}: {{ organizer.can_edit }}</p>
+            <div class="grid grid-cols-3 gap-x-2 w-24">
+                <span class="col-span-1 flex items-center justify-center"><img src="/public/icons/venue.svg" alt="Venues"></span>
+                <span class="col-span-1 flex items-center justify-center"><img src="/public/icons/space.svg" alt="Spaces"></span>
+                <span class="col-span-1 flex items-center justify-center"><img src="/public/icons/event.svg" alt="Events"></span>
+                <span class="col-span-1 flex items-center justify-center">{{ organizer.stats.count_venues }}</span>
+              <span class="col-span-1 flex items-center justify-center">{{ organizer.stats.count_spaces }}</span>
+              <span class="col-span-1 flex items-center justify-center">{{ organizer.stats.count_events }}</span>
+            </div>
 
-            <div class="mt-2 flex gap-2">
-              <nuxt-link :to="localePath({ name: 'venue-id', params: { id: organizer.organizer_id } })" class="bg-gray-100 text-gray-900 py-1 px-3 hover:bg-gray-700 hover:text-white transition rounded">{{ $t('dashboard.createVenue') }}</nuxt-link>
+            <div v-if="organizer.can_edit" class="mt-2 flex gap-2">
+              <nuxt-link :to="localePath({ name: 'venue-id', params: { id: organizer.organizer_id } })" class="bg-gray-600 text-white py-1 px-3 hover:bg-gray-800 hover:text-gray-100 transition rounded">{{ $t('dashboard.createVenue') }}</nuxt-link>
             </div>
           </div>
         </li>
@@ -36,7 +41,7 @@
           <div class="flex justify-between items-center font-semibold text-sm text-gray-600 bg-gray-200 p-3">
             <span>{{ $t('dashboard.createOrganizer') }}</span>
           </div>
-          <div class="px-3 py-4 bg-white text-gray-700">
+          <div class="flex items-center px-3 py-4 bg-white text-gray-700">
              <nuxt-link :to="localePath('organizer')" class="bg-green-600 text-white py-2 px-4 hover:bg-green-800 hover:text-white transition rounded">{{ $t('dashboard.createOrganizer') }}</nuxt-link>
           </div>
         </li>
@@ -52,20 +57,24 @@
         <li v-for="venue in venues" :key="venue.venue_id" class="col-span-12 sm:col-span-6 border border-gray-200">
           <div class="flex justify-between items-center font-semibold text-sm text-gray-600 bg-gray-200 p-3">
             <span>{{ venue.venue_name }}</span>
-            <div class="flex gap-2">
-              <img src="/public/icons/edit.svg" alt="Edit" class="cursor-pointer"
-              />
-              <img @click="deleteVenue(venue.venue_id)" src="/public/icons/delete.svg" alt="Delete" class="cursor-pointer"
-              />
+
+            <div v-if="venue.can_edit_venue" class="flex gap-2">
+              <img src="/public/icons/edit.svg" alt="Edit" class="cursor-pointer">
+              <img @click="deleteVenue(venue.venue_id)" src="/public/icons/delete.svg" alt="Delete" class="cursor-pointer">
             </div>
           </div>
+
           <div class="p-3 bg-white text-gray-700">
-            <p>{{ $t('dashboard.countSpaces') }}: {{ venue.stats.count_spaces }}</p>
-            <p>{{ $t('dashboard.countEvents') }}: {{ venue.stats.count_events }}</p>
-            <p>{{ $t('dashboard.canEdit') }}: {{ venue.can_edit }}</p>
+            <div class="grid grid-cols-2 gap-x-2 w-16">
+                <span class="col-span-1 flex items-center justify-center"><img src="/public/icons/space.svg" alt="Spaces"></span>
+                <span class="col-span-1 flex items-center justify-center"><img src="/public/icons/event.svg" alt="Events"></span>
+              <span class="col-span-1 flex items-center justify-center">{{ venue.stats.count_spaces }}</span>
+              <span class="col-span-1 flex items-center justify-center">{{ venue.stats.count_events }}</span>
+            </div>
+
             <div class="mt-2 flex gap-2">
-              <nuxt-link :to="localePath({ name: 'space-id', params: { id: venue.venue_id } })" class="bg-gray-100 text-gray-900 py-1 px-3 hover:bg-gray-700 hover:text-white transition rounded">{{ $t('dashboard.createSpace') }}</nuxt-link>
-              <nuxt-link v-if="venue.stats.count_space > 0" :to="localePath({ name: 'event-id', params: { id: venue.venue_id } })" class="bg-gray-100 text-gray-900 py-1 px-3 hover:bg-gray-700 hover:text-white transition rounded">{{ $t('dashboard.createEvent') }}</nuxt-link>
+              <nuxt-link v-if="venue.can_edit_space" :to="localePath({ name: 'space-id', params: { id: venue.venue_id } })" class="bg-gray-600 text-white py-1 px-3 hover:bg-gray-800 hover:text-gray-100 transition rounded">{{ $t('dashboard.createSpace') }}</nuxt-link>
+              <nuxt-link v-if="venue.can_edit_event && venue.stats.count_spaces > 0" :to="localePath({ name: 'event-id', params: { id: venue.venue_id } })" class="bg-gray-600 text-white py-1 px-3 hover:bg-gray-800 hover:text-gray-100 transition rounded">{{ $t('dashboard.createEvent') }}</nuxt-link>
             </div>
           </div>
         </li>
@@ -84,7 +93,7 @@
               <th class="p-3 border">{{ $t('dashboard.date') }}</th>
               <th class="p-3 border">{{ $t('dashboard.title') }}</th>
               <th class="p-3 border">{{ $t('dashboard.location') }}</th>
-              <th class="p-3 border">{{ $t('dashboard.responsible') }}</th>
+              <th class="p-3 border">{{ $t('dashboard.action') }}</th>
             </tr>
           </thead>
           <tbody class="text-gray-700">
@@ -92,7 +101,11 @@
               <td class="p-3 border">{{ formatGermanDate(event.event_date_start_first) }}</td>
               <td class="p-3 border">{{ event.event_title }}</td>
               <td class="p-3 border">{{ event.event_venue_name }}</td>
-              <td class="p-3 border">{{ event.can_edit === true ? 'Ja' : 'Nein' }}</td>
+              <td class="p-3 border text-right">
+                <nuxt-link v-if="event.can_edit" :to="localePath({ name: 'event-id', params: { id: event.event_id } })" class="cursor-pointer">
+                  <img src="/public/icons/edit.svg" alt="Edit" class="inline-block">
+                </nuxt-link>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -105,7 +118,6 @@
 import { ref, onMounted } from 'vue'
 import { useApi } from '@/composables/useApi'
 import { useLocalePath } from "#i18n";
-import Organizer from '~/pages/organizer.vue'
 const localePath = useLocalePath()
 
 const { fetchApi } = useApi()
@@ -130,8 +142,8 @@ const fetchVenues = async () => {
     venues.value = data.map(venue => ({
       ...venue,
       stats: {
-        count_space: 0,
-        count_event: 0,
+        count_spaces: 0,
+        count_events: 0,
       }
     }))
 
@@ -150,9 +162,9 @@ const fetchOrganizers = async () => {
     organizers.value = data.map(organizer => ({
       ...organizer,
       stats: {
-        count_event: 0,
-        count_venue: 0,
-        count_space: 0
+        count_events: 0,
+        count_venues: 0,
+        count_spaces: 0
       }
     }))
 
@@ -167,7 +179,7 @@ const fetchOrganizers = async () => {
 
 const fetchOrganizerStats = async (organizerId) => {
   try {
-    const data = await fetchApi(`/organizer/stats/?organizer_id=${organizerId}`)
+    const data = await fetchApi(`/organizer/stats?organizer_id=${organizerId}`)
     return data
   } catch (error) {
     console.error('Error fetching organizer stats:', error)
@@ -177,7 +189,7 @@ const fetchOrganizerStats = async (organizerId) => {
 
 const fetchVenueStats = async (venueId) => {
   try {
-    const data = await fetchApi(`/venue/stats/?venue_id=${venueId}`)
+    const data = await fetchApi(`/venue/stats?venue_id=${venueId}`)
     return data
   } catch (error) {
     console.error('Error fetching venue stats:', error)

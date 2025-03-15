@@ -58,7 +58,7 @@
     "date": "Date",
     "title": "Title",
     "location": "Location",
-    "responsible": "Responsible"
+    "action": "Action"
   },
   "eventForm": {
     "title": "Create Event",

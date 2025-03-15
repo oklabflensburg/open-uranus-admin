@@ -1,13 +1,21 @@
 import { useCookie, useRuntimeConfig } from '#app'
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 
 export const useAuth = () => {
   const accessToken = useCookie('access_token', { maxAge: 3600, httpOnly: false })
   const refreshToken = useCookie('refresh_token', { maxAge: 3600, httpOnly: false })
   const config = useRuntimeConfig()
   const apiBaseUrl = config.public.apiBaseUrl
+  const router = useRouter()
 
   const isAuthenticated = computed(() => !!accessToken.value)
+
+  const redirectToSignInIfNotAuthenticated = () => {
+    if (!isAuthenticated.value) {
+      router.push('/signin')
+    }
+  }
 
   const login = async (email, password) => {
     const url = `${apiBaseUrl}/user/signin`
@@ -17,7 +25,7 @@ export const useAuth = () => {
     formData.append('username', email)
     formData.append('password', password)
     formData.append('scope', '')
-    formData.append('client_id', 'string') // Remove if not needed
+    formData.append('client_id', 'string')
     formData.append('client_secret', 'string')
 
     try {
@@ -92,6 +100,7 @@ export const useAuth = () => {
     } catch (error) {
       console.error('Token refresh failed:', error)
       logout()
+      router.push('/signin')
       return false
     }
   }
@@ -101,5 +110,14 @@ export const useAuth = () => {
     refreshToken.value = null
   }
 
-  return { accessToken, refreshToken, login, signup, refreshAccessToken, logout, isAuthenticated }
+  return { 
+    accessToken, 
+    refreshToken, 
+    login, 
+    signup, 
+    refreshAccessToken, 
+    logout, 
+    isAuthenticated, 
+    redirectToSignInIfNotAuthenticated 
+  }
 }
