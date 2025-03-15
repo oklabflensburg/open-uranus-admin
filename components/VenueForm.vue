@@ -1,94 +1,99 @@
 <template>
-  <form id="addVenueForm" class="space-y-6" @submit.prevent="submitForm">
-    <h2 class="text-2xl font-bold mb-4">Location</h2>
+  <form id="addVenueForm" class="space-y-6" @submit.prevent="submitForm" aria-labelledby="venueFormTitle">
+    <h2 id="venueFormTitle" class="text-2xl font-bold mb-4">{{ $t('venueForm.title') }}</h2>
 
     <!-- Venue Name -->
-    <div class="">
-      <label class="block text-gray-700" for="venueName">Name</label>
-      <input type="text" id="venueName" name="venueName" class="mt-1 p-2 w-full border rounded-xs" v-model="venueName">
-      <p v-if="errors.venueName" class="text-red-600">{{ errors.venueName }}</p>
+    <div>
+      <label class="block text-gray-700" for="venueName">{{ $t('venueForm.name') }}</label>
+      <input type="text" id="venueName" name="venueName" class="mt-1 p-2 w-full border rounded-xs" v-model="venueName" @input="validateField('venueName')" aria-describedby="venueNameError">
+      <p v-if="errors.venueName" id="venueNameError" class="text-red-600">{{ errors.venueName }}</p>
     </div>
 
     <div class="grid grid-cols-12 gap-4">
       <!-- Venue Street -->
       <div class="col-span-9">
-        <label class="block text-gray-700" for="venueStreet">Straße</label>
-        <input type="text" id="venueStreet" name="venueStreet" class="mt-1 p-2 w-full border rounded-xs" v-model="venueStreet">
-        <p v-if="errors.venueStreet" class="text-red-600">{{ errors.venueStreet }}</p>
+        <label class="block text-gray-700" for="venueStreet">{{ $t('venueForm.street') }}</label>
+        <input type="text" id="venueStreet" name="venueStreet" class="mt-1 p-2 w-full border rounded-xs" v-model="venueStreet" @input="validateField('venueStreet')" aria-describedby="venueStreetError">
+        <p v-if="errors.venueStreet" id="venueStreetError" class="text-red-600">{{ errors.venueStreet }}</p>
       </div>
 
       <!-- Venue House Number -->
       <div class="col-span-3">
-        <label class="block text-gray-700" for="venueHouseNumber">Hausnummer</label>
-        <input type="text" id="venueHouseNumber" name="venueHouseNumber" class="mt-1 p-2 w-full border rounded-xs" v-model="venueHouseNumber">
-        <p v-if="errors.venueHouseNumber" class="text-red-600">{{ errors.venueHouseNumber }}</p>
+        <label class="block text-gray-700" for="venueHouseNumber">{{ $t('venueForm.houseNumber') }}</label>
+        <input type="text" id="venueHouseNumber" name="venueHouseNumber" class="mt-1 p-2 w-full border rounded-xs" v-model="venueHouseNumber" @input="validateField('venueHouseNumber')" aria-describedby="venueHouseNumberError">
+        <p v-if="errors.venueHouseNumber" id="venueHouseNumberError" class="text-red-600">{{ errors.venueHouseNumber }}</p>
       </div>
     </div>
 
     <!-- Venue Postal Code -->
     <div class="grid grid-cols-12 gap-4">
       <div class="col-span-4">
-        <label class="block text-gray-700" for="venuePostalCode">Postleitzahl</label>
-        <input type="text" id="venuePostalCode" name="venuePostalCode" class="mt-1 p-2 w-full border rounded-xs" v-model="venuePostalCode">
-        <p v-if="errors.venuePostalCode" class="text-red-600">{{ errors.venuePostalCode }}</p>
+        <label class="block text-gray-700" for="venuePostalCode">{{ $t('venueForm.postalCode') }}</label>
+        <input type="text" id="venuePostalCode" name="venuePostalCode" class="mt-1 p-2 w-full border rounded-xs" v-model="venuePostalCode" @input="validateField('venuePostalCode')" aria-describedby="venuePostalCodeError">
+        <p v-if="errors.venuePostalCode" id="venuePostalCodeError" class="text-red-600">{{ errors.venuePostalCode }}</p>
       </div>
 
       <!-- Venue City -->
       <div class="col-span-8">
-        <label class="block text-gray-700" for="venueCity">Stadt</label>
-        <input type="text" id="venueCity" name="venueCity" class="mt-1 p-2 w-full border rounded-xs" v-model="venueCity">
-        <p v-if="errors.venueCity" class="text-red-600">{{ errors.venueCity }}</p>
+        <label class="block text-gray-700" for="venueCity">{{ $t('venueForm.city') }}</label>
+        <input type="text" id="venueCity" name="venueCity" class="mt-1 p-2 w-full border rounded-xs" v-model="venueCity" @input="validateField('venueCity')" aria-describedby="venueCityError">
+        <p v-if="errors.venueCity" id="venueCityError" class="text-red-600">{{ errors.venueCity }}</p>
       </div>
     </div>
 
     <!-- Venue County Code -->
     <div class="grid grid-cols-12 gap-4">
       <div class="col-span-6">
-        <label class="block text-gray-700" for="venueCountyCode">Bundesland</label>
-        <input type="text" id="venueCountyCode" name="venueCountyCode" class="mt-1 p-2 w-full border rounded-xs" v-model="venueCountyCode">
-        <p v-if="errors.venueCountyCode" class="text-red-600">{{ errors.venueCountyCode }}</p>
+        <label class="block text-gray-700" for="venueCountyCode">{{ $t('venueForm.countyCode') }}</label>
+        <input type="text" id="venueCountyCode" name="venueCountyCode" class="mt-1 p-2 w-full border rounded-xs" v-model="venueCountyCode" @input="validateField('venueCountyCode')" aria-describedby="venueCountyCodeError">
+        <p v-if="errors.venueCountyCode" id="venueCountyCodeError" class="text-red-600">{{ errors.venueCountyCode }}</p>
       </div>
 
       <!-- Venue Country Code -->
       <div class="col-span-6">
-        <label class="block text-gray-700" for="venueCountryCode">Land</label>
-        <input type="text" id="venueCountryCode" name="venueCountryCode" class="mt-1 p-2 w-full border rounded-xs" v-model="venueCountryCode">
-        <p v-if="errors.venueCountryCode" class="text-red-600">{{ errors.venueCountryCode }}</p>
+        <label class="block text-gray-700" for="venueCountryCode">{{ $t('venueForm.countryCode') }}</label>
+        <input type="text" id="venueCountryCode" name="venueCountryCode" class="mt-1 p-2 w-full border rounded-xs" v-model="venueCountryCode" @input="validateField('venueCountryCode')" aria-describedby="venueCountryCodeError">
+        <p v-if="errors.venueCountryCode" id="venueCountryCodeError" class="text-red-600">{{ errors.venueCountryCode }}</p>
       </div>
     </div>
 
     <!-- Venue Latitude and Longitude -->
     <div class="grid grid-cols-12 gap-4">
       <div class="col-span-6">
-        <label class="block text-gray-700" for="venueLatitude">Breitengrad</label>
-        <input type="number" step="0.0000001" id="venueLatitude" name="venueLatitude" class="mt-1 p-2 w-full border rounded-xs" v-model="venueLatitude">
-        <p v-if="errors.venueLatitude" class="text-red-600">{{ errors.venueLatitude }}</p>
+        <label class="block text-gray-700" for="venueLatitude">{{ $t('venueForm.latitude') }}</label>
+        <input type="number" step="0.0000001" id="venueLatitude" name="venueLatitude" class="mt-1 p-2 w-full border rounded-xs" v-model="venueLatitude" @input="validateField('venueLatitude')" aria-describedby="venueLatitudeError">
+        <p v-if="errors.venueLatitude" id="venueLatitudeError" class="text-red-600">{{ errors.venueLatitude }}</p>
       </div>
 
       <div class="col-span-6">
-        <label class="block text-gray-700" for="venueLongitude">Längengrad</label>
-        <input type="number" step="0.0000001" id="venueLongitude" name="venueLongitude" class="mt-1 p-2 w-full border rounded-xs" v-model="venueLongitude">
-        <p v-if="errors.venueLongitude" class="text-red-600">{{ errors.venueLongitude }}</p>
+        <label class="block text-gray-700" for="venueLongitude">{{ $t('venueForm.longitude') }}</label>
+        <input type="number" step="0.0000001" id="venueLongitude" name="venueLongitude" class="mt-1 p-2 w-full border rounded-xs" v-model="venueLongitude" @input="validateField('venueLongitude')" aria-describedby="venueLongitudeError">
+        <p v-if="errors.venueLongitude" id="venueLongitudeError" class="text-red-600">{{ errors.venueLongitude }}</p>
       </div>
     </div>
 
     <!-- Venue Opened Date -->
-    <div class="">
-      <label class="block text-gray-700" for="venueOpenedAt">Eröffnungsdatum</label>
+    <div>
+      <label class="block text-gray-700" for="venueOpenedAt">{{ $t('venueForm.openedAt') }}</label>
       <input type="date" id="venueOpenedAt" name="venueOpenedAt" class="mt-1 p-2 w-full border rounded-xs" v-model="venueOpenedAt">
     </div>
 
-    <button type="submit" class="mt-6 px-4 py-2 bg-green-500 text-white rounded-xs hover:bg-green-700 transition">Ort hinzufügen</button>
+    <div class="text-right">
+      <button type="submit" class="mt-6 px-4 py-2 bg-green-500 text-white rounded-xs hover:bg-green-700 transition">{{ $t('venueForm.submitButton') }}</button>
+    </div>
   </form>
 </template>
 
 <script setup>
 import { ref, watch } from 'vue'
 import { useApi } from '@/composables/useApi'
+import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 
-const { t } = useI18n()
 const organizerId = route.params.id
 
 // Reactive form data
@@ -178,15 +183,34 @@ const submitForm = async () => {
 // Form validation
 const validateForm = () => {
   errors.value = {}
+  validateField('venueName')
+  validateField('venueStreet')
+  validateField('venueHouseNumber')
+  validateField('venuePostalCode')
+  validateField('venueCity')
+  validateField('venueCountyCode')
+  validateField('venueCountryCode')
+  validateField('venueLatitude')
+  validateField('venueLongitude')
+}
 
-  if (!venueName.value) errors.value.venueName = 'Bitte Namen für den Veranstaltungsort angeben'
-  if (!venueStreet.value) errors.value.venueStreet = 'Bitte eine Straße angeben'
-  if (!venueHouseNumber.value) errors.value.venueHouseNumber = 'Bitte Hausnummer angeben'
-  if (!venuePostalCode.value) errors.value.venuePostalCode = 'Bitte eine Postleitzahl angeben'
-  if (!venueCity.value) errors.value.venueCity = 'Bitte eine Stadt angeben'
-  if (!venueCountyCode.value) errors.value.venueCountyCode = 'Bitte Bundesland auswählen'
-  if (!venueCountryCode.value) errors.value.venueCountryCode = 'Bitte Ländercode auswählen'
-  if (!venueLatitude.value) errors.value.venueLatitude = 'Bitte Breitengrad angeben'
-  if (!venueLongitude.value) errors.value.venueLongitude = 'Bitte Längengrad angeben'
+const validateField = (field) => {
+  const fields = {
+    venueName,
+    venueStreet,
+    venueHouseNumber,
+    venuePostalCode,
+    venueCity,
+    venueCountyCode,
+    venueCountryCode,
+    venueLatitude,
+    venueLongitude
+  }
+  
+  if (!fields[field].value) {
+    errors.value[field] = t(`venueForm.errors.${field}`)
+  } else {
+    delete errors.value[field]
+  }
 }
 </script>

@@ -1,65 +1,74 @@
 <template>
-  <form id="venueSpaceForm" class="space-y-4 bg-white p-6 rounded-lg shadow-md" @submit.prevent="handleSubmit">
-    <h2 class="text-2xl font-bold mb-4">Raum anlegen</h2>
+  <form id="venueSpaceForm" class="space-y-4" @submit.prevent="handleSubmit" aria-labelledby="venueSpaceFormTitle">
+    <h2 id="venueSpaceFormTitle" class="text-2xl font-bold mb-4">{{ $t('venueSpaceForm.title') }}</h2>
 
     <!-- Name -->
     <div>
-      <label class="block text-gray-700" for="name">Name</label>
-      <input type="text" id="name" v-model="name" class="mt-1 p-2 w-full border rounded" @input="validateField('name')">
-      <p v-if="errors.name" class="text-red-600">{{ errors.name }}</p>
+      <label class="block text-gray-700" for="name">{{ $t('venueSpaceForm.name') }}</label>
+      <input type="text" id="name" v-model="name" class="mt-1 p-2 w-full border rounded" @input="validateField('name')" aria-describedby="nameError">
+      <p v-if="errors.name" id="nameError" class="text-red-600">{{ errors.name }}</p>
     </div>
 
-    <!-- Total Capacity -->
-    <div>
-      <label class="block text-gray-700" for="totalCapacity">Gesamtkapazität</label>
-      <input type="number" id="totalCapacity" v-model="totalCapacity" class="mt-1 p-2 w-full border rounded">
+    <div class="grid grid-cols-12 gap-4">
+      <!-- Total Capacity -->
+      <div class="col-span-12 sm:col-span-6 lg:col-span-4">
+        <label class="block text-gray-700" for="totalCapacity">{{ $t('venueSpaceForm.totalCapacity') }}</label>
+        <input type="number" id="totalCapacity" v-model="totalCapacity" class="mt-1 p-2 w-full border rounded" aria-describedby="totalCapacityError">
+        <p v-if="errors.totalCapacity" id="totalCapacityError" class="text-red-600">{{ errors.totalCapacity }}</p>
+      </div>
+
+      <!-- Seating Capacity -->
+      <div class="col-span-12 sm:col-span-6 lg:col-span-4">
+        <label class="block text-gray-700" for="seatingCapacity">{{ $t('venueSpaceForm.seatingCapacity') }}</label>
+        <input type="number" id="seatingCapacity" v-model="seatingCapacity" class="mt-1 p-2 w-full border rounded" aria-describedby="seatingCapacityError">
+        <p v-if="errors.seatingCapacity" id="seatingCapacityError" class="text-red-600">{{ errors.seatingCapacity }}</p>
+      </div>
+
+      <!-- Building Level -->
+      <div class="col-span-12 sm:col-span-6 lg:col-span-4">
+        <label class="block text-gray-700" for="buildingLevel">{{ $t('venueSpaceForm.buildingLevel') }}</label>
+        <input type="number" id="buildingLevel" v-model="buildingLevel" class="mt-1 p-2 w-full border rounded" aria-describedby="buildingLevelError">
+        <p v-if="errors.buildingLevel" id="buildingLevelError" class="text-red-600">{{ errors.buildingLevel }}</p>
+      </div>
     </div>
 
-    <!-- Seating Capacity -->
-    <div>
-      <label class="block text-gray-700" for="seatingCapacity">Sitzkapazität</label>
-      <input type="number" id="seatingCapacity" v-model="seatingCapacity" class="mt-1 p-2 w-full border rounded">
-    </div>
+    <div class="grid grid-cols-12 gap-4">
+      <!-- Space Type -->
+      <div class="col-span-12 sm:col-span-6">
+        <label class="block text-gray-700" for="spaceType">{{ $t('venueSpaceForm.spaceType') }}</label>
+        <select id="spaceType" v-model="spaceTypeId" class="bg-white mt-1 p-3 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" aria-describedby="spaceTypeError">
+          <option value="">{{ $t('venueSpaceForm.selectOption') }}</option>
+          <option v-for="type in spaceTypes" :key="type.id" :value="type.id">
+            {{ type.space_type_name }}
+          </option>
+        </select>
+        <p v-if="errors.spaceTypeId" id="spaceTypeError" class="text-red-600">{{ errors.spaceTypeId }}</p>
+      </div>
 
-    <!-- Space Type -->
-    <div>
-      <label class="block text-gray-700" for="spaceType">Space-Typ</label>
-      <select id="spaceType" v-model="spaceTypeId" class="bg-white mt-1 p-3 w-full border rounded-xs">
-        <option value="">Bitte auswählen</option>
-        <option v-for="type in spaceTypes" :key="type.id" :value="type.id">
-          {{ type.space_type_name }}
-        </option>
-      </select>
-    </div>
-
-    <!-- Building Level -->
-    <div>
-      <label class="block text-gray-700" for="buildingLevel">Gebäude Ebene</label>
-      <input type="number" id="buildingLevel" v-model="buildingLevel" class="mt-1 p-2 w-full border rounded">
+      <!-- Venue Selection -->
+      <div class="col-span-12 sm:col-span-6">
+        <label class="block text-gray-700" for="venue">{{ $t('venueSpaceForm.venue') }}</label>
+        <select id="venue" v-model="selectedVenue" class="bg-white mt-1 p-3 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" @change="validateField('selectedVenue')" aria-describedby="selectedVenueError">
+          <option value="">{{ $t('venueSpaceForm.selectOption') }}</option>
+          <option v-for="venue in venues" :key="venue.venue_id" :value="venue.venue_id">
+            {{ venue.venue_name }}
+          </option>
+        </select>
+        <p v-if="errors.selectedVenue" id="selectedVenueError" class="text-red-600">{{ errors.selectedVenue }}</p>
+      </div> 
     </div>
 
     <!-- URL -->
     <div>
-      <label class="block text-gray-700" for="url">URL</label>
-      <input type="url" id="url" v-model="url" class="mt-1 p-2 w-full border rounded">
-    </div>
-
-    <!-- Venue Selection -->
-    <div>
-      <label class="block text-gray-700" for="venue">Veranstaltungsort</label>
-      <select id="venue" v-model="selectedVenue" class="bg-white mt-1 p-3 w-full border rounded-xs" @change="validateField('selectedVenue')">
-        <option value="">Bitte auswählen</option>
-        <option v-for="venue in venues" :key="venue.venue_id" :value="venue.venue_id">
-          {{ venue.venue_name }}
-        </option>
-      </select>
-      <p v-if="errors.selectedVenue" class="text-red-600">{{ errors.selectedVenue }}</p>
+      <label class="block text-gray-700" for="url">{{ $t('venueSpaceForm.url') }}</label>
+      <input type="url" id="url" v-model="url" class="mt-1 p-2 w-full border rounded" aria-describedby="urlError">
+      <p v-if="errors.url" id="urlError" class="text-red-600">{{ errors.url }}</p>
     </div>
 
     <!-- Submit Button -->
     <div class="text-right">
       <button type="submit" class="mt-6 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700 transition">
-        Speichern
+        {{ $t('venueSpaceForm.submitButton') }}
       </button>
     </div>
   </form>
@@ -68,7 +77,10 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useApi } from '@/composables/useApi'
+import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 
@@ -91,16 +103,20 @@ const spaceTypes = ref([])
 const errors = ref({})
 
 const validateField = (field) => {
-  if (field === 'name' && !name.value) {
-    errors.value.name = 'Bitte einen Namen eingeben'
-  } else {
-    delete errors.value.name
+  const fields = {
+    name,
+    totalCapacity,
+    seatingCapacity,
+    spaceTypeId,
+    buildingLevel,
+    url,
+    selectedVenue
   }
-
-  if (field === 'selectedVenue' && !selectedVenue.value) {
-    errors.value.selectedVenue = 'Bitte eine Veranstaltungsort auswählen'
+  
+  if (!fields[field].value) {
+    errors.value[field] = t(`venueSpaceForm.errors.${field}`)
   } else {
-    delete errors.value.selectedVenue
+    delete errors.value[field]
   }
 }
 
@@ -141,7 +157,7 @@ const handleSubmit = async () => {
     await fetchApi('/space/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: bodyData,
+      body: JSON.stringify(bodyData),
     })
     router.push('/dashboard')
   } catch (error) {

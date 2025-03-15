@@ -1,10 +1,12 @@
 import { useAuth } from '@/composables/useAuth'
 import { useRuntimeConfig } from '#app'
+import { useRouter } from 'vue-router' // Import useRouter
 
 export const useApi = () => {
   const { accessToken, refreshAccessToken, logout } = useAuth()
   const config = useRuntimeConfig()
   const API_BASE_URL = config.public.apiBaseUrl
+  const router = useRouter() // Initialize router
 
   const fetchApi = async (endpoint, options = {}) => {
     if (!accessToken.value) {
@@ -41,6 +43,10 @@ export const useApi = () => {
           }
         })
       } else {
+        // Handle uncaught errors during route navigation
+        if (error.message.includes('uncaught error during route navigation')) {
+          router.push('/error') // Redirect to error page
+        }
         throw error
       }
     }
