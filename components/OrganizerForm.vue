@@ -64,6 +64,8 @@
       </div>
     </div>
 
+    <div v-if="submissionError" class="text-red-600">{{ submissionError }}</div>
+
     <div class="text-right">
       <button type="submit" class="mt-6 px-4 py-2 bg-green-500 text-white rounded-xs hover:bg-green-700 transition">
         {{ $t('organizerForm.submitButton') }}
@@ -95,6 +97,7 @@ const organizerPostalCode = ref('')
 const organizerCity = ref('')
 
 const errors = ref({})
+const submissionError = ref('')
 
 // Validation
 const validateForm = () => {
@@ -154,9 +157,10 @@ const handleSubmit = async () => {
       body: JSON.stringify(body),
     })
     console.log('Organizer successfully created!')
-    router.push({ name: 'Dashboard' })
+    router.push('dashboard')
   } catch (error) {
     console.error('Error submitting form:', error)
+    submissionError.value = t('organizerForm.errors.submission')
   }
 }
 </script>
