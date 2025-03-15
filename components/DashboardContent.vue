@@ -22,9 +22,9 @@
             </div>
           </div>
           <div class="p-3 bg-white text-gray-700">
-            <p>{{ $t('dashboard.countVenues') }}: {{ organizer.stats.count_venue }}</p>
-            <p>{{ $t('dashboard.countSpaces') }}: {{ organizer.stats.count_space }}</p>
-            <p>{{ $t('dashboard.countEvents') }}: {{ organizer.stats.count_event }}</p>
+            <p>{{ $t('dashboard.countVenues') }}: {{ organizer.stats.count_venues }}</p>
+            <p>{{ $t('dashboard.countSpaces') }}: {{ organizer.stats.count_spaces }}</p>
+            <p>{{ $t('dashboard.countEvents') }}: {{ organizer.stats.count_events }}</p>
             <p>{{ $t('dashboard.canEdit') }}: {{ organizer.can_edit }}</p>
 
             <div class="mt-2 flex gap-2">
@@ -60,11 +60,11 @@
             </div>
           </div>
           <div class="p-3 bg-white text-gray-700">
-            <p>{{ $t('dashboard.countSpaces') }}: {{ venue.stats.count_space }}</p>
-            <p>{{ $t('dashboard.countEvents') }}: {{ venue.stats.count_event }}</p>
+            <p>{{ $t('dashboard.countSpaces') }}: {{ venue.stats.count_spaces }}</p>
+            <p>{{ $t('dashboard.countEvents') }}: {{ venue.stats.count_events }}</p>
             <p>{{ $t('dashboard.canEdit') }}: {{ venue.can_edit }}</p>
             <div class="mt-2 flex gap-2">
-              <nuxt-link :to="localePath({ name: 'space-id', params: { id: venue.venue_id } })" class="bg-gray-100 text-gray-900 py-1 px-3 hover:bg-gray-700 hover:text-white transition rounded">{{ $t('dashboard.createVenue') }}</nuxt-link>
+              <nuxt-link :to="localePath({ name: 'space-id', params: { id: venue.venue_id } })" class="bg-gray-100 text-gray-900 py-1 px-3 hover:bg-gray-700 hover:text-white transition rounded">{{ $t('dashboard.createSpace') }}</nuxt-link>
               <nuxt-link v-if="venue.stats.count_space > 0" :to="localePath({ name: 'event-id', params: { id: venue.venue_id } })" class="bg-gray-100 text-gray-900 py-1 px-3 hover:bg-gray-700 hover:text-white transition rounded">{{ $t('dashboard.createEvent') }}</nuxt-link>
             </div>
           </div>
