@@ -1,7 +1,7 @@
 <template>
   <nav class="bg-gray-900 text-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-4">
-      <div class="flex justify-between h-16">
+    <div class="max-w-7xl mx-auto sm:px-4 sm:px-6 lg:px-4">
+      <div class="flex justify-between px-4 sm:px-0 h-16 items-center">
         <!-- Logo & Title -->
         <div class="flex items-center">
           <nuxt-link to="/" class="text-xl font-semibold">Uranus</nuxt-link>
@@ -18,7 +18,9 @@
 
         <!-- Desktop Menu -->
         <div class="hidden sm:flex items-center space-x-4">
-          <nuxt-link :to="localePath('/dashboard')" class="px-3 py-2 rounded hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/dashboard') }" v-if="isAuthenticated">{{ $t('menu.dashboard') }}</nuxt-link>
+          <nuxt-link :to="localePath('/dashboard')" @click="isOpen = false" class="px-3 py-2 rounded hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/dashboard') }" v-if="isAuthenticated">{{ $t('menu.dashboard') }}</nuxt-link>
+          <nuxt-link :to="localePath('/signin')" @click="isOpen = false" class="px-3 py-2 rounded hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/signin') }" v-if="!isAuthenticated">{{ $t('menu.signin') }}</nuxt-link>
+
           <div v-if="isAuthenticated" class="relative group">
             <button class="flex items-center px-3 py-2 rounded hover:bg-gray-700 focus:outline-none">
               <img src="https://i.pravatar.cc/40" alt="Profile" class="w-8 h-8 rounded-full mr-2">
@@ -26,52 +28,57 @@
               <span>{{ $t('menu.profile') }}</span>
             </button>
             <div class="w-full absolute hidden group-hover:block bg-gray-800 rounded shadow-lg">
-              <nuxt-link :to="localePath('/settings')" class="block px-4 py-2 hover:bg-gray-700">{{ $t('menu.settings') }}</nuxt-link>
-              <button @click="handleLogout" class="block w-full text-left px-4 py-2 hover:bg-gray-700">{{ $t('menu.logout') }}</button>
+              <nuxt-link :to="localePath('/settings')" class="block w-full text-left px-4 py-2 hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/settings') }"@click="isOpen = false">{{ $t('menu.settings') }}</nuxt-link>
+              <button @click="handleLogout" class="block w-full text-left px-4 py-2 hover:bg-gray-700">
+                {{ $t('menu.logout') }}
+              </button>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Mobile Menu Dropdown -->
-    <div v-if="isOpen" class="sm:hidden bg-gray-800">
-      <nuxt-link :to="localePath('/dashboard')" class="block px-4 py-2 hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/dashboard') }" v-if="isAuthenticated">{{ $t('menu.dashboard') }}</nuxt-link>
-      <nuxt-link :to="localePath('/signin')" class="block px-4 py-2 hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/signin') }" v-if="!isAuthenticated">{{ $t('menu.signin') }}</nuxt-link>
-      <button @click="handleLogout" class="block px-4 py-2 hover:bg-gray-700" v-if="isAuthenticated">{{ $t('menu.logout') }}</button>
+      <!-- Mobile List Menu -->
+      <div v-show="isOpen" class="sm:hidden transition-all duration-300 ease-in-out">
+        <ul class="flex flex-col space-y-1 py-1">
+          <li v-if="isAuthenticated">
+            <nuxt-link :to="localePath('/dashboard')" @click="isOpen = false" class="block px-4 py-2 hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/dashboard') }">{{ $t('menu.dashboard') }}</nuxt-link>
+          </li>
+          <li v-if="!isAuthenticated">
+            <nuxt-link :to="localePath('/signin')" @click="isOpen = false" class="block px-4 py-2 hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/signin') }">{{ $t('menu.signin') }}</nuxt-link>
+          </li>
+          <li v-if="isAuthenticated">
+            <nuxt-link :to="localePath('/settings')" class="block px-4 py-2 hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/settings') }"@click="isOpen = false">{{ $t('menu.settings') }}</nuxt-link>
+          </li>
+          <li v-if="isAuthenticated">
+            <button @click="handleLogout" class="block w-full text-left px-4 py-2 hover:bg-gray-700">
+              {{ $t('menu.logout') }}
+            </button>
+          </li>
+        </ul>
+      </div>
     </div>
   </nav>
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue"
+import { ref } from "vue"
 import { useAuth } from '@/composables/useAuth'
 import { useRoute } from 'vue-router'
-import { useI18n } from 'vue-i18n'
 import { navigateTo } from '#app'
-
-const isOpen = ref(false)
-const { logout, isAuthenticated } = useAuth()
-const route = useRoute()
 import { useLocalePath } from '#i18n'
 
-const { t, locale } = useI18n();
-const localePath = useLocalePath() // ✅ Correctly define localePath
+const { logout, isAuthenticated } = useAuth()
+const route = useRoute()
+const isOpen = ref(false)
+
+const localePath = useLocalePath()
 const isActive = (path) => {
-  return route.path === localePath(path) // Handle localized routes
+  return route.path === localePath(path)
 }
 
 const handleLogout = () => {
   logout()
-  navigateTo(localePath('/signin')) // Ensure locale-aware navigation
+  isOpen.value = false
+  navigateTo(localePath('/signin'))
 }
-
-watch(locale, (newLocale) => {
-  // This will trigger reactivity when locale changes
-  console.log('Locale changed to:', newLocale);
-});
-
-onMounted(() => {
-  console.log('NavBar mounted')
-});
 </script>
