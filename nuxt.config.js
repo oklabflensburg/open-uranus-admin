@@ -18,7 +18,7 @@ export default defineNuxtConfig({
     ],
     defaultLocale: 'de',
     strategy: 'prefix_except_default',
-    lazy: false,
+    lazy: true,
     vueI18n: './vue-i18n.js'
   }
 })

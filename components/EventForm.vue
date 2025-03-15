@@ -68,6 +68,12 @@
       </div>
     </div>
 
+    <div class="col-span-12 sm:col-span-6 lg:col-span-4">
+      <input type="file" @change="onFileChange" accept="image/*" aria-describedby="fileError" required />
+      <p v-if="errors.file" id="fileError" class="text-red-600">{{ errors.file }}</p>
+      <img v-if="previewUrl" :src="previewUrl" alt="Preview" class="w-32 h-32 mt-2" />
+    </div>
+
     <div class="text-right">
       <button type="submit" id="addEventButton" class="mt-6 px-4 py-2 bg-green-500 text-white rounded-xs hover:bg-green-700 transition">{{ $t('eventForm.submitButton') }}</button>
     </div>
@@ -98,6 +104,8 @@ const errors = ref({})
 const organizers = ref([])
 const venues = ref([])
 const spaces = ref([])
+const file = ref(null)
+const previewUrl = ref('')
 
 // Selected values
 const selectedOrganizer = ref("")
@@ -125,6 +133,14 @@ const fetchSpaces = async () => {
   }
 }
 
+const onFileChange = (event) => {
+  const selectedFile = event.target.files[0];
+  if (selectedFile) {
+    file.value = selectedFile;
+    previewUrl.value = URL.createObjectURL(selectedFile);
+  }
+}
+
 // Watch for changes to selectedVenue and fetch spaces accordingly
 watch(selectedVenue, fetchSpaces)
 
@@ -138,6 +154,10 @@ const validateForm = () => {
   validateField('selectedVenue')
   if (spaces.value.length > 0) {
     validateField('selectedSpace')
+  }
+  // Validate file upload
+  if (!file.value) {
+    errors.value.file = t('eventForm.errors.file')
   }
 }
 
@@ -162,12 +182,38 @@ const validateField = (field) => {
 }
 
 const handleSubmit = async () => {
-  validateForm()
+  validateForm();
 
   if (Object.keys(errors.value).length > 0) {
-    return
+    return;
   }
 
+  let imageUrl = ''
+
+  if (file.value) {
+    try {
+      const formData = new FormData();
+      formData.append('file', file.value);
+
+      const { fetchApi } = useApi();
+      const response = await fetchApi('/event/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response && response.source_name) {
+        imageUrl = response.source_name; // Adjust based on API response
+        console.log(imageUrl)
+      } else {
+        throw new Error('Invalid response from upload API');
+      }
+    } catch (error) {
+      console.error('Upload Error:', error);
+      return alert('File upload failed!'); // Prevent form submission if upload fails
+    }
+  }
+
+  // Prepare form data with uploaded image URL
   const bodyData = {
     event_title: eventTitle.value,
     event_description: eventDescription.value,
@@ -177,23 +223,24 @@ const handleSubmit = async () => {
     event_organizer_id: parseInt(selectedOrganizer.value, 10),
     event_venue_id: parseInt(selectedVenue.value, 10),
     event_venue_name: venueName.value,
-    event_space_id: parseInt(selectedSpace.value, 10)
-  }
+    event_space_id: parseInt(selectedSpace.value, 10),
+    event_image: imageUrl, // Add image URL to the payload
+  };
 
   try {
-    const { fetchApi } = useApi()
-    const data = await fetchApi('/event/', {
-      method: 'POST',
+    const { fetchApi } = useApi();
+    const data = await fetchApi("/event/", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(bodyData),
-    })
+    });
 
-    console.log('Success:', data)
-    router.push('/dashboard')
+    console.log("Success:", data);
+    router.push("/dashboard");
   } catch (error) {
-    console.error('Error sending data:', error)
+    console.error("Error sending data:", error);
   }
 }
 
