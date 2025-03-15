@@ -13,13 +13,15 @@
       <div class="rounded-md shadow-sm space-y-4">
         <div>
           <label for="emailAddress" class="sr-only">{{ $t('email') }}</label>
-          <input v-model="signin.emailAddress" id="emailAddress" name="emailAddress" type="email" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" :placeholder="$t('emailAddress')">
+          <input v-model="signin.emailAddress" id="emailAddress" name="emailAddress" type="email" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" :class="{'border-red-500': errorMessage}" :placeholder="$t('emailAddress')">
         </div>
         <div class="mt-4">
           <label for="password" class="sr-only">{{ $t('password') }}</label>
-          <input v-model="signin.password" id="password" name="password" type="password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" :placeholder="$t('password')">
+          <input v-model="signin.password" id="password" name="password" type="password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" :class="{'border-red-500': errorMessage}" :placeholder="$t('password')">
         </div>
       </div>
+
+      <div v-if="errorMessage" class="text-red-500 text-sm">{{ errorMessage }}</div>
 
       <div class="flex items-center justify-between">
         <div class="flex items-center">
@@ -49,7 +51,8 @@ import { useRouter } from 'vue-router'
 import { useAuth } from '@/composables/useAuth'
 
 const router = useRouter()
-const { login, isAuthenticated } = useAuth() // Ensure isAuthenticated is imported
+const { login, isAuthenticated } = useAuth()
+const errorMessage = ref('')
 
 const signin = ref({
   emailAddress: '',
@@ -59,16 +62,21 @@ const signin = ref({
 
 onMounted(() => {
   if (isAuthenticated.value) {
-    router.push('/dashboard') // Redirect if already logged in
+    router.push('/dashboard')
   }
 })
 
 const handleSignIn = async () => {
-  const success = await login(signin.value.emailAddress, signin.value.password, signin.value.rememberMe)
-  if (success) {
-    router.push('/dashboard') // Redirect after login
-  } else {
-    alert($t('loginFailed'))
+  try {
+    const response = await login(signin.value.emailAddress, signin.value.password, signin.value.rememberMe)
+
+    if (response === true) {
+      router.push('/dashboard')
+    } else {
+      errorMessage.value = response
+    }
+  } catch (error) {
+    errorMessage.value = error
   }
 }
 </script>

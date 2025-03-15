@@ -31,10 +31,11 @@ export const useAuth = () => {
         accessToken.value = response.access_token
         refreshToken.value = response.refresh_token
         return true
+      } else {
+        return response.detail
       }
     } catch (error) {
-      console.error('Login failed:', error)
-      return false
+      return error.data.detail
     }
   }
 
@@ -61,7 +62,7 @@ export const useAuth = () => {
         return response.detail || 'Signup failed'
       }
     } catch (error) {
-      return response.detail || 'Signup failed'
+      return error.data.detail || 'Signup failed'
     }
   }
 
