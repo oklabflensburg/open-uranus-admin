@@ -12,6 +12,7 @@
       <textarea id="eventDescription" name="eventDescription" rows="4" class="mt-1 p-2 w-full border rounded-xs" v-model="eventDescription" @input="validateField('eventDescription')" aria-describedby="eventDescriptionError"></textarea>
       <p v-if="errors.eventDescription" id="eventDescriptionError" class="text-red-600">{{ errors.eventDescription }}</p>
     </div>
+
     <div class="grid grid-cols-12 gap-4 mb-4">
       <div class="col-span-12 sm:col-span-6 lg:col-span-4">
         <label class="block text-gray-700" for="eventDateStart">{{ $t('eventForm.eventDateStart') }}</label>
@@ -68,10 +69,38 @@
       </div>
     </div>
 
-    <div class="col-span-12 sm:col-span-6 lg:col-span-4">
-      <input type="file" @change="onFileChange" accept="image/*" aria-describedby="fileError" required />
-      <p v-if="errors.file" id="fileError" class="text-red-600">{{ errors.file }}</p>
-      <img v-if="previewUrl" :src="previewUrl" alt="Preview" class="w-32 h-32 mt-2" />
+
+    <div class="grid grid-cols-12 gap-4 mb-4">
+      <div class="col-span-12 sm:col-span-6 lg:col-span-4">
+        <label for="licenseType">{{ $t('eventForm.licenseType') }}</label>
+        <select class="bg-white mt-1 p-3 w-full border rounded-xs" id="licenseType" v-model="selectedLicenseType" :disabled="licenseTypes.length === 0" @change="validateField('selectedLicenseType')" aria-describedby="selectedLicenseTypeError">
+          <option v-if="licenseTypes.length === 0" value="" selected>---</option>
+          <option v-else value="" selected>{{ $t('eventForm.selectOption') }}</option>
+          <option v-for="licenseType in licenseTypes" :key="licenseType.id" :value="licenseType.id">
+            {{ licenseType.license_type_name }}
+          </option>
+        </select>
+        <p v-if="errors.selectedLicenseType" id="selectedLicenseTypeError" class="text-red-600">{{ errors.selectedLicenseType }}</p>
+      </div>
+
+      <div class="col-span-12 sm:col-span-6 lg:col-span-4">
+        <label for="imageType">{{ $t('eventForm.imageType') }}</label>
+        <select class="bg-white mt-1 p-3 w-full border rounded-xs" id="imageType" v-model="selectedImageType" :disabled="imageTypes.length === 0" @change="validateField('selectedImageType')" aria-describedby="selectedImageTypeError">
+          <option v-if="imageTypes.length === 0" value="" selected>---</option>
+          <option v-else value="" selected>{{ $t('eventForm.selectOption') }}</option>
+          <option v-for="imageType in imageTypes" :key="imageType.id" :value="imageType.id">
+            {{ imageType.image_type_name }}
+          </option>
+        </select>
+        <p v-if="errors.selectedImageType" id="selectedImageTypeError" class="text-red-600">{{ errors.selectedImageType }}</p>
+      </div>
+
+      <div class="col-span-12 sm:col-span-6 lg:col-span-4">
+        <label for="imageType">Bild auswählen</label>
+        <input type="file" @change="onFileChange" accept="image/*" aria-describedby="fileError">
+        <p v-if="errors.file" id="fileError" class="text-red-600">{{ errors.file }}</p>
+        <img v-if="previewUrl" :src="previewUrl" alt="Preview" class="w-32 mt-2" />
+      </div>
     </div>
 
     <div class="text-right">
@@ -89,7 +118,7 @@ import { useI18n } from 'vue-i18n'
 const route = useRoute()
 const router = useRouter()
 
-const { t } = useI18n()
+const { t, locale } = useI18n() // Update i18n import to include locale
 
 const venueId = route.params.id;
 const eventTitle = ref('')
@@ -99,18 +128,23 @@ const eventDateEnd = ref('')
 const entryTime = ref('')
 const venueName = ref('')
 const errors = ref({})
+const formError = ref('') // Add this line
 
 // Define reactive variables for dropdowns
 const organizers = ref([])
 const venues = ref([])
+const imageTypes = ref([])
+const licenseTypes = ref([])
 const spaces = ref([])
 const file = ref(null)
 const previewUrl = ref('')
 
 // Selected values
-const selectedOrganizer = ref("")
-const selectedVenue = ref("")
-const selectedSpace = ref("")
+const selectedOrganizer = ref('')
+const selectedLicenseType = ref('')
+const selectedImageType = ref('')
+const selectedVenue = ref('')
+const selectedSpace = ref('')
 
 // Fetch function
 const fetchData = async (url, targetArray) => {
@@ -134,10 +168,14 @@ const fetchSpaces = async () => {
 }
 
 const onFileChange = (event) => {
-  const selectedFile = event.target.files[0];
-  if (selectedFile) {
-    file.value = selectedFile;
-    previewUrl.value = URL.createObjectURL(selectedFile);
+  try {
+    const selectedFile = event.target.files[0];
+    if (selectedFile) {
+      file.value = selectedFile;
+      previewUrl.value = URL.createObjectURL(selectedFile);
+    }
+  } catch (error) {
+    console.error('Error handling file change:', error);
   }
 }
 
@@ -147,22 +185,27 @@ watch(selectedVenue, fetchSpaces)
 // Form validation
 const validateForm = () => {
   errors.value = {}
-  validateField('eventTitle')
-  validateField('eventDescription')
-  validateField('eventDateStart')
-  validateField('selectedOrganizer')
-  validateField('selectedVenue')
+  
+  // Required fields validation
+  const requiredFields = [
+    'eventTitle',
+    'eventDescription',
+    'eventDateStart',
+    'selectedOrganizer',
+    'selectedVenue'
+  ]
+
+  requiredFields.forEach(field => {
+    validateField(field, true)
+  })
+
   if (spaces.value.length > 0) {
-    validateField('selectedSpace')
-  }
-  // Validate file upload
-  if (!file.value) {
-    errors.value.file = t('eventForm.errors.file')
+    validateField('selectedSpace', true)
   }
 }
 
-// Validate individual field
-const validateField = (field) => {
+// Update validateField to handle required fields
+const validateField = (field, required = false) => {
   const fields = {
     eventTitle,
     eventDescription,
@@ -174,7 +217,9 @@ const validateField = (field) => {
     selectedSpace
   }
   
-  if (!fields[field].value) {
+  if (required && !fields[field]?.value) {
+    errors.value[field] = t('eventForm.errors.required')
+  } else if (!fields[field]?.value) {
     errors.value[field] = t(`eventForm.errors.${field}`)
   } else {
     delete errors.value[field]
@@ -182,71 +227,73 @@ const validateField = (field) => {
 }
 
 const handleSubmit = async () => {
-  validateForm();
+  try {
+    validateForm();
+    formError.value = '';
 
-  if (Object.keys(errors.value).length > 0) {
-    return;
-  }
+    if (Object.keys(errors.value).length > 0) {
+      formError.value = t('eventForm.errors.validation');
+      console.error('Validation errors:', JSON.parse(JSON.stringify(errors.value)));
+      return;
+    }
 
-  let imageUrl = ''
+    // Ensure all required fields are present
+    if (!eventTitle.value || !eventDescription.value || !eventDateStart.value || 
+        !selectedOrganizer.value || !selectedVenue.value || !file.value) {
+      console.error('Missing required fields');
+      return;
+    }
 
-  if (file.value) {
+    const formData = new FormData();
+    formData.append('file', file.value);
+    formData.append('event_title', eventTitle.value);
+    formData.append('event_description', eventDescription.value);
+    formData.append('event_date_start', eventDateStart.value);
+    formData.append('event_date_end', eventDateEnd.value || '');
+    formData.append('entry_time', entryTime.value || '');
+    
+    // Handle optional integer fields
+    if (selectedLicenseType.value) {
+      formData.append('event_image_license_type_id', parseInt(selectedLicenseType.value));
+    }
+    if (selectedImageType.value) {
+      formData.append('event_image_type_id', parseInt(selectedImageType.value));
+    }
+    
+    // Required integer fields
+    formData.append('event_organizer_id', parseInt(selectedOrganizer.value));
+    formData.append('event_venue_id', parseInt(selectedVenue.value));
+    
+    // Optional fields
+    if (selectedSpace.value) {
+      formData.append('event_space_id', parseInt(selectedSpace.value));
+    }
+    if (venueName.value) {
+      formData.append('event_venue_name', venueName.value);
+    }
+
     try {
-      const formData = new FormData();
-      formData.append('file', file.value);
-
       const { fetchApi } = useApi();
-      const response = await fetchApi('/event/upload', {
+      const data = await fetchApi('/event/', {
         method: 'POST',
         body: formData,
       });
 
-      if (response && response.source_name) {
-        imageUrl = response.source_name; // Adjust based on API response
-        console.log(imageUrl)
-      } else {
-        throw new Error('Invalid response from upload API');
-      }
+      console.log('Success:', data);
+      router.push('/dashboard');
     } catch (error) {
-      console.error('Upload Error:', error);
-      return alert('File upload failed!'); // Prevent form submission if upload fails
+      console.error('Error sending data:', error);
     }
-  }
-
-  // Prepare form data with uploaded image URL
-  const bodyData = {
-    event_title: eventTitle.value,
-    event_description: eventDescription.value,
-    event_date_start: eventDateStart.value,
-    event_date_end: eventDateEnd.value,
-    entry_time: entryTime.value,
-    event_organizer_id: parseInt(selectedOrganizer.value, 10),
-    event_venue_id: parseInt(selectedVenue.value, 10),
-    event_venue_name: venueName.value,
-    event_space_id: parseInt(selectedSpace.value, 10),
-    event_image: imageUrl, // Add image URL to the payload
-  };
-
-  try {
-    const { fetchApi } = useApi();
-    const data = await fetchApi("/event/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(bodyData),
-    });
-
-    console.log("Success:", data);
-    router.push("/dashboard");
   } catch (error) {
-    console.error("Error sending data:", error);
+    console.error('Error in handleSubmit:', error);
   }
 }
 
 // Fetch organizers and venues when component is mounted
 onMounted(() => {
   fetchData('/user/organizer/', organizers)
+  fetchData(`/license/type?lang=${locale.value}`, licenseTypes)
+  fetchData(`/image/type?lang=${locale.value}`, imageTypes)
   fetchData('/venue/', venues)
   if (venueId) {
     // Preselect the option if venueId is provided

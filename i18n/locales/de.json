@@ -72,6 +72,8 @@
       "space": "Raum",
       "selectOption": "Bitte auswählen",
       "submitButton": "Speichern",
+      "licenseType": "Lizenz",
+      "imageType": "Bildtyp",
       "errors": {
         "eventTitle": "Bitte einen Event Titel angeben",
         "eventDescription": "Bitte eine Event Beschreibung angeben",

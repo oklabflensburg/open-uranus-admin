@@ -72,6 +72,8 @@
     "space": "Space",
     "selectOption": "Please select",
     "submitButton": "Save",
+    "licenseType": "Licence",
+    "imageType": "Image type",
     "errors": {
       "eventTitle": "Please provide an event title",
       "eventDescription": "Please provide an event description",
