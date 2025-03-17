@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-screen-xl mx-auto bg-white p-3 md:p-6 rounded-xs shadow-lg">
+  <div class="max-w-screen-2xl mx-auto bg-white p-3 md:p-6 rounded-xs shadow-lg">
     <Search />
   </div>
 </template>

@@ -1,31 +1,60 @@
 <template>
   <div>
     <div class="grid grid-cols-12 gap-4 mb-4">
-      <div class="col-span-8">
-        <ul class="grid grid-cols-12 gap-4 mb-4">
-          <li v-for="event in events" :key="`${event.event_id}-${event.event_date_id}`" class="border border-gray-100 bg-gray-200 col-span-6 space-y-4">
-            <div class="">
-              <img :src="event.image_url" :alt="event.image_alt_name">
-            </div>
-            <div class="p-3">
-              <h1 class="text-xl">{{ event.event_title }}</h1>
-              <p>{{ event.event_description }}</p>
-              <address>{{ event.venue_postcode }} {{ event.venue_city }}</address>
-              {{ event.event_id }}<br>
-              {{ event.event_date_id }}<br>
-              {{ event.organizer_name }}<br>
-              {{ formatDate(event.event_date_start) }}
+      <div class="col-span-12 sm:col-span-9">
+        <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+          <li v-for="event in events"
+              :key="`${event.event_id}-${event.event_date_id}`"
+              class="border border-gray-100 bg-gray-200 rounded-lg shadow-md h-full flex flex-col">
 
-              <div class="flex flex-wrap gap-2 mt-2">
-                <span v-if="event.venue_type" v-for="type in event.venue_type.split(',').map(t => t.trim())" :key="type" class="font-sans text-xs font-medium px-2.5 py-1 rounded bg-orange-100 text-orange-800 hover:bg-orange-500 hover:text-white cursor-pointer" @click="handleTypeClick(type, 'venue_type')">{{ type }}</span>
-                <span v-if="event.space_type" v-for="type in event.space_type.split(',').map(t => t.trim())" :key="type" class="font-sans text-xs font-medium px-2.5 py-1 rounded bg-pink-100 text-pink-800 hover:bg-pink-500 hover:text-white cursor-pointer" @click="handleTypeClick(type, 'space_type')">{{ type }}</span>
-                <span v-if="event.event_type" v-for="type in event.event_type.split(',').map(t => t.trim())" :key="type" class="font-sans text-xs font-medium px-2.5 py-1 rounded bg-blue-100 text-blue-800 hover:bg-blue-500 hover:text-white cursor-pointer" @click="handleTypeClick(type, 'event_type')">{{ type }}</span>
+            <!-- Image -->
+            <div>
+              <img :src="event.image_url" :alt="event.image_alt_name"
+                  class="w-full h-48 object-cover rounded-t-lg">
+            </div>
+
+            <!-- Content -->
+            <div class="p-3 flex flex-col flex-grow">
+              <h1 class="text-xl font-semibold">{{ event.event_title }}</h1>
+              <p class="text-gray-700 flex-grow">{{ event.event_description }}</p>
+              <address class="text-sm text-gray-500">{{ event.venue_postcode }} {{ event.venue_city }}</address>
+
+              <div class="text-sm mt-2">
+                <span class="font-bold">Organizer:</span> {{ event.organizer_name }}<br>
+                <span class="font-bold">Event ID:</span> {{ event.event_id }}<br>
+                <span class="font-bold">Date ID:</span> {{ event.event_date_id }}<br>
+                <span class="font-bold">Start Date:</span> {{ formatDate(event.event_date_start) }}
+              </div>
+
+              <!-- Tags Section (sticks to bottom) -->
+              <div class="flex flex-wrap gap-2 mt-auto pt-2">
+                <span v-if="event.venue_type" v-for="type in event.venue_type.split(',').map(t => t.trim())"
+                      :key="type"
+                      class="text-xs font-medium px-2.5 py-1 rounded bg-orange-100 text-orange-800 hover:bg-orange-500 hover:text-white cursor-pointer"
+                      @click="handleTypeClick(type, 'venue_type')">
+                  {{ type }}
+                </span>
+
+                <span v-if="event.space_type" v-for="type in event.space_type.split(',').map(t => t.trim())"
+                      :key="type"
+                      class="text-xs font-medium px-2.5 py-1 rounded bg-pink-100 text-pink-800 hover:bg-pink-500 hover:text-white cursor-pointer"
+                      @click="handleTypeClick(type, 'space_type')">
+                  {{ type }}
+                </span>
+
+                <span v-if="event.event_type" v-for="type in event.event_type.split(',').map(t => t.trim())"
+                      :key="type"
+                      class="text-xs font-medium px-2.5 py-1 rounded bg-blue-100 text-blue-800 hover:bg-blue-500 hover:text-white cursor-pointer"
+                      @click="handleTypeClick(type, 'event_type')">
+                  {{ type }}
+                </span>
               </div>
             </div>
           </li>
         </ul>
       </div>
-      <div class="col-span-4 space-y-4">
+
+      <div class="col-span-12 sm:col-span-3 space-y-4">
         <div>
           <!-- Event City Input -->
           <label for="eventCity">Event City</label>
