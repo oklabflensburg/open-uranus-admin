@@ -16,13 +16,19 @@
           <input v-model="signupData.username" id="username" name="username" type="email" required :class="{'border-red-500': errorMessage}" class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" :placeholder="$t('emailAddress')">
         </div>
         <div class="grid grid-cols-12 gap-4">
-          <div class="col-span-6">
+          <div class="col-span-6 relative">
             <label for="password" class="sr-only">{{ $t('password') }}</label>
-            <input v-model="signupData.password" id="password" name="password" type="password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" :placeholder="$t('password')">
+            <input v-model="signupData.password" :type="passwordVisible ? 'text' : 'password'" id="password" name="password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" :placeholder="$t('password')">
+            <button type="button" @click="togglePasswordVisibility" class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-gray-500">
+              {{ passwordVisible ? $t('hide') : $t('show') }}
+            </button>
           </div>
-          <div class="col-span-6">
+          <div class="col-span-6 relative">
             <label for="confirmPassword" class="sr-only">{{ $t('confirmPassword') }}</label>
-            <input v-model="signupData.confirmPassword" id="confirmPassword" name="confirmPassword" type="password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" :placeholder="$t('confirmPassword')">
+            <input v-model="signupData.confirmPassword" :type="confirmPasswordVisible ? 'text' : 'password'" id="confirmPassword" name="confirmPassword" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" :placeholder="$t('confirmPassword')">
+            <button type="button" @click="toggleConfirmPasswordVisibility" class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-gray-500">
+              {{ confirmPasswordVisible ? $t('hide') : $t('show') }}
+            </button>
           </div>
         </div>
       </div>
@@ -60,6 +66,17 @@ const signupData = ref({
 })
 
 const errorMessage = ref('')
+
+const passwordVisible = ref(false)
+const confirmPasswordVisible = ref(false)
+
+const togglePasswordVisibility = () => {
+  passwordVisible.value = !passwordVisible.value
+}
+
+const toggleConfirmPasswordVisibility = () => {
+  confirmPasswordVisible.value = !confirmPasswordVisible.value
+}
 
 const handleSignUp = async () => {
   if (signupData.value.password !== signupData.value.confirmPassword) {

@@ -73,6 +73,7 @@
     "selectOption": "Bitte auswählen",
     "submitButton": "Speichern",
     "licenseType": "Lizenz",
+    "genreType": "Genre Type",
     "imageType": "Bildtyp",
     "cancelButton": "Abbrechen",
     "errors": {
@@ -118,7 +119,7 @@
     "seatingCapacity": "Sitzkapazität",
     "spaceType": "Space-Typ",
     "buildingLevel": "Gebäude Ebene",
-    "url": "URL",
+    "websiteUrl": "Website",
     "venue": "Veranstaltungsort",
     "submitButton": "Speichern",
     "selectOption": "Bitte auswählen",

@@ -74,6 +74,7 @@
     "submitButton": "Gem",
     "licenseType": "Licence",
     "imageType": "Billedtyper",
+    "genreType": "Genre Type",
     "cancelButton": "Stop",
     "errors": {
       "eventTitle": "Angiv venligst en titel for begivenheden",
@@ -118,7 +119,7 @@
     "seatingCapacity": "Siddepladser",
     "spaceType": "Rumtype",
     "buildingLevel": "Bygningsniveau",
-    "url": "URL",
+    "websiteUrl": "Website URL",
     "venue": "Sted",
     "submitButton": "Gem",
     "selectOption": "Vælg venligst",

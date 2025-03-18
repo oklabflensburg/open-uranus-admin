@@ -81,6 +81,18 @@
 
     <div class="grid grid-cols-12 gap-4 mb-4">
       <div class="col-span-12 sm:col-span-6 lg:col-span-4">
+        <label for="genreType">{{ $t('eventForm.genreType') }}</label>
+        <select class="bg-white mt-1 p-3 w-full border rounded-xs" id="genreType" v-model="selectedGenreType" :disabled="genreTypes.length === 0" @change="validateField('selectedGenreType')" aria-describedby="selectedGenreTypeError">
+          <option v-if="genreTypes.length === 0" value="" selected>---</option>
+          <option v-else value="" disabled>{{ $t('eventForm.selectOption') }}</option>
+          <option v-for="genreType in genreTypes" :key="genreType.id" :value="genreType.id">
+            {{ genreType.genre_type_name }}
+          </option>
+        </select>
+        <p v-if="errors.selectedGenreType" id="selectedGenreTypeError" class="text-red-600">{{ errors.selectedLicenseType }}</p>
+      </div>
+
+      <div class="col-span-12 sm:col-span-6 lg:col-span-4">
         <label for="licenseType">{{ $t('eventForm.licenseType') }}</label>
         <select class="bg-white mt-1 p-3 w-full border rounded-xs" id="licenseType" v-model="selectedLicenseType" :disabled="licenseTypes.length === 0" @change="validateField('selectedLicenseType')" aria-describedby="selectedLicenseTypeError">
           <option v-if="licenseTypes.length === 0" value="" selected>---</option>
@@ -144,6 +156,7 @@ const venues = ref([])
 const imageTypes = ref([])
 const eventTypes = ref([])
 const licenseTypes = ref([])
+const genreTypes = ref([])
 const spaces = ref([])
 
 // Image upload
@@ -153,6 +166,7 @@ const previewUrl = ref('')
 // Selected values
 const selectedEventTypes = ref([])
 const selectedOrganizer = ref('')
+const selectedGenreType = ref('')
 const selectedLicenseType = ref('')
 const selectedImageType = ref('')
 const selectedVenue = ref('')
@@ -257,6 +271,9 @@ const handleSubmit = async () => {
     formData.append('event_entry_time', entryTime.value || '');
 
     // Append only if the value is a valid number
+    if (selectedGenreType.value) {
+      formData.append('event_genre_type_id', parseInt(selectedGenreType.value));
+    }
     if (selectedLicenseType.value) {
       formData.append('event_image_license_type_id', parseInt(selectedLicenseType.value));
     }
@@ -301,6 +318,7 @@ const cancelForm = () => {
 // Fetch organizers and venues when component is mounted
 onMounted(() => {
   fetchData('/user/organizer/', organizers)
+  fetchData(`/genre/type/?lang=${locale.value}`, genreTypes)
   fetchData(`/license/type?lang=${locale.value}`, licenseTypes)
   fetchData(`/image/type/?lang=${locale.value}`, imageTypes)
   fetchData(`/event/type/?lang=${locale.value}`, eventTypes)

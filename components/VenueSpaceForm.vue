@@ -58,10 +58,10 @@
       </div> 
     </div>
 
-    <!-- URL -->
+    <!-- Website -->
     <div>
-      <label class="block text-gray-700" for="url">{{ $t('venueSpaceForm.url') }}</label>
-      <input type="url" id="url" v-model="url" class="mt-1 p-2 w-full border rounded" aria-describedby="urlError">
+      <label class="block text-gray-700" for="url">{{ $t('venueSpaceForm.websiteUrl') }}</label>
+      <input type="text" id="url" v-model="url" class="mt-1 p-2 w-full border rounded" aria-describedby="urlError">
       <p v-if="errors.url" id="urlError" class="text-red-600">{{ errors.url }}</p>
     </div>
 
@@ -78,7 +78,8 @@ import { useApi } from '@/composables/useApi'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
+
 const route = useRoute()
 const router = useRouter()
 
@@ -169,7 +170,8 @@ const cancelForm = () => {
 
 onMounted(() => {
   fetchData('/venue/', venues)
-  fetchData('/space/type/', spaceTypes)
+  fetchData(`/space/type/?lang=${locale.value}`, spaceTypes)
+
   if (venueId) {
     // Preselect the option if venueId is provided
     selectedVenue.value = venueId

@@ -59,7 +59,7 @@
         </ul>
       </div>
 
-      <div class="col-span-12 md:col-span-4 lg:col-span-3 space-y-4 bg-gray-100 p-3 rounded-md">
+      <div id="sidbarSearch" class="col-span-12 sm:col-span-5 md:col-span-4 lg:col-span-3 space-y-4 bg-gray-100 p-3 rounded-md md:sticky md:top-4 md:self-start overflow-scroll">
         <h1 class="text-2xl">Suche</h1>
 
         <div>

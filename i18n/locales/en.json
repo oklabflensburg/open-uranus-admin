@@ -73,6 +73,7 @@
     "selectOption": "Please select",
     "submitButton": "Save",
     "licenseType": "Licence",
+    "genreType": "Genre Type",
     "imageType": "Image type",
     "cancelButton": "Cancel",
     "errors": {
@@ -118,7 +119,7 @@
     "seatingCapacity": "Seating Capacity",
     "spaceType": "Space Type",
     "buildingLevel": "Building Level",
-    "url": "Website",
+    "websiteUrl": "Website",
     "venue": "Venue",
     "submitButton": "Save",
     "selectOption": "Please choose",
