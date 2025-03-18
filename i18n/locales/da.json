@@ -74,6 +74,7 @@
     "submitButton": "Gem",
     "licenseType": "Licence",
     "imageType": "Billedtyper",
+    "cancelButton": "Stop",
     "errors": {
       "eventTitle": "Angiv venligst en titel for begivenheden",
       "eventDescription": "Angiv venligst en beskrivelse",
@@ -96,6 +97,7 @@
     "longitude": "Længdegrad",
     "openedAt": "Åbningsdato",
     "submitButton": "Tilføj sted",
+    "cancelButton": "Stop",
     "errors": {
       "venueName": "Angiv venligst et navn for stedet",
       "venueStreet": "Angiv venligst en gade",
@@ -119,6 +121,7 @@
     "venue": "Sted",
     "submitButton": "Gem",
     "selectOption": "Vælg venligst",
+    "cancelButton": "Stop",
     "errors": {
       "name": "Angiv venligst et navn",
       "selectedVenue": "Vælg venligst et sted"
@@ -139,6 +142,7 @@
     "latitude": "Breddegrad",
     "longitude": "Længdegrad",
     "submitButton": "Tilføj arrangør",
+    "cancelButton": "Stop",
     "successMessage": "Arrangør oprettet med succes!",
     "errors": {
       "organizerName": "Angiv venligst et navn",

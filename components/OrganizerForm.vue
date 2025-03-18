@@ -1,5 +1,5 @@
 <template>
-  <form id="addOrganizerForm" class="space-y-4 bg-white p-6 rounded-lg shadow-md" @submit.prevent="handleSubmit" aria-labelledby="organizerFormTitle">
+  <form id="addOrganizerForm" class="space-y-4" @submit.prevent="handleSubmit" aria-labelledby="organizerFormTitle">
     <h2 id="organizerFormTitle" class="text-2xl font-bold mb-4">{{ $t('organizerForm.title') }}</h2>
 
     <!-- Name -->
@@ -66,10 +66,9 @@
 
     <div v-if="submissionError" class="text-red-600">{{ submissionError }}</div>
 
-    <div class="text-right">
-      <button type="submit" class="mt-6 px-4 py-2 bg-green-500 text-white rounded-xs hover:bg-green-700 transition">
-        {{ $t('organizerForm.submitButton') }}
-      </button>
+    <div class="flex space-x-4 justify-end">
+      <button type="submit" class="mt-6 px-4 py-2 bg-green-500 text-white rounded-xs hover:bg-green-700 transition">{{ $t('organizerForm.submitButton') }}</button>
+      <button type="button" @click="cancelForm" class="mt-6 px-4 py-2 bg-gray-500 text-white rounded-xs hover:bg-gray-700 transition">{{ $t('organizerForm.cancelButton') }}</button>
     </div>
   </form>
 </template>
@@ -162,5 +161,9 @@ const handleSubmit = async () => {
     console.error('Error submitting form:', error)
     submissionError.value = t('organizerForm.errors.submission')
   }
+}
+
+const cancelForm = () => {
+  router.push('/dashboard')
 }
 </script>

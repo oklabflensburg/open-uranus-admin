@@ -74,6 +74,7 @@
     "submitButton": "Save",
     "licenseType": "Licence",
     "imageType": "Image type",
+    "cancelButton": "Cancel",
     "errors": {
       "eventTitle": "Please provide an event title",
       "eventDescription": "Please provide an event description",
@@ -96,6 +97,7 @@
     "longitude": "Longitude",
     "openedAt": "Opened At",
     "submitButton": "Add Venue",
+    "cancelButton": "Cancel",
     "errors": {
       "venueName": "Please enter the venue name",
       "venueStreet": "Please enter the street",
@@ -119,6 +121,7 @@
     "venue": "Venue",
     "submitButton": "Save",
     "selectOption": "Please choose",
+    "cancelButton": "Cancel",
     "errors": {
       "name": "Please enter the name",
       "selectedVenue": "Please select a venue"
@@ -140,6 +143,7 @@
     "longitude": "Longitude",
     "submitButton": "Add Organizer",
     "successMessage": "Organizer created successfully!",
+    "cancelButton": "Cancel",
     "errors": {
         "organizerName": "Please provide a name",
         "organizerDescription": "Please provide a description",

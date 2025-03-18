@@ -65,11 +65,9 @@
       <p v-if="errors.url" id="urlError" class="text-red-600">{{ errors.url }}</p>
     </div>
 
-    <!-- Submit Button -->
-    <div class="text-right">
-      <button type="submit" class="mt-6 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700 transition">
-        {{ $t('venueSpaceForm.submitButton') }}
-      </button>
+    <div class="flex space-x-4 justify-end">
+      <button type="submit" class="mt-6 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700 transition">{{ $t('venueSpaceForm.submitButton') }}</button>
+      <button type="button" @click="cancelForm" class="mt-6 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700 transition">{{ $t('venueSpaceForm.cancelButton') }}</button>
     </div>
   </form>
 </template>
@@ -163,6 +161,10 @@ const handleSubmit = async () => {
   } catch (error) {
     console.error('Error submitting form:', error)
   }
+}
+
+const cancelForm = () => {
+  router.push('/dashboard')
 }
 
 onMounted(() => {

@@ -78,8 +78,9 @@
       <input type="date" id="venueOpenedAt" name="venueOpenedAt" class="mt-1 p-2 w-full border rounded-xs" v-model="venueOpenedAt">
     </div>
 
-    <div class="text-right">
+    <div class="flex space-x-4 justify-end">
       <button type="submit" class="mt-6 px-4 py-2 bg-green-500 text-white rounded-xs hover:bg-green-700 transition">{{ $t('venueForm.submitButton') }}</button>
+      <button type="button" @click="cancelForm" class="mt-6 px-4 py-2 bg-gray-500 text-white rounded-xs hover:bg-gray-700 transition">{{ $t('venueForm.cancelButton') }}</button>
     </div>
   </form>
 </template>
@@ -212,5 +213,9 @@ const validateField = (field) => {
   } else {
     delete errors.value[field]
   }
+}
+
+const cancelForm = () => {
+  router.push('/dashboard')
 }
 </script>

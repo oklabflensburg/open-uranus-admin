@@ -74,6 +74,7 @@
       "submitButton": "Speichern",
       "licenseType": "Lizenz",
       "imageType": "Bildtyp",
+      "cancelButton": "Abbrechen",
       "errors": {
         "eventTitle": "Bitte einen Event Titel angeben",
         "eventDescription": "Bitte eine Event Beschreibung angeben",
@@ -96,6 +97,7 @@
       "longitude": "Längengrad",
       "openedAt": "Eröffnungsdatum",
       "submitButton": "Ort hinzufügen",
+      "cancelButton": "Abbrechen",
       "errors": {
         "venueName": "Bitte Namen für den Veranstaltungsort angeben",
         "venueStreet": "Bitte eine Straße angeben",
@@ -119,6 +121,7 @@
       "venue": "Veranstaltungsort",
       "submitButton": "Speichern",
       "selectOption": "Bitte auswählen",
+      "cancelButton": "Abbrechen",
       "errors": {
         "name": "Bitte Name eingeben",
         "selectedVenue": "Bitte Veranstaltungsort auswählen"
@@ -140,6 +143,7 @@
       "longitude": "Längengrad",
       "submitButton": "Organisator hinzufügen",
       "successMessage": "Organisator erfolgreich erstellt!",
+      "cancelButton": "Abbrechen",
       "errors": {
         "organizerName": "Bitte einen Namen angeben",
         "organizerDescription": "Bitte eine Beschreibung angeben",
