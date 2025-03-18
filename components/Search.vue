@@ -5,11 +5,12 @@
         <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
           <li v-for="event in events"
               :key="`${event.event_id}-${event.event_date_id}`"
-              class="border border-gray-100 bg-gray-200 rounded-lg shadow-md h-full flex flex-col">
+              class="border border-gray-100 bg-gray-200 rounded-lg shadow-md h-full flex flex-col"
+              role="listitem">
 
             <!-- Image -->
             <div>
-              <img :src="event.image_url" :alt="event.image_alt_name"
+              <img :src="event.image_url" :alt="event.image_alt_name || 'Event image'"
                   class="w-full h-48 object-cover rounded-t-lg">
             </div>
 
@@ -31,21 +32,24 @@
                 <span v-if="event.venue_type" v-for="type in event.venue_type.split(',').map(t => t.trim())"
                       :key="type"
                       class="text-xs font-medium px-2.5 py-1 rounded bg-orange-100 text-orange-800 hover:bg-orange-500 hover:text-white cursor-pointer"
-                      @click="handleTypeClick(type, 'venue_type')">
+                      @click="handleTypeClick(type, 'venue_type')"
+                      role="button" aria-label="Filter by venue type: {{ type }}">
                   {{ type }}
                 </span>
 
                 <span v-if="event.space_type" v-for="type in event.space_type.split(',').map(t => t.trim())"
                       :key="type"
                       class="text-xs font-medium px-2.5 py-1 rounded bg-pink-100 text-pink-800 hover:bg-pink-500 hover:text-white cursor-pointer"
-                      @click="handleTypeClick(type, 'space_type')">
+                      @click="handleTypeClick(type, 'space_type')"
+                      role="button" aria-label="Filter by space type: {{ type }}">
                   {{ type }}
                 </span>
 
                 <span v-if="event.event_type" v-for="type in event.event_type.split(',').map(t => t.trim())"
                       :key="type"
                       class="text-xs font-medium px-2.5 py-1 rounded bg-blue-100 text-blue-800 hover:bg-blue-500 hover:text-white cursor-pointer"
-                      @click="handleTypeClick(type, 'event_type')">
+                      @click="handleTypeClick(type, 'event_type')"
+                      role="button" aria-label="Filter by event type: {{ type }}">
                   {{ type }}
                 </span>
               </div>
@@ -58,12 +62,12 @@
         <div>
           <!-- Event City Input -->
           <label for="eventCity">Event City</label>
-          <input type="text" id="eventCity" v-model="eventCity" class="bg-white mt-1 p-3 w-full border rounded-xs" placeholder="Enter city">
+          <input type="text" id="eventCity" v-model="eventCity" class="bg-white mt-1 p-3 w-full border rounded-xs" placeholder="Enter city" aria-label="Enter event city">
         </div>
         <div>
           <!-- Venue Type Dropdown -->
           <label for="venueType">Venue Type</label>
-          <select class="bg-white mt-1 p-3 w-full border rounded-xs" id="venueType" v-model="selectedVenueType">
+          <select class="bg-white mt-1 p-3 w-full border rounded-xs" id="venueType" v-model="selectedVenueType" aria-label="Select venue type">
             <option selected value="">Bitte auswählen</option>
             <option v-for="venueType in venueTypes" :key="venueType.venue_type_id" :value="venueType.venue_type_id">
               {{ venueType.venue_type_name }}
@@ -74,7 +78,7 @@
         <div>
           <!-- Event Type Dropdown -->
           <label for="eventType">Event Type</label>
-          <select class="bg-white mt-1 p-3 w-full border rounded-xs" id="eventType" v-model="selectedEventType">
+          <select class="bg-white mt-1 p-3 w-full border rounded-xs" id="eventType" v-model="selectedEventType" aria-label="Select event type">
             <option selected value="">Bitte auswählen</option>
             <option v-for="eventType in eventTypes" :key="eventType.event_type_id" :value="eventType.event_type_id">
               {{ eventType.event_type_name }}
@@ -85,7 +89,7 @@
         <div>
           <!-- Space Type Dropdown -->
           <label for="spaceType">Space Type</label>
-          <select class="bg-white mt-1 p-3 w-full border rounded-xs" id="spaceType" v-model="selectedSpaceType">
+          <select class="bg-white mt-1 p-3 w-full border rounded-xs" id="spaceType" v-model="selectedSpaceType" aria-label="Select space type">
             <option selected value="">Bitte auswählen</option>
             <option v-for="spaceType in spaceTypes" :key="spaceType.space_type_id" :value="spaceType.space_type_id">
               {{ spaceType.space_type_name }}
@@ -96,12 +100,22 @@
         <div>
           <!-- Genre Type Dropdown -->
           <label for="genreType">Genre Type</label>
-          <select class="bg-white mt-1 p-3 w-full border rounded-xs" id="genreType" v-model="selectedGenreType">
+          <select class="bg-white mt-1 p-3 w-full border rounded-xs" id="genreType" v-model="selectedGenreType" aria-label="Select genre type">
             <option selected value="">Bitte auswählen</option>
             <option v-for="genreType in genreTypes" :key="genreType.genre_type_id" :value="genreType.genre_type_id">
               {{ genreType.genre_type_name }}
             </option>
           </select>
+        </div>
+
+        <div>
+          <label for="eventDateStart" class="block font-medium mb-1">Frühster Beginn</label>
+          <input type="date" id="eventDateStart" v-model="eventDateStart" class="w-full p-2 border rounded mb-4" aria-describedby="eventDateStart" aria-label="Select earliest event start date">
+        </div>
+
+        <div>
+          <label for="eventDateEnd" class="block font-medium mb-1">Spätestes Datum</label>
+          <input type="date" id="eventDateEnd" v-model="eventDateEnd" class="w-full p-2 border rounded" aria-describedby="eventDateEnd" aria-label="Select latest event end date">
         </div>
       </div>
     </div>
@@ -128,6 +142,10 @@ const selectedEventType = ref('')
 const selectedVenueType = ref('')
 const selectedSpaceType = ref('')
 const selectedGenreType = ref('')
+
+// Date inputs
+const eventDateStart = ref('')
+const eventDateEnd = ref('')
 
 // Get API base URL from Nuxt config
 const config = useRuntimeConfig()
@@ -176,6 +194,8 @@ const generateQuery = (additionalParams = {}) => {
   if (selectedVenueType.value) params.append('venue_type_id', selectedVenueType.value)
   if (selectedSpaceType.value) params.append('space_type_id', selectedSpaceType.value)
   if (selectedGenreType.value) params.append('genre_type_id', selectedGenreType.value)
+  if (eventDateStart.value) params.append('date_start', `>${formatDate(eventDateStart.value)}`)
+  if (eventDateEnd.value) params.append('date_end', `<${formatDate(eventDateEnd.value)}`)
 
   // Add additional parameters
   Object.keys(additionalParams).forEach(key => {
@@ -198,7 +218,7 @@ const handleTypeClick = (type, typeKey) => {
 }
 
 // Watchers for all filters
-watch([eventCity, selectedEventType, selectedVenueType, selectedSpaceType, selectedGenreType], () => {
+watch([eventCity, selectedEventType, selectedVenueType, selectedSpaceType, selectedGenreType, eventDateStart, eventDateEnd], () => {
   fetchData(generateQuery(), events)
 })
 </script>
