@@ -3,19 +3,30 @@
     <h2 id="eventFormTitle" class="text-2xl font-bold mb-4">{{ $t('eventForm.title') }}</h2>
 
     <div>
-      <label class="block text-gray-700" for="eventTitle">{{ $t('eventForm.eventTitle') }}</label>
+      <label class="block text-gray-700" for="eventTitle">{{ $t('eventForm.eventTitle') }} <span class="text-red-600">*</span></label>
       <input type="text" id="eventTitle" name="eventTitle" class="mt-1 p-2 w-full border rounded-xs" v-model="eventTitle" @input="validateField('eventTitle')" aria-describedby="eventTitleError">
       <p v-if="errors.eventTitle" id="eventTitleError" class="text-red-600">{{ errors.eventTitle }}</p>
     </div>
     <div>
-      <label class="block text-gray-700" for="eventDescription">{{ $t('eventForm.eventDescription') }}</label>
+      <label class="block text-gray-700" for="eventDescription">{{ $t('eventForm.eventDescription') }} <span class="text-red-600">*</span></label>
       <textarea id="eventDescription" name="eventDescription" rows="4" class="mt-1 p-2 w-full border rounded-xs" v-model="eventDescription" @input="validateField('eventDescription')" aria-describedby="eventDescriptionError"></textarea>
       <p v-if="errors.eventDescription" id="eventDescriptionError" class="text-red-600">{{ errors.eventDescription }}</p>
     </div>
 
+    <div class="col-span-12 sm:col-span-6 lg:col-span-4">
+      <label for="eventType">Event Typ <span class="text-red-600">*</span></label>
+      <select class="bg-white mt-1 p-3 w-full border rounded-xs" id="eventType" v-model="selectedEventTypes" multiple :disabled="eventTypes.length === 0" @change="validateField('selectedEventTypes')" aria-describedby="selectedEventTypesError">
+        <option v-if="eventTypes.length === 0" value="" selected>---</option>
+        <option v-for="eventType in eventTypes" :key="eventType.id" :value="eventType.event_type_id">
+          {{ eventType.event_type_name }}
+        </option>
+      </select>
+      <p v-if="errors.selectedEventTypes" id="selectedEventTypesError" class="text-red-600">{{ errors.selectedEventTypes }}</p>
+    </div>
+
     <div class="grid grid-cols-12 gap-4 mb-4">
       <div class="col-span-12 sm:col-span-6 lg:col-span-4">
-        <label class="block text-gray-700" for="eventDateStart">{{ $t('eventForm.eventDateStart') }}</label>
+        <label class="block text-gray-700" for="eventDateStart">{{ $t('eventForm.eventDateStart') }} <span class="text-red-600">*</span></label>
         <input type="datetime-local" name="eventDateStart" class="mt-1 p-2 w-full border rounded-xs" v-model="eventDateStart" @input="validateField('eventDateStart')" aria-describedby="eventDateStartError">
         <p v-if="errors.eventDateStart" id="eventDateStartError" class="text-red-600">{{ errors.eventDateStart }}</p>
       </div>
@@ -33,9 +44,9 @@
 
       <!-- Organizer ID -->
       <div class="col-span-12 sm:col-span-6 lg:col-span-4">
-        <label class="block text-gray-700" for="organizer">{{ $t('eventForm.organizer') }}</label>
+        <label class="block text-gray-700" for="organizer">{{ $t('eventForm.organizer') }} <span class="text-red-600">*</span></label>
         <select class="bg-white mt-1 p-3 w-full border rounded-xs" id="organizer" v-model="selectedOrganizer" @change="validateField('selectedOrganizer')" aria-describedby="selectedOrganizerError">
-          <option selected value="">{{ $t('eventForm.selectOption') }}</option>
+          <option value="" disabled>{{ $t('eventForm.selectOption') }}</option>
           <option v-for="organizer in organizers" :key="organizer.organizer_id" :value="organizer.organizer_id">
             {{ organizer.organizer_name }}
           </option>
@@ -45,9 +56,9 @@
 
       <!-- Venue ID -->
       <div class="col-span-12 sm:col-span-6 lg:col-span-4">
-        <label class="block text-gray-700" for="venue">{{ $t('eventForm.venue') }}</label>
-        <select class="bg-white mt-1 p-3 w-full border rounded-xs" id="venue" v-model="selectedVenue" @change="fetchSpaces; validateField('selectedVenue')" aria-describedby="selectedVenueError">
-          <option selected value="">{{ $t('eventForm.selectOption') }}</option>
+        <label class="block text-gray-700" for="venue">{{ $t('eventForm.venue') }} <span class="text-red-600">*</span></label>
+        <select class="bg-white mt-1 p-3 w-full border rounded-xs" id="venue" v-model="selectedVenue" @change="validateField('selectedVenue')" aria-describedby="selectedVenueError">
+          <option value="" disabled>{{ $t('eventForm.selectOption') }}</option>
           <option v-for="venue in venues" :key="venue.venue_id" :value="venue.venue_id">
             {{ venue.venue_name }}
           </option>
@@ -57,10 +68,9 @@
 
       <!-- Space -->
       <div class="col-span-12 sm:col-span-6 lg:col-span-4">
-        <label for="space">{{ $t('eventForm.space') }}</label>
+        <label for="space">{{ $t('eventForm.space') }} <span class="text-red-600">*</span></label>
         <select class="bg-white mt-1 p-3 w-full border rounded-xs" id="space" v-model="selectedSpace" :disabled="spaces.length === 0" @change="validateField('selectedSpace')" aria-describedby="selectedSpaceError">
-          <option v-if="spaces.length === 0" value="" selected>---</option>
-          <option v-else value="" selected>{{ $t('eventForm.selectOption') }}</option>
+          <option value="" disabled>{{ $t('eventForm.selectOption') }}</option>
           <option v-for="space in spaces" :key="space.id" :value="space.id">
             {{ space.name }}
           </option>
@@ -75,7 +85,7 @@
         <label for="licenseType">{{ $t('eventForm.licenseType') }}</label>
         <select class="bg-white mt-1 p-3 w-full border rounded-xs" id="licenseType" v-model="selectedLicenseType" :disabled="licenseTypes.length === 0" @change="validateField('selectedLicenseType')" aria-describedby="selectedLicenseTypeError">
           <option v-if="licenseTypes.length === 0" value="" selected>---</option>
-          <option v-else value="" selected>{{ $t('eventForm.selectOption') }}</option>
+          <option v-else value="" disabled>{{ $t('eventForm.selectOption') }}</option>
           <option v-for="licenseType in licenseTypes" :key="licenseType.id" :value="licenseType.id">
             {{ licenseType.license_type_name }}
           </option>
@@ -87,7 +97,7 @@
         <label for="imageType">{{ $t('eventForm.imageType') }}</label>
         <select class="bg-white mt-1 p-3 w-full border rounded-xs" id="imageType" v-model="selectedImageType" :disabled="imageTypes.length === 0" @change="validateField('selectedImageType')" aria-describedby="selectedImageTypeError">
           <option v-if="imageTypes.length === 0" value="" selected>---</option>
-          <option v-else value="" selected>{{ $t('eventForm.selectOption') }}</option>
+          <option v-else value="" disabled>{{ $t('eventForm.selectOption') }}</option>
           <option v-for="imageType in imageTypes" :key="imageType.id" :value="imageType.id">
             {{ imageType.image_type_name }}
           </option>
@@ -119,28 +129,30 @@ import { useI18n } from 'vue-i18n'
 const route = useRoute()
 const router = useRouter()
 
-const { t, locale } = useI18n() // Update i18n import to include locale
+const { t, locale } = useI18n()
 
-const venueId = route.params.id;
+const venueId = route.params.id
 const eventTitle = ref('')
 const eventDescription = ref('')
 const eventDateStart = ref('')
 const eventDateEnd = ref('')
 const entryTime = ref('')
-const venueName = ref('')
 const errors = ref({})
-const formError = ref('') // Add this line
 
 // Define reactive variables for dropdowns
 const organizers = ref([])
 const venues = ref([])
 const imageTypes = ref([])
+const eventTypes = ref([])
 const licenseTypes = ref([])
 const spaces = ref([])
+
+// Image upload
 const file = ref(null)
 const previewUrl = ref('')
 
 // Selected values
+const selectedEventTypes = ref([])
 const selectedOrganizer = ref('')
 const selectedLicenseType = ref('')
 const selectedImageType = ref('')
@@ -160,7 +172,7 @@ const fetchData = async (url, targetArray) => {
 
 // Fetch spaces based on selected venue
 const fetchSpaces = async () => {
-  if (selectedVenue.value) {
+  if (selectedVenue.value.length > 0) {
     const url = `/space/filtered?venue_id=${selectedVenue.value}`
     fetchData(url, spaces)
   } else {
@@ -170,13 +182,13 @@ const fetchSpaces = async () => {
 
 const onFileChange = (event) => {
   try {
-    const selectedFile = event.target.files[0];
+    const selectedFile = event.target.files[0]
     if (selectedFile) {
-      file.value = selectedFile;
-      previewUrl.value = URL.createObjectURL(selectedFile);
+      file.value = selectedFile
+      previewUrl.value = URL.createObjectURL(selectedFile)
     }
   } catch (error) {
-    console.error('Error handling file change:', error);
+    console.error('Error handling file change:', error)
   }
 }
 
@@ -193,16 +205,14 @@ const validateForm = () => {
     'eventDescription',
     'eventDateStart',
     'selectedOrganizer',
-    'selectedVenue'
+    'selectedVenue',
+    'selectedEventTypes',
+    'selectedSpace'
   ]
 
   requiredFields.forEach(field => {
     validateField(field, true)
   })
-
-  if (spaces.value.length > 0) {
-    validateField('selectedSpace', true)
-  }
 }
 
 // Update validateField to handle required fields
@@ -211,16 +221,13 @@ const validateField = (field, required = false) => {
     eventTitle,
     eventDescription,
     eventDateStart,
-    eventDateEnd,
-    entryTime,
     selectedOrganizer,
     selectedVenue,
-    selectedSpace
+    selectedSpace,
+    selectedEventTypes
   }
   
-  if (required && !fields[field]?.value) {
-    errors.value[field] = t('eventForm.errors.required')
-  } else if (!fields[field]?.value) {
+  if (!fields[field]?.value || fields[field]?.value.length === 0) {
     errors.value[field] = t(`eventForm.errors.${field}`)
   } else {
     delete errors.value[field]
@@ -229,64 +236,56 @@ const validateField = (field, required = false) => {
 
 const handleSubmit = async () => {
   try {
-    validateForm();
-    formError.value = '';
-
-    if (Object.keys(errors.value).length > 0) {
-      formError.value = t('eventForm.errors.validation');
-      console.error('Validation errors:', JSON.parse(JSON.stringify(errors.value)));
-      return;
-    }
+    validateForm()
 
     // Ensure all required fields are present
-    if (!eventTitle.value || !eventDescription.value || !eventDateStart.value || 
-        !selectedOrganizer.value || !selectedVenue.value || !file.value) {
-      console.error('Missing required fields');
-      return;
+    if (Object.keys(errors.value).length > 0) {
+      return
     }
 
     const formData = new FormData();
-    formData.append('file', file.value);
+
+    if (file.value) {
+      formData.append('file', file.value);
+    }
+
     formData.append('event_title', eventTitle.value);
     formData.append('event_description', eventDescription.value);
     formData.append('event_date_start', eventDateStart.value);
     formData.append('event_date_end', eventDateEnd.value || '');
-    formData.append('entry_time', entryTime.value || '');
-    
-    // Handle optional integer fields
+    formData.append('event_entry_time', entryTime.value || '');
+
+    // Append only if the value is a valid number
     if (selectedLicenseType.value) {
       formData.append('event_image_license_type_id', parseInt(selectedLicenseType.value));
     }
     if (selectedImageType.value) {
       formData.append('event_image_type_id', parseInt(selectedImageType.value));
     }
-    
-    // Required integer fields
-    formData.append('event_organizer_id', parseInt(selectedOrganizer.value));
-    formData.append('event_venue_id', parseInt(selectedVenue.value));
-    
-    // Optional fields
+    if (selectedOrganizer.value) {
+      formData.append('event_organizer_id', parseInt(selectedOrganizer.value));
+    }
+    if (selectedVenue.value) {
+      formData.append('event_venue_id', parseInt(selectedVenue.value));
+    }
     if (selectedSpace.value) {
       formData.append('event_space_id', parseInt(selectedSpace.value));
     }
-    if (venueName.value) {
-      formData.append('event_venue_name', venueName.value);
-    }
 
     try {
-      const { fetchApi } = useApi();
+      const { fetchApi } = useApi()
       const data = await fetchApi('/event/', {
         method: 'POST',
         body: formData,
-      });
+      })
 
-      console.log('Success:', data);
-      router.push('/dashboard');
+      console.log('Success:', data)
+      router.push('/dashboard')
     } catch (error) {
-      console.error('Error sending data:', error);
+      console.error('Error sending data:', error)
     }
   } catch (error) {
-    console.error('Error in handleSubmit:', error);
+    console.error('Error in handleSubmit:', error)
   }
 }
 
@@ -298,7 +297,8 @@ const cancelForm = () => {
 onMounted(() => {
   fetchData('/user/organizer/', organizers)
   fetchData(`/license/type?lang=${locale.value}`, licenseTypes)
-  fetchData(`/image/type?lang=${locale.value}`, imageTypes)
+  fetchData(`/image/type/?lang=${locale.value}`, imageTypes)
+  fetchData(`/event/type/?lang=${locale.value}`, eventTypes)
   fetchData('/user/venue/', venues)
   if (venueId) {
     // Preselect the option if venueId is provided

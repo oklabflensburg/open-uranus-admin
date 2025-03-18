@@ -81,7 +81,8 @@
       "eventDateStart": "Please provide an event start date",
       "selectedOrganizer": "Please select an organizer",
       "selectedVenue": "Please select a venue",
-      "selectedSpace": "Please select a space"
+      "selectedSpace": "Please select a space",
+      "selectedEventTypes": "Bitte mindestens einen Event Typen auswählen"
     }
   },
   "venueForm": {

@@ -81,7 +81,8 @@
       "eventDateStart": "Angiv venligst en startdato",
       "selectedOrganizer": "Vælg venligst en arrangør",
       "selectedVenue": "Vælg venligst et sted",
-      "selectedSpace": "Vælg venligst et rum"
+      "selectedSpace": "Vælg venligst et rum",
+      "selectedEventTypes": "Bitte mindestens einen Event Typen auswählen"
     }
   },
   "venueForm": {

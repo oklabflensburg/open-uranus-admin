@@ -81,7 +81,8 @@
       "eventDateStart": "Bitte einen Event Beginn angeben",
       "selectedOrganizer": "Bitte einen Veranstalter auswählen",
       "selectedVenue": "Bitte einen Veranstaltungsort auswählen",
-      "selectedSpace": "Bitte einen Raum auswählen"
+      "selectedSpace": "Bitte einen Raum auswählen",
+      "selectedEventTypes": "Bitte mindestens einen Event Typen auswählen"
     }
   },
   "venueForm": {
