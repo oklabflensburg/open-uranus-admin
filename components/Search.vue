@@ -19,16 +19,14 @@
 
             <!-- Content -->
             <div class="p-3 flex flex-col flex-grow">
+              <span class="mb-1">{{ formatDate(event.event_date_start) }}</span>
               <h1 class="text-xl font-semibold">{{ event.event_title }}</h1>
-              <p class="text-gray-700 flex-grow">{{ event.event_description }}</p>
-              <address class="text-sm text-gray-500">{{ event.venue_postcode }} {{ event.venue_city }}</address>
 
-              <div class="text-sm mt-2">
-                <span class="font-bold">{{ $t('search.event.organizer') }}:</span> {{ event.organizer_name }}<br>
-                <span class="font-bold">{{ $t('search.event.event_id') }}:</span> {{ event.event_id }}<br>
-                <span class="font-bold">{{ $t('search.event.date_id') }}:</span> {{ event.event_date_id }}<br>
-                <span class="font-bold">{{ $t('search.event.start_date') }}:</span> {{ formatDate(event.event_date_start) }}
-              </div>
+              <p class="text-gray-700 mb-6">{{ truncateDescription(event.event_description) }}</p>
+              <address class="flex-grow not-italic">
+                <span class="font-bold">{{ event.venue_name }}</span><br>
+                {{ event.venue_postcode }} {{ event.venue_city }}
+              </address>
 
               <!-- Tags Section (sticks to bottom) -->
               <div class="flex flex-wrap gap-2 mt-auto pt-2">
@@ -61,7 +59,9 @@
         </ul>
       </div>
 
-      <div class="col-span-12 md:col-span-4 lg:col-span-3 space-y-4">
+      <div class="col-span-12 md:col-span-4 lg:col-span-3 space-y-4 bg-gray-100 p-3 rounded-md">
+        <h1 class="text-2xl">Suche</h1>
+
         <div>
           <!-- Event City Input -->
           <label for="eventCity">{{ $t('search.filter.event_city') }}</label>
@@ -181,6 +181,11 @@ function formatDate(dateString) {
   }
 
   return dateString
+}
+
+function truncateDescription(description) {
+  if (description.length <= 200) return description;
+  return description.substring(0, 200).split(' ').slice(0, -1).join(' ') + '...';
 }
 
 // Fetch function

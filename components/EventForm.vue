@@ -274,7 +274,7 @@ const handleSubmit = async () => {
     }
 
     selectedEventTypes.value.forEach(eventType => {
-      formData.append('event_type_id[]', eventType)
+      formData.append('event_type_id', eventType)
     })
 
     try {
