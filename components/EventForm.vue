@@ -104,8 +104,8 @@
     </div>
 
     <div class="flex space-x-4 justify-end">
-      <button type="submit" id="addEventButton" class="mt-6 px-4 py-2 bg-green-500 text-white rounded-xs hover:bg-green-700 transition">{{ $t('eventForm.submitButton') }}</button>
       <button type="button" @click="cancelForm" class="mt-6 px-4 py-2 bg-gray-500 text-white rounded-xs hover:bg-gray-700 transition">{{ $t('eventForm.cancelButton') }}</button>
+      <button type="submit" id="addEventButton" class="mt-6 px-4 py-2 bg-green-500 text-white rounded-xs hover:bg-green-700 transition">{{ $t('eventForm.submitButton') }}</button>
     </div>
   </form>
 </template>

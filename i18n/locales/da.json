@@ -155,5 +155,34 @@
       "organizerPostalCode": "Angiv venligst et postnummer",
       "organizerCity": "Angiv venligst en by"
     }
+  },
+  "search": {
+    "event": {
+      "image_alt": "Begivenhedsbillede",
+      "organizer": "Arrangør",
+      "event_id": "Begivenheds-ID",
+      "date_id": "Dato-ID",
+      "start_date": "Startdato"
+    },
+    "filter": {
+      "event_city": "Begivenhedsby",
+      "enter_city": "Indtast by",
+      "enter_event_city": "Indtast begivenhedsby",
+      "venues": "Filtrer steder",
+      "venue_type": "Filtrer stedtype",
+      "event_type": "Filtrer begivenhedstype",
+      "space_type": "Filtrer rumtype",
+      "genre_type": "Filtrer genrtype",
+      "select_venue": "Vælg sted",
+      "select_venue_type": "Vælg stedtype",
+      "select_event_type": "Vælg begivenhedstype",
+      "select_space_type": "Vælg rumtype",
+      "select_genre_type": "Vælg genrtype",
+      "select_option": "Vælg venligst",
+      "earliest_start": "Tidligste start",
+      "latest_date": "Seneste dato",
+      "select_earliest_start_date": "Vælg tidligste startdato",
+      "select_latest_end_date": "Vælg seneste slutdato"
+    }
   }
 }
