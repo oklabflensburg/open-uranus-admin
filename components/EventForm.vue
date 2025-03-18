@@ -79,7 +79,6 @@
       </div>
     </div>
 
-
     <div class="grid grid-cols-12 gap-4 mb-4">
       <div class="col-span-12 sm:col-span-6 lg:col-span-4">
         <label for="licenseType">{{ $t('eventForm.licenseType') }}</label>
@@ -172,13 +171,18 @@ const fetchData = async (url, targetArray) => {
 
 // Fetch spaces based on selected venue
 const fetchSpaces = async () => {
-  if (selectedVenue.value.length > 0) {
+  if (selectedVenue.value) {
     const url = `/space/filtered?venue_id=${selectedVenue.value}`
     fetchData(url, spaces)
   } else {
     spaces.value = []
   }
 }
+
+// Watch for changes to selectedVenue and fetch spaces accordingly
+watch(selectedVenue, () => {
+  fetchSpaces()
+})
 
 const onFileChange = (event) => {
   try {
@@ -191,9 +195,6 @@ const onFileChange = (event) => {
     console.error('Error handling file change:', error)
   }
 }
-
-// Watch for changes to selectedVenue and fetch spaces accordingly
-watch(selectedVenue, fetchSpaces)
 
 // Form validation
 const validateForm = () => {
@@ -271,6 +272,10 @@ const handleSubmit = async () => {
     if (selectedSpace.value) {
       formData.append('event_space_id', parseInt(selectedSpace.value));
     }
+
+    selectedEventTypes.value.forEach(eventType => {
+      formData.append('event_type_id[]', eventType)
+    })
 
     try {
       const { fetchApi } = useApi()
