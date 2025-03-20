@@ -74,7 +74,7 @@
 
             <div class="mt-2 flex gap-2">
               <nuxt-link v-if="venue.can_edit_space" :to="localePath({ name: 'space-id', params: { id: venue.venue_id } })" class="bg-gray-600 text-white py-1 px-3 hover:bg-gray-800 hover:text-gray-100 transition rounded">{{ $t('dashboard.createSpace') }}</nuxt-link>
-              <nuxt-link v-if="venue.can_edit_event && venue.stats.count_spaces > 0" :to="localePath({ name: 'event-id', params: { id: venue.venue_id } })" class="bg-gray-600 text-white py-1 px-3 hover:bg-gray-800 hover:text-gray-100 transition rounded">{{ $t('dashboard.createEvent') }}</nuxt-link>
+              <nuxt-link v-if="venue.can_edit_event && venue.stats.count_spaces > 0" :to="localePath({ name: 'event', query: { venueId: venue.venue_id } })" class="bg-gray-600 text-white py-1 px-3 hover:bg-gray-800 hover:text-gray-100 transition rounded"> {{ $t('dashboard.createEvent') }}</nuxt-link>
             </div>
           </div>
         </li>
@@ -102,7 +102,7 @@
               <td class="p-3 border">{{ event.event_title }}</td>
               <td class="p-3 border">{{ event.event_venue_name }}</td>
               <td class="p-3 border text-right">
-                <nuxt-link v-if="event.can_edit" :to="localePath({ name: 'event-id', params: { id: event.event_id } })" class="cursor-pointer">
+                <nuxt-link v-if="event.can_edit" :to="localePath({ name: 'event-id', params: { id: event.event_date_id }, query: { venueId: 21, update: true }})" class="cursor-pointer">
                   <img src="/public/icons/edit.svg" alt="Edit" class="inline-block">
                 </nuxt-link>
               </td>

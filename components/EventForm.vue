@@ -137,12 +137,21 @@ import { useApi } from '@/composables/useApi'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
+const { fetchApi } = useApi()
+
 const route = useRoute()
 const router = useRouter()
 
 const { t, locale } = useI18n()
 
-const venueId = route.params.id
+// Read venueId from query parameters
+const venueId = route.query.venueId
+const updteEvent = route.query.update
+const eventDateId = route.params.id
+
+console.log('eventDateId:', eventDateId)
+console.log('venueId:', venueId)
+
 const eventTitle = ref('')
 const eventDescription = ref('')
 const eventDateStart = ref('')
@@ -169,13 +178,12 @@ const selectedOrganizer = ref('')
 const selectedGenreType = ref('')
 const selectedLicenseType = ref('')
 const selectedImageType = ref('')
-const selectedVenue = ref('')
+const selectedVenue = ref(venueId || '') // Preselect venueId if available
 const selectedSpace = ref('')
 
 // Fetch function
 const fetchData = async (url, targetArray) => {
   try {
-    const { fetchApi } = useApi()
     const data = await fetchApi(url)
     targetArray.value = data
   } catch (error) {
@@ -264,40 +272,51 @@ const handleSubmit = async () => {
       formData.append('file', file.value);
     }
 
-    formData.append('event_title', eventTitle.value);
-    formData.append('event_description', eventDescription.value);
-    formData.append('event_date_start', eventDateStart.value);
-    formData.append('event_date_end', eventDateEnd.value || '');
-    formData.append('event_entry_time', entryTime.value || '');
+    formData.append('event_title', eventTitle.value)
+    formData.append('event_description', eventDescription.value)
 
-    // Append only if the value is a valid number
+    if (eventDateStart.value) {
+      formData.append('event_date_start', eventDateStart.value)
+    }
+    if (eventDateEnd.value) {
+      formData.append('event_date_end', eventDateEnd.value)
+    }
+    if (entryTime.value) {
+      formData.append('event_entry_time', entryTime.value)
+    }
+
     if (selectedGenreType.value) {
       formData.append('event_genre_type_id', parseInt(selectedGenreType.value));
     }
+
     if (selectedLicenseType.value) {
       formData.append('event_image_license_type_id', parseInt(selectedLicenseType.value));
     }
+
     if (selectedImageType.value) {
       formData.append('event_image_type_id', parseInt(selectedImageType.value));
     }
+
     if (selectedOrganizer.value) {
       formData.append('event_organizer_id', parseInt(selectedOrganizer.value));
     }
+
     if (selectedVenue.value) {
       formData.append('event_venue_id', parseInt(selectedVenue.value));
     }
+
     if (selectedSpace.value) {
       formData.append('event_space_id', parseInt(selectedSpace.value));
     }
 
     selectedEventTypes.value.forEach(eventType => {
-      formData.append('event_type_id', eventType)
+      formData.append('event_type_id', parseInt(eventType))
     })
 
     try {
       const { fetchApi } = useApi()
-      const data = await fetchApi('/event/', {
-        method: 'POST',
+      const data = await fetchApi(`/event/${updteEvent ? parseInt(eventDateId) : ''}`, {
+        method: updteEvent ? 'PUT' : 'POST',
         body: formData,
       })
 
@@ -315,7 +334,36 @@ const cancelForm = () => {
   router.push('/dashboard')
 }
 
-// Fetch organizers and venues when component is mounted
+// Fetch event data for editing
+const fetchEventData = async () => {
+  if (eventDateId) {
+    try {
+      const eventData = await fetchApi(`/event/${parseInt(eventDateId)}?lang=${locale.value}`)
+
+      eventTitle.value = eventData.event_title || ''
+      eventDescription.value = eventData.event_description || ''
+      eventDateStart.value = eventData.event_date_start || ''
+      eventDateEnd.value = eventData.event_date_end || ''
+      entryTime.value = eventData.event_entry_time || ''
+      selectedOrganizer.value = eventData.event_organizer_id || ''
+      selectedVenue.value = eventData.event_venue_id || ''
+      selectedSpace.value = eventData.event_space_id || ''
+      selectedEventTypes.value = []
+      if (eventData.event_type_ids && Array.isArray(eventData.event_type_ids)) {
+        eventData.event_type_ids.forEach(eventTypeId => {
+          selectedEventTypes.value.push(eventTypeId)
+        })
+      }
+      selectedGenreType.value = eventData.event_genre_type_id || ''
+      selectedLicenseType.value = eventData.event_image_license_type_id || ''
+      selectedImageType.value = eventData.event_image_type_id || ''
+    } catch (error) {
+      console.error('Error fetching event data:', error)
+    }
+  }
+}
+
+// Fetch organizers, venues, and event data when component is mounted
 onMounted(() => {
   fetchData('/user/organizer/', organizers)
   fetchData(`/genre/type/?lang=${locale.value}`, genreTypes)
@@ -324,8 +372,8 @@ onMounted(() => {
   fetchData(`/event/type/?lang=${locale.value}`, eventTypes)
   fetchData('/user/venue/', venues)
   if (venueId) {
-    // Preselect the option if venueId is provided
     selectedVenue.value = venueId
   }
+  fetchEventData() // Fetch event data if eventDateId is present
 })
 </script>
