@@ -6,7 +6,6 @@
           <li v-if="events.length === 0" class="col-span-full text-center text-gray-500">
             Keine Events gefunden. Bitte nutze die Suche!
           </li>
-          {{ events }}
           <li v-for="event in events"
               :key="`${event.event_id}-${event.event_date_id}`"
               class="border border-gray-100 bg-gray-200 rounded-md shadow-md h-full flex flex-col"
