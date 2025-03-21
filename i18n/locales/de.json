@@ -164,7 +164,8 @@
       "organizer": "Veranstalter",
       "event_id": "Veranstaltungs-ID",
       "date_id": "Datum-ID",
-      "start_date": "Startdatum"
+      "start_date": "Startdatum",
+      "add_to_calendar": "Zum Kalender hinzufügen"
     },
     "filter": {
       "event_city": "Veranstaltungsstadt",

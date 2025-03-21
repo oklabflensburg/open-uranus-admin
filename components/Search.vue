@@ -6,6 +6,7 @@
           <li v-if="events.length === 0" class="col-span-full text-center text-gray-500">
             Keine Events gefunden. Bitte nutze die Suche!
           </li>
+          {{ events }}
           <li v-for="event in events"
               :key="`${event.event_id}-${event.event_date_id}`"
               class="border border-gray-100 bg-gray-200 rounded-md shadow-md h-full flex flex-col"
@@ -38,11 +39,7 @@
                   {{ type }}
                 </span>
 
-                <span v-if="event.space_type" v-for="type in event.space_type.split(',').map(t => t.trim())"
-                      :key="type"
-                      class="text-xs font-medium px-2.5 py-1 rounded bg-pink-100 text-pink-800 hover:bg-pink-500 hover:text-white cursor-pointer"
-                      @click="handleTypeClick(type, 'space_type')"
-                      role="button" :aria-label="$t('search.filter.space_type', { type })">
+                <span v-if="event.space_type" v-for="type in event.space_type.split(',').map(t => t.trim())" :key="type" class="text-xs font-medium px-2.5 py-1 rounded bg-pink-100 text-pink-800 hover:bg-pink-500 hover:text-white cursor-pointer" @click="handleTypeClick(type, 'space_type')" role="button" :aria-label="$t('search.filter.space_type', { type })">
                   {{ type }}
                 </span>
 
@@ -54,6 +51,12 @@
                   {{ type }}
                 </span>
               </div>
+            </div>
+
+            <div class="flex flex-wrap gap-2 mt-auto p-3">
+              <button @click="downloadCalendar(event.event_date_id)" class="text-xs font-medium px-2.5 py-1 rounded bg-gray-100 text-gray-800 hover:bg-gray-500 hover:text-white cursor-pointer">
+                {{ $t('search.event.add_to_calendar') }}
+              </button>
             </div>
           </li>
         </ul>
@@ -246,4 +249,27 @@ const handleTypeClick = (type, typeKey) => {
 watch([eventCity, selectedVenue, selectedEventType, selectedVenueType, selectedSpaceType, selectedGenreType, eventDateStart, eventDateEnd], () => {
   fetchData(generateQuery(), events)
 })
+
+const downloadCalendar = async (eventDateId) => {
+  try {
+    const response = await fetch(`${apiBaseUrl}/event/${eventDateId}/calendar`, {
+      method: 'GET',
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to download calendar file');
+    }
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `event-${eventDateId}.ics`);
+    document.body.appendChild(link);
+    link.click();
+    link.parentNode.removeChild(link);
+  } catch (error) {
+    console.error('Error downloading calendar file:', error);
+  }
+};
 </script>

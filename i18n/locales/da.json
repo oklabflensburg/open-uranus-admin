@@ -164,7 +164,8 @@
       "organizer": "Arrangør",
       "event_id": "Begivenheds-ID",
       "date_id": "Dato-ID",
-      "start_date": "Startdato"
+      "start_date": "Startdato",
+      "add_to_calendar": "Zum Kalender hinzufügen"
     },
     "filter": {
       "event_city": "Begivenhedsby",
