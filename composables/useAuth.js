@@ -110,6 +110,26 @@ export const useAuth = () => {
     refreshToken.value = null
   }
 
+  const handleForgotPassword = async (email) => {
+    const url = `${apiBaseUrl}/user/forgot/password`
+
+    try {
+      const response = await $fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to send forgot password request')
+      }
+
+      return response.detail
+    } catch (error) {
+      return error.data.detail
+    }
+  }
+
   return { 
     accessToken, 
     refreshToken, 
@@ -118,6 +138,7 @@ export const useAuth = () => {
     refreshAccessToken, 
     logout, 
     isAuthenticated, 
-    redirectToSignInIfNotAuthenticated 
+    redirectToSignInIfNotAuthenticated,
+    handleForgotPassword
   }
 }

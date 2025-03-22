@@ -37,7 +37,12 @@
   "noAccount": "Noch kein Nutzerkonto? Registrieren",
   "rememberMe": "Erinnere dich an mich",
   "signIn": "Anmelden",
+  "forgotPassword": "Passwort vergessen",
+  "forgotPasswordSuccess": "Ein Link zum Zurücksetzen des Passworts wurde an Ihre E-Mail gesendet.",
+  "forgotPasswordError": "Das Zurücksetzen des Passworts ist fehlgeschlagen. Bitte versuchen Sie es erneut.",
   "loginFailed": "Anmeldung fehlgeschlagen! Überprüfen Sie Ihre Anmeldeinformationen.",
+  "backToSignIn": "Zurück zur Anmeldung",
+  "resetPassword": "Passwort zurücksetzen",
   "dashboard": {
     "welcomeMessage": "Willkommen auf deinem Uranus Dashboard",
     "welcomeDescription": "Du kannst jetzt direkt loslegen und deine erste Organisation erstellen.",
@@ -187,5 +192,7 @@
       "select_earliest_start_date": "Frühstes Startdatum auswählen",
       "select_latest_end_date": "Spätestes Enddatum auswählen"
     }
-  }
+  },
+  "isRequired": "ist erforderlich",
+  "isInvalid": "ist ungültig"
 }

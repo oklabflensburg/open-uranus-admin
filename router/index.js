@@ -7,6 +7,7 @@ const routes = [
     component: DefaultLayout,
     children: [
       { path: '/', name: 'Home', component: () => import('@/pages/index.vue'), meta: { middleware: 'auth' }},
+      { path: '/forgot', name: 'ForgotPassword', component: () => import('@/pages/forgot.vue')},
       { path: '/signin', name: 'Signin', component: () => import('@/pages/signin.vue')},
       { path: '/signup', name: 'Signup', component: () => import('@/pages/signup.vue')},
       { path: '/settings', name: 'Settings', component: () => import('@/pages/settings.vue'), meta: { middleware: 'auth' }},

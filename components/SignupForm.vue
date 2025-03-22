@@ -42,7 +42,8 @@
       </div>
 
       <div class="text-right space-x-4">
-        <nuxt-link :to="'/signin'" class="text-blue-500">{{ $t('alreadyHaveAccount') }}</nuxt-link>
+        <nuxt-link :to="'/signin'" class="text-blue-500 hover:underline">{{ $t('alreadyHaveAccount') }}</nuxt-link>
+        <nuxt-link :to="'/forgot'" class="text-blue-500 hover:underline">{{ $t('forgotPassword') }}</nuxt-link>
       </div>
     </form>
   </div>

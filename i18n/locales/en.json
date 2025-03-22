@@ -37,7 +37,12 @@
   "noAccount": "No account? Register",
   "rememberMe": "Remember me",
   "signIn": "Sign In",
+  "forgotPassword": "Forgot my Password",
+  "forgotPasswordSuccess": "A password reset link has been sent to your email.",
+  "forgotPasswordError": "Failed to send password reset link. Please try again.",
   "loginFailed": "Login failed! Check your credentials.",
+  "backToSignIn": "Back to Sign In",
+  "resetPassword": "Reset Password",
   "dashboard": {
     "welcomeMessage": "Welcome to your Uranus Dashboard",
     "welcomeDescription": "You can start right away and create your first organization.",
@@ -187,5 +192,7 @@
       "select_earliest_start_date": "Select earliest start date",
       "select_latest_end_date": "Select latest end date"
     }
-  }
+  },
+  "isRequired": "is required",
+  "isInvalid": "is invalid"
 }

@@ -37,7 +37,12 @@
   "noAccount": "Har du ikke en konto? Registrer",
   "rememberMe": "Husk mig",
   "signIn": "Log ind",
+  "forgotPassword": "Glemt mit kodeord",
+  "forgotPasswordSuccess": "Et link til nulstilling af adgangskode er sendt til din e-mail.",
+  "forgotPasswordError": "Kunne ikke sende link til nulstilling af adgangskode. Prøv igen.",
   "loginFailed": "Login mislykkedes! Tjek dine oplysninger.",
+  "backToSignIn": "Tilbage til login",
+  "resetPassword": "Nulstil adgangskode",
   "dashboard": {
     "welcomeMessage": "Velkommen til dit Uranus Dashboard",
     "welcomeDescription": "Du kan nu starte med at oprette din første organisation.",
@@ -187,5 +192,7 @@
       "select_earliest_start_date": "Vælg tidligste startdato",
       "select_latest_end_date": "Vælg seneste slutdato"
     }
-  }
+  },
+  "isRequired": "er påkrævet",
+  "isInvalid": "er ugyldig"
 }

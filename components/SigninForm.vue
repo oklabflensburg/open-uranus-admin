@@ -40,10 +40,11 @@
           {{ $t('signIn') }}
         </button>
       </div>
-  <!-- Toggle between sign-up and sign-in -->
-  <div class="text-right space-x-4">
-      <nuxt-link :to="'/signup'" class="text-blue-500">{{ $t('noAccount') }}</nuxt-link>
-    </div>
+
+      <div class="text-right space-x-4">
+        <nuxt-link :to="'/signup'" class="text-blue-500 hover:underline">{{ $t('noAccount') }}</nuxt-link>
+        <nuxt-link :to="'/forgot'" class="text-blue-500 hover:underline">{{ $t('forgotPassword') }}</nuxt-link>
+      </div>
     </form>
   </div>
 </template>
