@@ -23,7 +23,7 @@
 
     <!-- Description -->
     <div>
-      <label class="block text-gray-700" for="organizerDescription">{{ $t('organizerForm.description') }}<span class="text-red-600 ml-1" aria-hidden="true">*</span></label>
+      <label class="block text-gray-700" for="organizerDescription">{{ $t('organizerForm.description') }}</label>
       <textarea 
         id="organizerDescription" 
         rows="4" 
@@ -40,7 +40,7 @@
     <!-- Contact Information -->
     <div class="grid grid-cols-12 gap-4">
       <div class="col-span-6">
-        <label class="block text-gray-700" for="organizerContactEmail">{{ $t('organizerForm.contactEmail') }}<span class="text-red-600 ml-1" aria-hidden="true">*</span></label>
+        <label class="block text-gray-700" for="organizerContactEmail">{{ $t('organizerForm.contactEmail') }}</label>
         <input 
           type="email" 
           id="organizerContactEmail" 
@@ -54,7 +54,7 @@
         <p v-if="errors.organizerContactEmail" id="organizerContactEmailError" class="text-red-600">{{ errors.organizerContactEmail }}</p>
       </div>
       <div class="col-span-6">
-        <label class="block text-gray-700" for="organizerContactPhone">{{ $t('organizerForm.contactPhone') }}<span class="text-red-600 ml-1" aria-hidden="true">*</span></label>
+        <label class="block text-gray-700" for="organizerContactPhone">{{ $t('organizerForm.contactPhone') }}</label>
         <input 
           type="text" 
           id="organizerContactPhone" 
@@ -149,7 +149,6 @@ const statusMessage = ref('')
 const submitButtonText = ref(t('organizerForm.submitButton'))
 
 const organizerId = route.params.id
-console.log('organizerId', organizerId)
 
 const updateStatusMessage = (message) => {
   statusMessage.value = message
@@ -163,14 +162,6 @@ const validateForm = () => {
   errors.value = {}
 
   validateField('organizerName')
-  validateField('organizerDescription')
-  validateField('organizerContactEmail')
-  validateField('organizerContactPhone')
-  validateField('organizerWebsiteUrl')
-  validateField('organizerStreet')
-  validateField('organizerHouseNumber')
-  validateField('organizerPostalCode')
-  validateField('organizerCity')
   
   // Focus first error field for better accessibility
   if (Object.keys(errors.value).length > 0) {
@@ -184,18 +175,10 @@ const validateForm = () => {
 
 const validateField = (field) => {
   const fields = {
-    organizerName,
-    organizerDescription,
-    organizerContactEmail,
-    organizerContactPhone,
-    organizerWebsiteUrl,
-    organizerStreet,
-    organizerHouseNumber,
-    organizerPostalCode,
-    organizerCity
+    organizerName
   }
   
-  if (!fields[field].value) {
+  if (!fields[field]?.value) {
     errors.value[field] = t(`organizerForm.errors.${field}`)
   } else if (field === 'organizerContactEmail' && !validateEmail(fields[field].value)) {
     errors.value[field] = t('organizerForm.errors.invalidEmail')
