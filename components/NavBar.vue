@@ -23,6 +23,15 @@
 
           <div v-if="isAuthenticated" class="relative group">
             <button class="flex items-center px-3 py-2 rounded hover:bg-gray-700 focus:outline-none">
+              <span>Info</span>
+            </button>
+            <div class="w-48 absolute hidden group-hover:block bg-gray-800 rounded shadow-lg">
+              <nuxt-link :to="localePath('/admin/organization')" class="block w-full text-left px-4 py-2 hover:bg-gray-700" :class="{ 'bg-gray-700': isActive('/settings') }"@click="isOpen = false">Organtionen</nuxt-link>
+            </div>
+          </div>
+
+          <div v-if="isAuthenticated" class="relative group">
+            <button class="flex items-center px-3 py-2 rounded hover:bg-gray-700 focus:outline-none">
               <img src="https://i.pravatar.cc/40" alt="Profile" class="w-8 h-8 rounded-full mr-2">
               <span class="fi fis fi-de w-8 h-8 rounded-full mr-2"></span>
               <span>{{ $t('menu.profile') }}</span>
