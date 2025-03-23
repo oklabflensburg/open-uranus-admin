@@ -149,6 +149,7 @@ const statusMessage = ref('')
 const submitButtonText = ref(t('organizerForm.submitButton'))
 
 const organizerId = route.params.id
+console.log('organizerId', organizerId)
 
 const updateStatusMessage = (message) => {
   statusMessage.value = message
@@ -220,6 +221,7 @@ const validateUrl = (url) => {
 }
 
 const isModeEdit = () => {
+  // must not be null or undefined
   return !!organizerId
 }
 
@@ -242,7 +244,7 @@ const handleSubmit = async () => {
   }
 
   try {
-    if (isModeEdit) {
+    if (isModeEdit()) {
       await fetchApi(`/organizer/${organizerId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },

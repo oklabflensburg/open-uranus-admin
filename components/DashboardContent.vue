@@ -209,11 +209,27 @@ const fetchEvents = async () => {
 }
 
 const deleteOrganizer = async (id) => {
+  const userConfirmed = confirm('Are you sure you want to delete this organizer? This action cannot be undone.');
+  if (!userConfirmed) return;
+
   try {
-    await fetchApi(`/organizer/${id}`, { method: 'DELETE' })
-    organizers.value = organizers.value.filter(organizer => organizer.organizer_id !== id)
+    const password = prompt('Please enter your password to confirm deletion:');
+    if (!password) {
+      alert('Deletion canceled. Password is required.');
+      return;
+    }
+
+    await fetchApi(`/organizer/${id}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password })
+    });
+
+    organizers.value = organizers.value.filter(organizer => organizer.organizer_id !== id);
+    alert('Organizer deleted successfully.');
   } catch (error) {
-    console.error('Error deleting organizer:', error)
+    console.error('Error deleting organizer:', error);
+    alert('Failed to delete organizer. Please try again.');
   }
 }
 
