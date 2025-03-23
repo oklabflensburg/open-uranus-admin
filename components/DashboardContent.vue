@@ -18,7 +18,9 @@
             <span>{{ organizer.organizer_name }}</span>
 
             <div v-if="organizer.can_edit" class="flex gap-2">
-              <img src="/public/icons/edit.svg" alt="Edit" class="cursor-pointer"/>
+              <nuxt-link :to="localePath(`/organizer/${organizer.organizer_id}`)">
+                <img src="/public/icons/edit.svg" alt="Edit" class="cursor-pointer"/>
+              </nuxt-link>
               <img @click="deleteOrganizer(organizer.organizer_id)" src="/public/icons/delete.svg" alt="Delete" class="cursor-pointer"/>
             </div>
           </div>

@@ -1,12 +1,12 @@
 import { useAuth } from '@/composables/useAuth'
 import { useRuntimeConfig } from '#app'
-import { useRouter } from 'vue-router' // Import useRouter
+import { useRouter } from 'vue-router'
 
 export const useApi = () => {
   const { accessToken, refreshAccessToken, logout } = useAuth()
   const config = useRuntimeConfig()
   const API_BASE_URL = config.public.apiBaseUrl
-  const router = useRouter() // Initialize router
+  const router = useRouter()
 
   const fetchApi = async (endpoint, options = {}) => {
     if (!accessToken.value) {
