@@ -48,4 +48,8 @@ useHead({
     }
   ]
 })
+
+definePageMeta({
+  auth: true
+})
 </script>

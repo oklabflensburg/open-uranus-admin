@@ -6,7 +6,6 @@
 
 <script setup>
 import { useHead } from '#imports'
-import SignupForm from '~/components/SignupForm.vue'
 
 useHead({
   title: 'Sign Up - Uranus',
@@ -16,5 +15,9 @@ useHead({
       content: 'Sign up to create your Uranus account.'
     }
   ]
+})
+
+definePageMeta({
+  auth: false
 })
 </script>

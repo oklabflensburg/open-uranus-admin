@@ -68,4 +68,8 @@ const cancelEdit = () => {
 const chooseLanguage = () => {
   // Logic to choose language
 }
+
+definePageMeta({
+  auth: true
+})
 </script>

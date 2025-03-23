@@ -6,7 +6,6 @@
 
 <script setup>
 import { useHead } from '#imports'
-import SigninForm from '~/components/SigninForm.vue'
 
 useHead({
   title: 'Sign In - Uranus',
@@ -16,5 +15,9 @@ useHead({
       content: 'Sign in to access your Uranus account.'
     }
   ]
+})
+
+definePageMeta({
+  auth: false
 })
 </script>

@@ -17,4 +17,8 @@ useHead({
     }
   ]
 })
+
+definePageMeta({
+  auth: false
+})
 </script>

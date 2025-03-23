@@ -6,4 +6,8 @@
 
 <script setup>
 import ForgotPasswordForm from '@/components/ForgotPasswordForm.vue'
+
+definePageMeta({
+  auth: false
+})
 </script>

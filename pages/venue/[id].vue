@@ -1,12 +1,13 @@
 <template>
   <div class="max-w-screen-xl mx-auto bg-white p-3 md:p-6 rounded-xs shadow-lg">
-    <AddVenueForm />
+    <VenueForm />
+    HALLO PIPPA
   </div>
 </template>
 
 <script setup>
 import { useHead } from '#imports'
-import AddVenueForm from '~/components/VenueForm.vue'
+import VenueForm from '~/components/VenueForm.vue'
 
 definePageMeta({
   middleware: ['auth']
@@ -20,5 +21,9 @@ useHead({
       content: 'Manage your event venues.'
     }
   ]
+})
+
+definePageMeta({
+  auth: true
 })
 </script>
