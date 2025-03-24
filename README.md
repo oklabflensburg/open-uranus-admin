@@ -1,3 +1,8 @@
+# Uranus Admin Frontend
+
+See <https://github.com/oklabflensburg/open-uranus-api/edit/main/README.md>
+
+
 # Nuxt Minimal Starter
 
 Set in your `.env`:
