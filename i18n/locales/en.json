@@ -92,7 +92,7 @@
     }
   },
   "venueForm": {
-    "title": "Venue Information",
+    "title": "Create new Venue",
     "name": "Venue Name",
     "street": "Street",
     "houseNumber": "House Number",
@@ -113,6 +113,8 @@
     "validationErrors": "Please correct the errors in the form.",
     "organizer": "Organizer",
     "selectOrganizer": "Select an organizer",
+    "type": "Venue Type",
+    "selectType": "Select venue type",
     "errors": {
       "venueName": "Venue name is required",
       "venueStreet": "Street is required",
@@ -126,7 +128,8 @@
       "submission": "An error occurred while saving the venue",
       "load": "Failed to load venue data",
       "venueOrganizerId": "Please select an organizer",
-      "loadOrganizers": "Failed to load organizers"
+      "loadOrganizers": "Failed to load organizers",
+      "venueTypeId": "Venue type is required"
     }
   },
   "venueSpaceForm": {

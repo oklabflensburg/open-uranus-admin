@@ -92,7 +92,7 @@
     }
   },
   "venueForm": {
-    "title": "Veranstaltungsort Informationen",
+    "title": "Neuen Veranstaltungsort erstellen",
     "name": "Name des Veranstaltungsortes",
     "street": "Straße",
     "houseNumber": "Hausnummer",
@@ -112,6 +112,8 @@
     "cancelButton": "Abbrechen",
     "submitting": "Formulardaten werden übermittelt...",
     "success": "Veranstaltungsort erfolgreich gespeichert!",
+    "type": "Veranstaltungsort-Typ",
+    "selectType": "Veranstaltungsort-Typ auswählen",
     "validationErrors": "Bitte korrigieren Sie die Fehler im Formular.",
     "errors": {
       "venueName": "Name des Veranstaltungsortes ist erforderlich",
@@ -124,6 +126,7 @@
       "venueLatitude": "Breitengrad ist erforderlich",
       "venueLongitude": "Längengrad ist erforderlich",
       "venueOrganizerId": "Bitte wählen Sie einen Veranstalter",
+      "venueTypeId": "Veranstaltungsort-Typ ist erforderlich",
       "submission": "Beim Speichern des Veranstaltungsortes ist ein Fehler aufgetreten",
       "load": "Fehler beim Laden der Veranstaltungsortdaten",
       "loadOrganizers": "Veranstalter konnten nicht geladen werden"

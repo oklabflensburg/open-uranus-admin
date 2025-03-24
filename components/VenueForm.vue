@@ -1,7 +1,10 @@
 <template>
   <form id="addVenueForm" class="space-y-6" @submit.prevent="handleSubmit" aria-labelledby="venueFormTitle">
-    <h2 id="venueFormTitle" class="text-2xl font-bold mb-4">{{ $t('venueForm.title') }}</h2>
-    
+    <div>
+      <h2 id="venueFormTitle" class="text-2xl font-bold">{{ $t('venueForm.title') }}</h2>
+      <h3 class="text-md mb-4">Für Organisation: {{ venueOrganizerName }}</h3>
+    </div>
+
     <!-- Accessibility status message for screen readers -->
     <div class="sr-only" aria-live="polite" role="status">{{ statusMessage }}</div>
 
@@ -97,23 +100,22 @@
     <!-- Venue County Code -->
     <div class="grid grid-cols-12 gap-4">
       <div class="col-span-6">
-        <label class="block text-gray-700" for="venueCountyCode">{{ $t('venueForm.countyCode') }}<span class="text-red-600 ml-1" aria-hidden="true">*</span></label>
+        <label class="block text-gray-700" for="venueStateCode">{{ $t('venueForm.countyCode') }}</label>
         <select 
-          id="venueCountyCode" 
-          name="venueCountyCode" 
+          id="venueStateCode" 
+          name="venueStateCode" 
           class="bg-white mt-1 p-2.5 w-full border rounded-xs focus-visible" 
-          v-model="venueCountyCode" 
-          @change="validateField('venueCountyCode')" 
-          aria-describedby="venueCountyCodeError"
-          aria-required="true"
-          :aria-invalid="!!errors.venueCountyCode"
+          v-model="venueStateCode" 
+          aria-describedby="venueStateCodeError"
+          aria-required="false"
+          :aria-invalid="!!errors.venueStateCode"
         >
           <option value="">{{ $t('venueForm.selectState') }}</option>
           <option v-for="state in germanStates" :key="state.code" :value="state.code">
             {{ state.name }}
           </option>
         </select>
-        <p v-if="errors.venueCountyCode" id="venueCountyCodeError" class="text-red-600">{{ errors.venueCountyCode }}</p>
+        <p v-if="errors.venueStateCode" id="venueStateCodeError" class="text-red-600">{{ errors.venueStateCode }}</p>
       </div>
 
       <!-- Venue Country Code -->
@@ -124,7 +126,7 @@
           name="venueCountryCode" 
           class="bg-white mt-1 p-2.5 w-full border rounded-xs focus-visible" 
           v-model="venueCountryCode" 
-          @change="validateField('venueCountryCode')" 
+          @change="validateField('venueCountryCode')"
           aria-describedby="venueCountryCodeError"
           aria-required="true"
           :aria-invalid="!!errors.venueCountryCode"
@@ -148,7 +150,7 @@
           id="venueLatitude" 
           name="venueLatitude" 
           class="mt-1 p-2 w-full border rounded-xs focus-visible" 
-          v-model="venueLatitude" 
+          v-model="venueLatitude"
           @input="validateField('venueLatitude')" 
           aria-describedby="venueLatitudeError"
           aria-required="true"
@@ -175,6 +177,28 @@
       </div>
     </div>
 
+    <!-- Venue Type -->
+    <div>
+      <label class="block text-gray-700" for="venueTypeId">{{ $t('venueForm.type') }}</label>
+      <Multiselect
+        v-model="selectedVenueTypes"
+        :options="venueTypes"
+        :multiple="true"
+        :searchable="true"
+        :close-on-select="false"
+        :show-labels="false"
+        :placeholder="$t('venueForm.selectType')"
+        label="venue_type_name"
+        track-by="venue_type_id"
+        @select="onVenueTypeSelect"
+        @remove="onVenueTypeRemove"
+        aria-describedby="venueTypeIdError"
+        aria-required="false"
+        :aria-invalid="!!errors.venueTypeId"
+      />
+      <p v-if="errors.venueTypeId" id="venueTypeIdError" class="text-red-600">{{ errors.venueTypeId }}</p>
+    </div>
+
     <div class="grid grid-cols-12 gap-4">
       <!-- Venue Opened Date -->
       <div class="col-span-6">
@@ -186,26 +210,6 @@
           class="mt-1 p-2 w-full border rounded-xs focus-visible" 
           v-model="venueOpenedAt"
         >
-      </div>
-      <!-- Venue Organizer -->
-      <div class="col-span-6">
-        <label class="block text-gray-700" for="venueOrganizerId">{{ $t('venueForm.organizer') }}<span class="text-red-600 ml-1" aria-hidden="true">*</span></label>
-        <select 
-          id="venueOrganizerId" 
-          name="venueOrganizerId" 
-          class="bg-white mt-1 p-2.5 w-full border rounded-xs focus-visible" 
-          v-model="venueOrganizerId" 
-          @change="validateField('venueOrganizerId')" 
-          aria-describedby="venueOrganizerIdError"
-          aria-required="true"
-          :aria-invalid="!!errors.venueOrganizerId"
-        >
-          <option value="">{{ $t('venueForm.selectOrganizer') }}</option>
-          <option v-for="organizer in organizers" :key="organizer.organizer_id" :value="organizer.organizer_id">
-            {{ organizer.organizer_name }}
-          </option>
-        </select>
-        <p v-if="errors.venueOrganizerId" id="venueOrganizerIdError" class="text-red-600">{{ errors.venueOrganizerId }}</p>
       </div>
     </div>
 
@@ -219,10 +223,11 @@
 </template>
 
 <script setup>
-import { ref, watch, nextTick, onMounted } from 'vue'
+import { ref, watch, nextTick, onMounted, computed } from 'vue'
 import { useApi } from '@/composables/useApi'
 import { useRoute, useRouter, useLocalePath } from '#imports'
 import { useI18n } from 'vue-i18n'
+import Multiselect from 'vue-multiselect'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -255,7 +260,7 @@ const germanStates = [
 
 // Countries list
 const countries = [
-  { code: "DE", name: "Germany" },
+  { code: "DEU", name: "Germany" },
   { code: "AT", name: "Austria" },
   { code: "BE", name: "Belgium" },
   { code: "BG", name: "Bulgaria" },
@@ -306,12 +311,17 @@ const venueStreet = ref('')
 const venueHouseNumber = ref('')
 const venuePostalCode = ref('')
 const venueCity = ref('')
-const venueOrganizerId = ref('')
-const venueCountyCode = ref('')
+const venueOrganizerId = ref(organizerId)
+console.log('venueOrganizerId', venueOrganizerId.value)
+const venueOrganizerName = ref('')
+const venueStateCode = ref('')
 const venueCountryCode = ref('')
 const venueLatitude = ref('')
 const venueLongitude = ref('')
 const venueOpenedAt = ref('')
+const venueTypeId = ref([])
+const selectedVenueTypes = ref([])
+const venueTypes = ref([])
 const organizers = ref([])
 
 const errors = ref({})
@@ -329,7 +339,7 @@ const updateStatusMessage = (message) => {
 
 // Function to get location data
 const getLocationData = async () => {
-  const url = `https://nominatim.oklabflensburg.de/search?q=${venueStreet.value} ${venueHouseNumber.value} ${venueCity.value} ${venueCountyCode.value} ${venueCountryCode.value} ${venuePostalCode.value}&limit=1`
+  const url = `https://nominatim.oklabflensburg.de/search?q=${venueStreet.value} ${venueHouseNumber.value} ${venueCity.value} ${venueStateCode.value} ${venueCountryCode.value} ${venuePostalCode.value}&limit=1`
 
   try {
     const response = await fetch(url)
@@ -351,8 +361,11 @@ const getLocationData = async () => {
 }
 
 // Watch for changes to the relevant input fields
-watch([venueStreet, venueHouseNumber, venueCity, venueCountyCode, venuePostalCode], () => {
+watch([venueStreet, venueHouseNumber, venueCity, venueStateCode, venuePostalCode], () => {
   // Call getLocationData whenever one of these inputs changes
+  if (isModeEdit()) {
+    return
+  }
   getLocationData()
 })
 
@@ -364,11 +377,25 @@ const loadOrganizers = async () => {
     
     // Preselect organizer if organizerId is set in route query
     if (organizerId && organizerId.trim() !== '') {
+      console.log('Preselecting organizer:', organizerId)
       venueOrganizerId.value = organizerId
+      venueOrganizerName.value = organizers.value.find(organizer => organizer.organizer_id === parseInt(organizerId, 10))?.organizer_name
     }
   } catch (error) {
     submissionError.value = t('venueForm.errors.loadOrganizers')
     updateStatusMessage(t('venueForm.errors.loadOrganizers'))
+  }
+}
+
+// Load venue types from API
+const loadVenueTypes = async () => {
+  try {
+    const response = await fetchApi('/venue/type/?lang=de')
+    venueTypes.value = response || []
+  } catch (error) {
+    console.error('Failed to load venue types:', error)
+    submissionError.value = t('venueForm.errors.loadVenueTypes')
+    updateStatusMessage(t('venueForm.errors.loadVenueTypes'))
   }
 }
 
@@ -381,11 +408,9 @@ const validateForm = () => {
   validateField('venueHouseNumber')
   validateField('venuePostalCode')
   validateField('venueCity')
-  validateField('venueCountyCode')
   validateField('venueCountryCode')
   validateField('venueLatitude')
   validateField('venueLongitude')
-  validateField('venueOrganizerId')
   
   // Focus first error field for better accessibility
   if (Object.keys(errors.value).length > 0) {
@@ -404,17 +429,22 @@ const validateField = (field) => {
     venueHouseNumber,
     venuePostalCode,
     venueCity,
-    venueCountyCode,
+    venueStateCode,
     venueCountryCode,
     venueLatitude,
     venueLongitude,
-    venueOrganizerId
+    venueTypeId
   }
   
-  if (!fields[field].value) {
-    errors.value[field] = t(`venueForm.errors.${field}`)
-  } else {
+  if (field === 'venueTypeId') {
+    // Venue type is not required, so just clear any existing error
     delete errors.value[field]
+  } else {
+    if (!fields[field].value) {
+      errors.value[field] = t(`venueForm.errors.${field}`)
+    } else {
+      delete errors.value[field]
+    }
   }
 }
 
@@ -424,22 +454,37 @@ const isModeEdit = () => {
 }
 
 const loadVenueData = async (id) => {
-  console.log('Loading venue data for ID:', id)
   try {
     const response = await fetchApi(`/venue/${id}`)
-
+    
+    // Basic venue data
     venueName.value = response.venue_name
     venueStreet.value = response.venue_street
     venueHouseNumber.value = response.venue_house_number
     venuePostalCode.value = response.venue_postal_code
     venueCity.value = response.venue_city
-    venueCountyCode.value = response.venue_county_code || ''
+    venueStateCode.value = response.venue_county_code || ''
     venueCountryCode.value = response.venue_country_code || ''
-    venueLatitude.value = response.venue_latitude
-    venueLongitude.value = response.venue_longitude
+    venueLatitude.value = response.geojson?.coordinates?.[1] || ''
+    venueLongitude.value = response.geojson?.coordinates?.[0] || ''
     venueOpenedAt.value = response.venue_opened_at || ''
-    venueOrganizerId.value = response.venue_organizer_id ? response.venue_organizer_id.toString() : ''
+    venueOrganizerId.value = response.venue_organizer_id
+    console.log(response.venue_organizer_id)
+    
+    // Properly pre-select venue types
+    selectedVenueTypes.value = []
+    if (response.venue_type_ids && Array.isArray(response.venue_type_ids)) {
+      // Find matching venue type objects based on IDs
+      const matchedVenueTypes = venueTypes.value.filter(
+        venueType => response.venue_type_ids.includes(venueType.venue_type_id)
+      )
+      selectedVenueTypes.value = matchedVenueTypes
+      
+      // Update the venueTypeId array with the IDs
+      updateVenueTypeIds()
+    }
   } catch (error) {
+    console.error('Error loading venue data:', error)
     submissionError.value = t('venueForm.errors.load')
     updateStatusMessage(t('venueForm.errors.load'))
   }
@@ -456,28 +501,40 @@ const handleSubmit = async () => {
 
   updateStatusMessage(t('venueForm.submitting'))
 
-  // Prepare data to send
-  const body = {
-    venue_organizer_id: parseInt(venueOrganizerId.value, 10),
-    venue_name: venueName.value,
-    venue_street: venueStreet.value,
-    venue_house_number: venueHouseNumber.value,
-    venue_postal_code: venuePostalCode.value,
-    venue_city: venueCity.value,
-    venue_county_code: venueCountyCode.value,
-    venue_country_code: venueCountryCode.value,
-    venue_latitude: venueLatitude.value,
-    venue_longitude: venueLongitude.value,
-    venue_opened_at: venueOpenedAt.value || null
+  // Create FormData object
+  const formData = new FormData()
+  console.log('venueOrganizerId.value', venueOrganizerId.value)
+  formData.append('venue_organizer_id', venueOrganizerId.value)
+  formData.append('venue_name', venueName.value)
+  formData.append('venue_street', venueStreet.value)
+  formData.append('venue_house_number', venueHouseNumber.value)
+  formData.append('venue_postal_code', venuePostalCode.value)
+  formData.append('venue_city', venueCity.value)
+  
+  if (venueStateCode.value) {
+    formData.append('venue_county_code', venueStateCode.value)
   }
+  
+  formData.append('venue_country_code', venueCountryCode.value)
+  formData.append('venue_latitude', venueLatitude.value)
+  formData.append('venue_longitude', venueLongitude.value)
+  
+  if (venueOpenedAt.value) {
+    formData.append('venue_opened_at', venueOpenedAt.value)
+  }
+  
+  // Handle venue type IDs as an array
+  venueTypeId.value.forEach(typeId => {
+    formData.append('venue_type_ids', typeId)
+  })
 
   try {
-    console.log('Submitting form data:', isModeEdit() ? 'PUT' : 'POST', body)
+    console.log('Submitting form data using FormData:', isModeEdit() ? 'PUT' : 'POST')
+    
     if (isModeEdit()) {
       await fetchApi(`/venue/${venueId}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
+        body: formData,
       })
 
       updateStatusMessage(t('venueForm.success'))
@@ -486,14 +543,14 @@ const handleSubmit = async () => {
     } else {
       await fetchApi('/venue/', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
+        body: formData,
       })
 
       updateStatusMessage(t('venueForm.success'))
       router.push(localePath('/dashboard'))
     }
   } catch (error) {
+    console.error('Form submission error:', error)
     submissionError.value = t('venueForm.errors.submission')
     updateStatusMessage(t('venueForm.errors.submission'))
   }
@@ -503,11 +560,78 @@ const cancelForm = () => {
   router.push(localePath('/dashboard'))
 }
 
+const onVenueTypeSelect = (selected) => {
+  updateVenueTypeIds()
+  validateField('venueTypeId')
+}
+
+const onVenueTypeRemove = (removed) => {
+  updateVenueTypeIds()
+  validateField('venueTypeId')
+}
+
+const updateVenueTypeIds = () => {
+  if (selectedVenueTypes.value && Array.isArray(selectedVenueTypes.value)) {
+    venueTypeId.value = selectedVenueTypes.value
+      .filter(type => type && type.venue_type_id)
+      .map(type => type.venue_type_id.toString())
+  } else {
+    venueTypeId.value = []
+  }
+}
+
 onMounted(() => {
   loadOrganizers()
+  loadVenueTypes()
   if (isModeEdit()) {
-    loadVenueData(venueId)
+    // For edit mode, load venue types first, then load venue data
+    // to ensure we can match venue types properly
+    Promise.all([
+      loadVenueTypes(),
+      loadOrganizers()
+    ]).then(() => {
+      loadVenueData(venueId)
+    })
     submitButtonText.value = t('venueForm.saveChanges')
+  } else {
+    loadVenueTypes()
+    loadOrganizers()
   }
 })
 </script>
+
+<style>
+@import 'vue-multiselect/dist/vue-multiselect.css';
+
+/* Custom styles for multiselect to match your design */
+.multiselect {
+  border-radius: 0.125rem;
+}
+.multiselect__tags {
+  border: 1px solid #d1d5db;
+  padding: 0.5rem;
+  border-radius: 0.125rem;
+  min-height: 42px;
+  height: auto;
+}
+.multiselect__select {
+  height: 42px;
+}
+.multiselect__input, .multiselect__single {
+  padding: 0;
+  margin-bottom: 0;
+}
+.multiselect--active {
+  z-index: 50;
+}
+.multiselect__tag {
+  background-color: #10b981;
+  margin-bottom: 3px;
+}
+.multiselect__tag-icon:after {
+  color: white;
+}
+.multiselect__tag-icon:focus, .multiselect__tag-icon:hover {
+  background-color: #059669;
+}
+</style>

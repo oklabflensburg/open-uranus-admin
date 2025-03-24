@@ -92,7 +92,7 @@
     }
   },
   "venueForm": {
-    "title": "Stedoplysninger",
+    "title": "Opret nyt sted",
     "name": "Stedets navn",
     "street": "Gade",
     "houseNumber": "Husnummer",
@@ -113,6 +113,8 @@
     "validationErrors": "Ret venligst fejlene i formularen.",
     "organizer": "Arrangør",
     "selectOrganizer": "Vælg en arrangør",
+    "type": "Stedtype",
+    "selectType": "Vælg stedtype",
     "errors": {
       "venueName": "Stedets navn er påkrævet",
       "venueStreet": "Gade er påkrævet",
@@ -126,7 +128,8 @@
       "submission": "Der opstod en fejl under gemning af stedet",
       "load": "Kunne ikke indlæse stedets data",
       "venueOrganizerId": "Vælg venligst en arrangør",
-      "loadOrganizers": "Kunne ikke indlæse arrangører"
+      "loadOrganizers": "Kunne ikke indlæse arrangører",
+      "venueTypeId": "Stedtype er påkrævet"
     }
   },
   "venueSpaceForm": {
