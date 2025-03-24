@@ -5,14 +5,13 @@ Digitally Mapping and Providing the Event Landscape
 See: <https://github.com/oklabflensburg/open-uranus-api>
 
 
-# Nuxt Minimal Starter
+## Nuxt Minimal Starter
 
 Set in your `.env`:
 
 ```
 API_BASE_URL=https://api.uranus.oklabflensburg.de
 ```
-
 
 Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
