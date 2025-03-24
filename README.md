@@ -1,6 +1,7 @@
 # Uranus Frontend
 
 Digitally Mapping and Providing the Event Landscape
+
 See: <https://github.com/oklabflensburg/open-uranus-api>
 
 
