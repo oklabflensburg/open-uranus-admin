@@ -219,5 +219,13 @@
     }
   },
   "isRequired": "ist erforderlich",
-  "isInvalid": "ist ungültig"
+  "isInvalid": "ist ungültig",
+  "userProfile": {
+    "roles": "Deine Rollen & Berechtigungen",
+    "organizationName": "Organisation",
+    "organizationRole": "Organisations-Admin",
+    "venueRole": "Veranstaltungsort-Admin",
+    "spaceRole": "Raum-Admin",
+    "eventRole": "Veranstaltungs-Admin"
+  }
 }

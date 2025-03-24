@@ -219,5 +219,13 @@
     }
   },
   "isRequired": "er påkrævet",
-  "isInvalid": "er ugyldig"
+  "isInvalid": "er ugyldig",
+  "userProfile": {
+    "roles": "Dine roller og tilladelser",
+    "organizationName": "Organisation",
+    "organizationRole": "Organisationsadmin",
+    "venueRole": "Stedsadmin",
+    "spaceRole": "Områdeadmin",
+    "eventRole": "Begivenhedsadmin"
+  }
 }

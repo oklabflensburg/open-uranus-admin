@@ -226,17 +226,33 @@
 
       <div class="col-span-12 sm:col-span-6 lg:col-span-4">
         <label for="eventImage">{{ $t('eventForm.selectImage') }}</label>
-        <input 
-          type="file" 
-          id="eventImage"
-          class="mt-1 p-2 w-full border rounded-xs focus-visible"
-          @change="onFileChange" 
-          accept="image/*" 
-          aria-describedby="fileError"
-          :aria-invalid="!!errors.file"
-        >
-        <p v-if="errors.file" id="fileError" class="text-red-600">{{ errors.file }}</p>
-        <img v-if="previewUrl" :src="previewUrl" alt="Preview" class="w-32 mt-2" />
+        <div class="relative mt-1">
+          <!-- Hide actual input but keep it accessible -->
+          <input 
+            type="file" 
+            id="eventImage"
+            class="sr-only absolute"
+            ref="fileInput"
+            @change="onFileChange" 
+            accept="image/*" 
+            aria-describedby="fileError"
+            :aria-invalid="!!errors.file"
+          >
+          <button 
+            type="button" 
+            class="w-full flex items-center justify-center px-4 py-2 bg-white border border-gray-300 rounded-xs hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition"
+            @click="$refs.fileInput.click()"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span>{{ file?.name || $t('eventForm.selectImage') }}</span>
+          </button>
+          <p v-if="errors.file" id="fileError" class="text-red-600 mt-1">{{ errors.file }}</p>
+          <div v-if="previewUrl" class="mt-2">
+            <img :src="previewUrl" alt="Preview" class="h-32 w-auto object-contain border rounded" />
+          </div>
+        </div>
       </div>
     </div>
 
