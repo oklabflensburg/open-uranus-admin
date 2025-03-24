@@ -1,6 +1,7 @@
-# Uranus Admin Frontend
+# Uranus Frontend
 
-See <https://github.com/oklabflensburg/open-uranus-api>
+Digitally Mapping and Providing the Event Landscape
+See: <https://github.com/oklabflensburg/open-uranus-api>
 
 
 # Nuxt Minimal Starter
