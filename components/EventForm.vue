@@ -365,6 +365,7 @@ const fetchEventData = async () => {
 
 // Fetch organizers, venues, and event data when component is mounted
 onMounted(() => {
+  fetchSpaces()
   fetchData('/user/organizer/', organizers)
   fetchData(`/genre/type/?lang=${locale.value}`, genreTypes)
   fetchData(`/license/type?lang=${locale.value}`, licenseTypes)
