@@ -1,6 +1,6 @@
 # Uranus Admin Frontend
 
-See <https://github.com/oklabflensburg/open-uranus-api/edit/main/README.md>
+See <https://github.com/oklabflensburg/open-uranus-api>
 
 
 # Nuxt Minimal Starter
