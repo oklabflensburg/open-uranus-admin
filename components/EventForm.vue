@@ -252,9 +252,9 @@
 <script setup>
 import { ref, onMounted, watch, nextTick } from 'vue'
 import { useApi } from '@/composables/useApi'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { useLocalePath } from '@nuxtjs/i18n'
+import { useRouter, useLocalePath } from '#imports'
 
 const { fetchApi } = useApi()
 
