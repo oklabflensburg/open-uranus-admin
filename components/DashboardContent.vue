@@ -35,7 +35,7 @@
             </div>
 
             <div v-if="organizer.can_edit" class="mt-2 flex gap-2">
-              <nuxt-link :to="localePath({ name: 'venue-id', params: { id: organizer.organizer_id } })" class="bg-gray-600 text-white py-1 px-3 hover:bg-gray-800 hover:text-gray-100 transition rounded">{{ $t('dashboard.createVenue') }}</nuxt-link>
+              <nuxt-link :to="localePath(`/venue?organizerId=${organizer.organizer_id}`)" class="bg-gray-600 text-white py-1 px-3 hover:bg-gray-800 hover:text-gray-100 transition rounded">{{ $t('dashboard.createVenue') }}</nuxt-link>
             </div>
           </div>
         </li>
@@ -61,7 +61,9 @@
             <span>{{ venue.venue_name }}</span>
 
             <div v-if="venue.can_edit_venue" class="flex gap-2">
-              <img src="/public/icons/edit.svg" alt="Edit" class="cursor-pointer">
+              <nuxt-link :to="localePath(`/venue/${venue.venue_id}?organizerId=${venue.venue_organizer_id}`)">
+                <img src="/public/icons/edit.svg" alt="Edit" class="cursor-pointer"/>
+              </nuxt-link>
               <img @click="deleteVenue(venue.venue_id)" src="/public/icons/delete.svg" alt="Delete" class="cursor-pointer">
             </div>
           </div>
@@ -191,7 +193,7 @@ const fetchOrganizerStats = async (organizerId) => {
 
 const fetchVenueStats = async (venueId) => {
   try {
-    const data = await fetchApi(`/venue/stats?venue_id=${venueId}`)
+    const data = await fetchApi(`/venue/${venueId}/stats`)
     return data
   } catch (error) {
     console.error('Error fetching venue stats:', error)
