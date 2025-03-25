@@ -242,6 +242,13 @@
     "organizationRole": "Organisations-Admin",
     "venueRole": "Veranstaltungsort-Admin",
     "spaceRole": "Raum-Admin",
-    "eventRole": "Veranstaltungs-Admin"
+    "eventRole": "Veranstaltungs-Admin",
+    "organizationRoles": "Organisationsbenutzerrollen",
+    "userName": "Benutzername",
+    "userEmail": "E-Mail",
+    "organizationRole": "Organisationsadministrator",
+    "venueRole": "Veranstaltungsortadministrator",
+    "spaceRole": "Bereichsadministrator",
+    "eventRole": "Veranstaltungsadministrator"
   }
 }

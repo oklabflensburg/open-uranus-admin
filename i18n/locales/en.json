@@ -239,6 +239,9 @@
   "userProfile": {
     "roles": "Your Roles & Permissions",
     "organizationName": "Organization",
+    "organizationRoles": "Organization User Roles",
+    "userName": "User Name",
+    "userEmail": "Email",
     "organizationRole": "Organization Admin",
     "venueRole": "Venue Admin",
     "spaceRole": "Space Admin",

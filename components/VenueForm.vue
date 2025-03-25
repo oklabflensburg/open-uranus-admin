@@ -1,16 +1,21 @@
 <template>
-  <form id="addVenueForm" class="space-y-6" @submit.prevent="handleSubmit" aria-labelledby="venueFormTitle">
+  <form id="addVenueForm" class="space-y-6" @submit.prevent="handleSubmit" @keydown.esc="cancelForm" aria-labelledby="venueFormTitle">
     <div>
       <h2 id="venueFormTitle" class="text-2xl font-bold">{{ $t('venueForm.title') }}</h2>
       <h3 class="text-md mb-4">Für Organisation: {{ venueOrganizerName }}</h3>
     </div>
 
     <!-- Accessibility status message for screen readers -->
-    <div class="sr-only" aria-live="polite" role="status">{{ statusMessage }}</div>
+    <div aria-live="assertive" role="status" class="sr-only">{{ statusMessage }}</div>
+    
+    <!-- Visual loading indicator -->
+    <div v-if="isLoading" class="mb-4 p-2 bg-blue-100 text-blue-800 rounded" role="status">
+      <p>{{ loadingMessage }}</p>
+    </div>
 
     <!-- Venue Name -->
     <div>
-      <label class="block text-gray-700" for="venueName">{{ $t('venueForm.name') }}<span class="text-red-600 ml-1" aria-hidden="true">*</span></label>
+      <label class="block text-gray-700" for="venueName">{{ $t('venueForm.name') }}<span class="text-red-600 ml-1" aria-hidden="true">*</span><span class="sr-only">{{ $t('venueForm.required') }}</span></label>
       <input 
         type="text" 
         id="venueName" 
@@ -27,7 +32,7 @@
 
     <div class="grid grid-cols-12 gap-4">
       <!-- Venue Street -->
-      <div class="col-span-9">
+      <div class="col-span-12 sm:col-span-9">
         <label class="block text-gray-700" for="venueStreet">{{ $t('venueForm.street') }}<span class="text-red-600 ml-1" aria-hidden="true">*</span></label>
         <input 
           type="text" 
@@ -44,7 +49,7 @@
       </div>
 
       <!-- Venue House Number -->
-      <div class="col-span-3">
+      <div class="col-span-12 sm:col-span-3">
         <label class="block text-gray-700" for="venueHouseNumber">{{ $t('venueForm.houseNumber') }}<span class="text-red-600 ml-1" aria-hidden="true">*</span></label>
         <input 
           type="text" 
@@ -63,7 +68,7 @@
 
     <!-- Venue Postal Code -->
     <div class="grid grid-cols-12 gap-4">
-      <div class="col-span-4">
+      <div class="col-span-12 sm:col-span-4">
         <label class="block text-gray-700" for="venuePostalCode">{{ $t('venueForm.postalCode') }}<span class="text-red-600 ml-1" aria-hidden="true">*</span></label>
         <input 
           type="text" 
@@ -80,7 +85,7 @@
       </div>
 
       <!-- Venue City -->
-      <div class="col-span-8">
+      <div class="col-span-12 sm:col-span-8">
         <label class="block text-gray-700" for="venueCity">{{ $t('venueForm.city') }}<span class="text-red-600 ml-1" aria-hidden="true">*</span></label>
         <input 
           type="text" 
@@ -99,7 +104,7 @@
 
     <!-- Venue County Code -->
     <div class="grid grid-cols-12 gap-4">
-      <div class="col-span-6">
+      <div class="col-span-12 sm:col-span-6">
         <label class="block text-gray-700" for="venueStateCode">{{ $t('venueForm.countyCode') }}</label>
         <select 
           id="venueStateCode" 
@@ -119,7 +124,7 @@
       </div>
 
       <!-- Venue Country Code -->
-      <div class="col-span-6">
+      <div class="col-span-12 sm:col-span-6">
         <label class="block text-gray-700" for="venueCountryCode">{{ $t('venueForm.countryCode') }}<span class="text-red-600 ml-1" aria-hidden="true">*</span></label>
         <select 
           id="venueCountryCode" 
@@ -142,7 +147,7 @@
 
     <!-- Venue Latitude and Longitude -->
     <div class="grid grid-cols-12 gap-4">
-      <div class="col-span-6">
+      <div class="col-span-12 sm:col-span-6">
         <label class="block text-gray-700" for="venueLatitude">{{ $t('venueForm.latitude') }}<span class="text-red-600 ml-1" aria-hidden="true">*</span></label>
         <input 
           type="number" 
@@ -159,7 +164,7 @@
         <p v-if="errors.venueLatitude" id="venueLatitudeError" class="text-red-600">{{ errors.venueLatitude }}</p>
       </div>
 
-      <div class="col-span-6">
+      <div class="col-span-12 sm:col-span-6">
         <label class="block text-gray-700" for="venueLongitude">{{ $t('venueForm.longitude') }}<span class="text-red-600 ml-1" aria-hidden="true">*</span></label>
         <input 
           type="number" 
@@ -179,7 +184,7 @@
 
     <!-- Venue Type -->
     <div>
-      <label class="block text-gray-700" for="venueTypeId">{{ $t('venueForm.type') }}</label>
+      <label class="block text-gray-700" id="venueTypeLabel" for="venueTypeSelect">{{ $t('venueForm.type') }}</label>
       <Multiselect
         v-model="selectedVenueTypes"
         :options="venueTypes"
@@ -193,7 +198,12 @@
         @select="onVenueTypeSelect"
         @remove="onVenueTypeRemove"
         aria-describedby="venueTypeIdError"
-        aria-required="false"
+        aria-labelledby="venueTypeLabel"
+        id="venueTypeSelect"
+        role="combobox"
+        aria-expanded="false"
+        aria-haspopup="listbox"
+        :aria-busy="isLoading"
         :aria-invalid="!!errors.venueTypeId"
       />
       <p v-if="errors.venueTypeId" id="venueTypeIdError" class="text-red-600">{{ errors.venueTypeId }}</p>
@@ -201,7 +211,7 @@
 
     <div class="grid grid-cols-12 gap-4">
       <!-- Venue Opened Date -->
-      <div class="col-span-6">
+      <div class="col-span-12 sm:col-span-6">
         <label class="block text-gray-700" for="venueOpenedAt">{{ $t('venueForm.openedAt') }}</label>
         <input 
           type="date" 
@@ -213,17 +223,30 @@
       </div>
     </div>
 
-    <div v-if="submissionError" class="text-red-600" aria-live="assertive">{{ submissionError }}</div>
+    <div v-if="submissionError" class="text-red-600 p-2 bg-red-100 rounded" role="alert" aria-live="assertive">{{ submissionError }}</div>
 
     <div class="flex space-x-4 justify-end">
-      <button type="button" @click="cancelForm" class="mt-6 px-4 py-2 bg-gray-500 text-white rounded-xs hover:bg-gray-700 focus-visible transition">{{ $t('venueForm.cancelButton') }}</button>
-      <button type="submit" class="mt-6 px-4 py-2 bg-green-500 text-white rounded-xs hover:bg-green-700 focus-visible transition">{{ submitButtonText }}</button>
+      <button 
+        type="button" 
+        @click="cancelForm" 
+        class="mt-6 px-4 py-2 bg-gray-500 text-white rounded-xs hover:bg-gray-700 focus-visible transition"
+        :disabled="isSubmitting"
+      >{{ $t('venueForm.cancelButton') }}</button>
+      <button 
+        type="submit" 
+        class="mt-6 px-4 py-2 bg-green-500 text-white rounded-xs hover:bg-green-700 focus-visible transition"
+        :disabled="isSubmitting"
+        aria-busy="isSubmitting"
+      >
+        <span v-if="isSubmitting">{{ $t('venueForm.submitting') }}</span>
+        <span v-else>{{ submitButtonText }}</span>
+      </button>
     </div>
   </form>
 </template>
 
 <script setup>
-import { ref, watch, nextTick, onMounted, computed } from 'vue'
+import { ref, watch, nextTick, onMounted, onUnmounted } from 'vue'
 import { useApi } from '@/composables/useApi'
 import { useRoute, useRouter, useLocalePath } from '#imports'
 import { useI18n } from 'vue-i18n'
@@ -329,9 +352,15 @@ const submissionError = ref('')
 const statusMessage = ref('')
 const submitButtonText = ref(t('venueForm.submitButton'))
 
+// Accessibility enhancement: Add loading states
+const isLoading = ref(false)
+const isSubmitting = ref(false)
+const loadingMessage = ref('')
+
 const updateStatusMessage = (message) => {
   statusMessage.value = message
 
+  // Clear the message after screen readers have had time to announce it
   setTimeout(() => {
     statusMessage.value = ''
   }, 5000)
@@ -339,6 +368,11 @@ const updateStatusMessage = (message) => {
 
 // Function to get location data
 const getLocationData = async () => {
+  // Set loading state
+  isLoading.value = true
+  loadingMessage.value = t('venueForm.fetchingLocation')
+  updateStatusMessage(t('venueForm.fetchingLocation'))
+
   const url = `https://nominatim.oklabflensburg.de/search?q=${venueStreet.value} ${venueHouseNumber.value} ${venueCity.value} ${venueStateCode.value} ${venueCountryCode.value} ${venuePostalCode.value}&limit=1`
 
   try {
@@ -354,41 +388,70 @@ const getLocationData = async () => {
     if (data && data[0]) {
       venueLatitude.value = parseFloat(data[0].lat).toFixed(6)
       venueLongitude.value = parseFloat(data[0].lon).toFixed(6)
+      updateStatusMessage(t('venueForm.locationUpdated'))
+    } else {
+      updateStatusMessage(t('venueForm.noLocationFound'))
     }
   } catch (error) {
     console.error('Error fetching location data:', error)
+    updateStatusMessage(t('venueForm.locationError'))
+  } finally {
+    isLoading.value = false
+    loadingMessage.value = ''
   }
 }
 
+// Add debounce function to prevent too many API calls
+const debounce = (fn, delay) => {
+  let timeoutId
+  return function(...args) {
+    clearTimeout(timeoutId)
+    timeoutId = setTimeout(() => fn.apply(this, args), delay)
+  }
+}
+
+// Create debounced version of getLocationData
+const debouncedGetLocationData = debounce(getLocationData, 1000)
+
 // Watch for changes to the relevant input fields
 watch([venueStreet, venueHouseNumber, venueCity, venueStateCode, venuePostalCode], () => {
-  // Call getLocationData whenever one of these inputs changes
-  if (isModeEdit()) {
+  // Only fetch location data if all required address fields are filled
+  if (isModeEdit() || !venueStreet.value || !venueHouseNumber.value || !venueCity.value) {
     return
   }
-  getLocationData()
+  debouncedGetLocationData()
 })
 
 // Load organizers from API
 const loadOrganizers = async () => {
+  isLoading.value = true
+  loadingMessage.value = t('venueForm.loadingOrganizers')
+  updateStatusMessage(t('venueForm.loadingOrganizers'))
+  
   try {
     const response = await fetchApi('/user/organizer/')
     organizers.value = response || []
     
     // Preselect organizer if organizerId is set in route query
     if (organizerId && organizerId.trim() !== '') {
-      console.log('Preselecting organizer:', organizerId)
       venueOrganizerId.value = organizerId
       venueOrganizerName.value = organizers.value.find(organizer => organizer.organizer_id === parseInt(organizerId, 10))?.organizer_name
     }
   } catch (error) {
     submissionError.value = t('venueForm.errors.loadOrganizers')
     updateStatusMessage(t('venueForm.errors.loadOrganizers'))
+  } finally {
+    isLoading.value = false
+    loadingMessage.value = ''
   }
 }
 
 // Load venue types from API
 const loadVenueTypes = async () => {
+  isLoading.value = true
+  loadingMessage.value = t('venueForm.loadingVenueTypes')
+  updateStatusMessage(t('venueForm.loadingVenueTypes'))
+  
   try {
     const response = await fetchApi('/venue/type/?lang=de')
     venueTypes.value = response || []
@@ -396,6 +459,9 @@ const loadVenueTypes = async () => {
     console.error('Failed to load venue types:', error)
     submissionError.value = t('venueForm.errors.loadVenueTypes')
     updateStatusMessage(t('venueForm.errors.loadVenueTypes'))
+  } finally {
+    isLoading.value = false
+    loadingMessage.value = ''
   }
 }
 
@@ -417,9 +483,11 @@ const validateForm = () => {
     const firstErrorField = Object.keys(errors.value)[0]
     nextTick(() => {
       document.getElementById(firstErrorField)?.focus()
-      updateStatusMessage(t('venueForm.validationErrors'))
+      updateStatusMessage(t('venueForm.validationErrors') + ': ' + errors.value[firstErrorField])
     })
+    return false
   }
+  return true
 }
 
 const validateField = (field) => {
@@ -469,7 +537,6 @@ const loadVenueData = async (id) => {
     venueLongitude.value = response.geojson?.coordinates?.[0] || ''
     venueOpenedAt.value = response.venue_opened_at || ''
     venueOrganizerId.value = response.venue_organizer_id
-    console.log(response.venue_organizer_id)
     
     // Properly pre-select venue types
     selectedVenueTypes.value = []
@@ -492,13 +559,11 @@ const loadVenueData = async (id) => {
 
 const handleSubmit = async () => {
   // Validate form fields before submitting
-  validateForm()
-
-  // If there are errors, don't submit
-  if (Object.keys(errors.value).length > 0) {
+  if (!validateForm()) {
     return
   }
 
+  isSubmitting.value = true
   updateStatusMessage(t('venueForm.submitting'))
 
   // Create FormData object
@@ -553,6 +618,13 @@ const handleSubmit = async () => {
     console.error('Form submission error:', error)
     submissionError.value = t('venueForm.errors.submission')
     updateStatusMessage(t('venueForm.errors.submission'))
+    // On error, focus the error message for screen readers
+    nextTick(() => {
+      const errorElement = document.querySelector('[role="alert"]')
+      if (errorElement) errorElement.focus()
+    })
+  } finally {
+    isSubmitting.value = false
   }
 }
 
@@ -590,7 +662,14 @@ onMounted(() => {
       loadVenueTypes(),
       loadOrganizers()
     ]).then(() => {
-      loadVenueData(venueId)
+      isLoading.value = true
+      loadingMessage.value = t('venueForm.loadingVenueData')
+      updateStatusMessage(t('venueForm.loadingVenueData'))
+      
+      loadVenueData(venueId).finally(() => {
+        isLoading.value = false
+        loadingMessage.value = ''
+      })
     })
     submitButtonText.value = t('venueForm.saveChanges')
   } else {

@@ -242,6 +242,13 @@
     "organizationRole": "Organisationsadmin",
     "venueRole": "Stedsadmin",
     "spaceRole": "Områdeadmin",
-    "eventRole": "Begivenhedsadmin"
+    "eventRole": "Begivenhedsadmin",
+    "organizationRoles": "Organisationsbrugerroller",
+    "userName": "Brugernavn",
+    "userEmail": "E-mail",
+    "organizationRole": "Organisationsadministrator",
+    "venueRole": "Stedadministrator",
+    "spaceRole": "Områdeadministrator",
+    "eventRole": "Begivenhedsadministrator"
   }
 }
