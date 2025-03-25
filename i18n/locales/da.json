@@ -16,11 +16,21 @@
     "settings": "Indstillinger",
     "profile": "Profil",
     "about": "Om",
-    "logout": "Log ud"
+    "logout": "Log ud",
+    "appName": "Uranus",
+    "structure": "Struktur",
+    "organizations": "Organisationer",
+    "myProfile": "Min Profil",
+    "locale": "Sprogindstillinger"
   },
   "settings": {
     "title": "Indstillinger",
-    "language": "Sprog"
+    "language": "Sprog",
+    "selectLanguage": "Vælg sprog",
+    "switchTo": "Skift til {language}",
+    "languageChanged": "Sproget er ændret til {language}",
+    "pageTitle": "Sprogindstillinger",
+    "pageDescription": "Vælg dit foretrukne sprog til applikationen"
   },
   "uranusAdminPanel": "Uranus Admin Panel",
   "alreadyHaveAccount": "Har du allerede en konto? Log ind",
@@ -189,13 +199,15 @@
     }
   },
   "search": {
+    "title": "Søgning",
     "event": {
       "image_alt": "Begivenhedsbillede",
       "organizer": "Arrangør",
       "event_id": "Begivenheds-ID",
       "date_id": "Dato-ID",
       "start_date": "Startdato",
-      "add_to_calendar": "Zum Kalender hinzufügen"
+      "add_to_calendar": "Tilføj til kalender",
+      "no_events": "Ingen begivenheder fundet. Brug søgefunktionen!"
     },
     "filter": {
       "event_city": "Begivenhedsby",
@@ -215,7 +227,11 @@
       "earliest_start": "Tidligste start",
       "latest_date": "Seneste dato",
       "select_earliest_start_date": "Vælg tidligste startdato",
-      "select_latest_end_date": "Vælg seneste slutdato"
+      "select_latest_end_date": "Vælg seneste slutdato",
+      "earliest_start_desc": "Vælg den tidligste dato for begivenheder",
+      "latest_date_desc": "Vælg den seneste dato for begivenheder",
+      "apply": "Anvend filtre",
+      "reset": "Nulstil"
     }
   },
   "isRequired": "er påkrævet",

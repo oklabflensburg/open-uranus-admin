@@ -12,13 +12,13 @@ export default defineNuxtConfig({
   ],
   i18n: {
     locales: [
-      { code: 'en', iso: 'en-US', name: 'English', files: ['en.json'] },
-      { code: 'da', iso: 'dk-DK', name: 'Danisch', files: ['da.json'] },
-      { code: 'de', iso: 'de-DE', name: 'Deutsch', files: ['de.json'] }
+      { code: 'en', name: 'English', files: ['en.json'] },
+      { code: 'da', name: 'Dansk', files: ['da.json'] },
+      { code: 'de', name: 'Deutsch', files: ['de.json'] }
     ],
     defaultLocale: 'de',
     strategy: 'prefix_except_default',
     lazy: true,
-    vueI18n: './vue-i18n.js'
+    langDir: 'locales/'
   }
 })

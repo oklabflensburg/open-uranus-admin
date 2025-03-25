@@ -16,11 +16,21 @@
     "settings": "Einstellungen",
     "profile": "Profil",
     "about": "Über",
-    "logout": "Abmelden"
+    "logout": "Abmelden",
+    "appName": "Uranus",
+    "structure": "Struktur",
+    "organizations": "Organisationen",
+    "myProfile": "Mein Profil",
+    "locale": "Spracheinstellungen"
   },
   "settings": {
     "title": "Einstellungen",
-    "language": "Sprache"
+    "language": "Sprache",
+    "selectLanguage": "Sprache auswählen",
+    "switchTo": "Zu {language} wechseln",
+    "languageChanged": "Sprache wurde zu {language} geändert",
+    "pageTitle": "Spracheinstellungen",
+    "pageDescription": "Wählen Sie Ihre bevorzugte Sprache für die Anwendung"
   },
   "uranusAdminPanel": "Uranus Admin Panel",
   "alreadyHaveAccount": "Bereits ein Konto? Anmelden",
@@ -189,13 +199,15 @@
     }
   },
   "search": {
+    "title": "Suche",
     "event": {
-      "image_alt": "Veranstaltungsbild",
+      "image_alt": "Eventbild",
       "organizer": "Veranstalter",
       "event_id": "Veranstaltungs-ID",
       "date_id": "Datum-ID",
       "start_date": "Startdatum",
-      "add_to_calendar": "Zum Kalender hinzufügen"
+      "add_to_calendar": "Zum Kalender hinzufügen",
+      "no_events": "Keine Events gefunden. Bitte nutze die Suche!"
     },
     "filter": {
       "event_city": "Veranstaltungsstadt",
@@ -215,7 +227,11 @@
       "earliest_start": "Frühster Beginn",
       "latest_date": "Spätestes Datum",
       "select_earliest_start_date": "Frühstes Startdatum auswählen",
-      "select_latest_end_date": "Spätestes Enddatum auswählen"
+      "select_latest_end_date": "Spätestes Enddatum auswählen",
+      "earliest_start_desc": "Wähle das früheste Datum für Events",
+      "latest_date_desc": "Wähle das späteste Datum für Events",
+      "apply": "Filter anwenden",
+      "reset": "Zurücksetzen"
     }
   },
   "isRequired": "ist erforderlich",

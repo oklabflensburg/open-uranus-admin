@@ -4,7 +4,7 @@
       <div class="col-span-12 md:col-span-8 lg:col-span-9">
         <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
           <li v-if="events.length === 0" class="col-span-full text-center text-gray-500">
-            Keine Events gefunden. Bitte nutze die Suche!
+            {{ $t('search.event.no_events') }}
           </li>
           <li v-for="event in events"
               :key="`${event.event_id}-${event.event_date_id}`"
@@ -61,79 +61,142 @@
         </ul>
       </div>
 
-      <div id="sidbarSearch" class="col-span-12 sm:col-span-5 md:col-span-4 lg:col-span-3 space-y-4 bg-gray-100 p-3 rounded-md md:sticky md:top-4 md:self-start overflow-scroll">
-        <h1 class="text-2xl">Suche</h1>
+      <div id="sidebarSearch" class="col-span-12 sm:col-span-5 md:col-span-4 lg:col-span-3 space-y-4 bg-gray-100 p-3 rounded-md md:sticky md:top-4 md:self-start overflow-auto z-0">
+        <h1 class="text-2xl" id="searchFormTitle">{{ $t('search.title') }}</h1>
+        
+        <form aria-labelledby="searchFormTitle" @submit.prevent="applyFilters" role="search">
+          <div class="space-y-4">
 
-        <div>
-          <!-- Event City Input -->
-          <label for="eventCity">{{ $t('search.filter.event_city') }}</label>
-          <input type="text" id="eventCity" v-model="eventCity" class="bg-white mt-1 p-3 w-full border rounded-xs" :placeholder="$t('search.filter.enter_city')" :aria-label="$t('search.filter.enter_event_city')">
-        </div>
+            <div>
+              <!-- Event City Input -->
+              <label for="eventCity" class="block mb-1">{{ $t('search.filter.event_city') }}</label>
+              <input 
+                type="text" 
+                id="eventCity" 
+                v-model="eventCity" 
+                class="bg-white mt-1 p-3 w-full border rounded-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" 
+                :placeholder="$t('search.filter.enter_city')" 
+                :aria-label="$t('search.filter.enter_event_city')"
+              >
+            </div>
 
-        <div>
-          <!-- Venues Dropdown -->
-          <label for="venueType">{{ $t('search.filter.venues') }}</label>
-          <select class="bg-white mt-1 p-3 w-full border rounded-xs" id="venueType" v-model="selectedVenue" :aria-label="$t('search.filter.select_venue')">
-            <option selected value="">{{ $t('search.filter.select_option') }}</option>
-            <option v-for="venue in venues" :key="venue.venue_id" :value="venue.venue_id">
-              {{ venue.venue_name }}
-            </option>
-          </select>
-        </div>
+            <div>
+              <!-- Venues Dropdown -->
+              <label for="venueSelect" class="block mb-1">{{ $t('search.filter.venues') }}</label>
+              <select 
+                class="bg-white mt-1 p-3 w-full border rounded-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" 
+                id="venueSelect" 
+                v-model="selectedVenue" 
+                :aria-label="$t('search.filter.select_venue')"
+              >
+                <option selected value="">{{ $t('search.filter.select_option') }}</option>
+                <option v-for="venue in venues" :key="venue.venue_id" :value="venue.venue_id">
+                  {{ venue.venue_name }}
+                </option>
+              </select>
+            </div>
 
-        <div>
-          <!-- Venue Type Dropdown -->
-          <label for="venueType">{{ $t('search.filter.venue_type') }}</label>
-          <select class="bg-white mt-1 p-3 w-full border rounded-xs" id="venueType" v-model="selectedVenueType" :aria-label="$t('search.filter.select_venue_type')">
-            <option selected value="">{{ $t('search.filter.select_option') }}</option>
-            <option v-for="venueType in venueTypes" :key="venueType.venue_type_id" :value="venueType.venue_type_id">
-              {{ venueType.venue_type_name }}
-            </option>
-          </select>
-        </div>
+            <div>
+              <!-- Venue Type Dropdown -->
+              <label for="venueTypeSelect" class="block mb-1">{{ $t('search.filter.venue_type') }}</label>
+              <select 
+                class="bg-white mt-1 p-3 w-full border rounded-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" 
+                id="venueTypeSelect" 
+                v-model="selectedVenueType" 
+                :aria-label="$t('search.filter.select_venue_type')"
+              >
+                <option selected value="">{{ $t('search.filter.select_option') }}</option>
+                <option v-for="venueType in venueTypes" :key="venueType.venue_type_id" :value="venueType.venue_type_id">
+                  {{ venueType.venue_type_name }}
+                </option>
+              </select>
+            </div>
 
-        <div>
-          <!-- Event Type Dropdown -->
-          <label for="eventType">{{ $t('search.filter.event_type') }}</label>
-          <select class="bg-white mt-1 p-3 w-full border rounded-xs" id="eventType" v-model="selectedEventType" :aria-label="$t('search.filter.select_event_type')">
-            <option selected value="">{{ $t('search.filter.select_option') }}</option>
-            <option v-for="eventType in eventTypes" :key="eventType.event_type_id" :value="eventType.event_type_id">
-              {{ eventType.event_type_name }}
-            </option>
-          </select>
-        </div>
+            <div>
+              <!-- Event Type Dropdown -->
+              <label for="eventTypeSelect" class="block mb-1">{{ $t('search.filter.event_type') }}</label>
+              <select 
+                class="bg-white mt-1 p-3 w-full border rounded-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" 
+                id="eventTypeSelect" 
+                v-model="selectedEventType" 
+                :aria-label="$t('search.filter.select_event_type')"
+              >
+                <option selected value="">{{ $t('search.filter.select_option') }}</option>
+                <option v-for="eventType in eventTypes" :key="eventType.event_type_id" :value="eventType.event_type_id">
+                  {{ eventType.event_type_name }}
+                </option>
+              </select>
+            </div>
 
-        <div>
-          <!-- Space Type Dropdown -->
-          <label for="spaceType">{{ $t('search.filter.space_type') }}</label>
-          <select class="bg-white mt-1 p-3 w-full border rounded-xs" id="spaceType" v-model="selectedSpaceType" :aria-label="$t('search.filter.select_space_type')">
-            <option selected value="">{{ $t('search.filter.select_option') }}</option>
-            <option v-for="spaceType in spaceTypes" :key="spaceType.space_type_id" :value="spaceType.space_type_id">
-              {{ spaceType.space_type_name }}
-            </option>
-          </select>
-        </div>
+            <div>
+              <!-- Space Type Dropdown -->
+              <label for="spaceTypeSelect" class="block mb-1">{{ $t('search.filter.space_type') }}</label>
+              <select 
+                class="bg-white mt-1 p-3 w-full border rounded-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" 
+                id="spaceTypeSelect" 
+                v-model="selectedSpaceType" 
+                :aria-label="$t('search.filter.select_space_type')"
+              >
+                <option selected value="">{{ $t('search.filter.select_option') }}</option>
+                <option v-for="spaceType in spaceTypes" :key="spaceType.space_type_id" :value="spaceType.space_type_id">
+                  {{ spaceType.space_type_name }}
+                </option>
+              </select>
+            </div>
 
-        <div>
-          <!-- Genre Type Dropdown -->
-          <label for="genreType">{{ $t('search.filter.genre_type') }}</label>
-          <select class="bg-white mt-1 p-3 w-full border rounded-xs" id="genreType" v-model="selectedGenreType" :aria-label="$t('search.filter.select_genre_type')">
-            <option selected value="">{{ $t('search.filter.select_option') }}</option>
-            <option v-for="genreType in genreTypes" :key="genreType.genre_type_id" :value="genreType.genre_type_id">
-              {{ genreType.genre_type_name }}
-            </option>
-          </select>
-        </div>
+            <div>
+              <!-- Genre Type Dropdown -->
+              <label for="genreTypeSelect" class="block mb-1">{{ $t('search.filter.genre_type') }}</label>
+              <select 
+                class="bg-white mt-1 p-3 w-full border rounded-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" 
+                id="genreTypeSelect" 
+                v-model="selectedGenreType" 
+                :aria-label="$t('search.filter.select_genre_type')"
+              >
+                <option selected value="">{{ $t('search.filter.select_option') }}</option>
+                <option v-for="genreType in genreTypes" :key="genreType.genre_type_id" :value="genreType.genre_type_id">
+                  {{ genreType.genre_type_name }}
+                </option>
+              </select>
+            </div>
 
-        <div>
-          <label for="eventDateStart" class="block font-medium mb-1">{{ $t('search.filter.earliest_start') }}</label>
-          <input type="date" id="eventDateStart" v-model="eventDateStart" class="w-full p-2 border rounded mb-4" :aria-describedby="$t('search.filter.earliest_start')" :aria-label="$t('search.filter.select_earliest_start_date')">
-        </div>
+            <div>
+              <label for="eventDateStart" class="block font-medium mb-1">{{ $t('search.filter.earliest_start') }}</label>
+              <input 
+                type="date" 
+                id="eventDateStart" 
+                v-model="eventDateStart" 
+                class="w-full p-2 border rounded mb-4 focus:ring-2 focus:ring-blue-500 focus:outline-none" 
+                :aria-describedby="eventDateStartDesc"
+                :aria-label="$t('search.filter.select_earliest_start_date')"
+              >
+              <div id="eventDateStartDesc" class="sr-only">{{ $t('search.filter.earliest_start_desc') || 'Select the earliest date for events' }}</div>
+            </div>
 
-        <div>
-          <label for="eventDateEnd" class="block font-medium mb-1">{{ $t('search.filter.latest_date') }}</label>
-          <input type="date" id="eventDateEnd" v-model="eventDateEnd" class="w-full p-2 border rounded" :aria-describedby="$t('search.filter.latest_date')" :aria-label="$t('search.filter.select_latest_end_date')">
-        </div>
+            <div>
+              <label for="eventDateEnd" class="block font-medium mb-1">{{ $t('search.filter.latest_date') }}</label>
+              <input 
+                type="date" 
+                id="eventDateEnd" 
+                v-model="eventDateEnd" 
+                class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none" 
+                :aria-describedby="eventDateEndDesc"
+                :aria-label="$t('search.filter.select_latest_end_date')"
+              >
+              <div id="eventDateEndDesc" class="sr-only">{{ $t('search.filter.latest_date_desc') || 'Select the latest date for events' }}</div>
+            </div>
+            
+            <div class="flex flex-col space-y-2 mt-6">
+              <button 
+                type="button" 
+                @click="resetFilters" 
+                class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 focus:ring-2 focus:ring-gray-500 focus:outline-none"
+              >
+                {{ $t('search.filter.reset') || 'Reset' }}
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -144,6 +207,9 @@ import { ref, onMounted, watch } from 'vue'
 import { useRuntimeConfig } from '#app'
 import { useI18n } from 'vue-i18n'
 
+// Get i18n instance to access current locale
+const { locale } = useI18n()
+
 // Define reactive variables for dropdowns
 const events = ref([])
 const venues = ref([])
@@ -152,9 +218,6 @@ const eventTypes = ref([])
 const venueTypes = ref([])
 const spaceTypes = ref([])
 const genreTypes = ref([])
-
-// Define the venue property
-const venue = ref('')
 
 // Selected values
 const selectedVenue = ref('')
@@ -202,13 +265,23 @@ const fetchData = async (url, targetArray) => {
   }
 }
 
+// Function to fetch type data with current locale
+const fetchTypeData = () => {
+  fetchData('/venue', venues)
+  fetchData(`/event/type/?lang=${locale.value}`, eventTypes)
+  fetchData(`/venue/type/?lang=${locale.value}`, venueTypes)
+  fetchData(`/space/type/?lang=${locale.value}`, spaceTypes)
+  fetchData(`/genre/type/?lang=${locale.value}`, genreTypes)
+}
+
 // Fetch data when component is mounted
 onMounted(() => {
-  fetchData('/venue', venues)
-  fetchData('/event/type/?lang=de', eventTypes)
-  fetchData('/venue/type/?lang=de', venueTypes)
-  fetchData('/space/type/?lang=de', spaceTypes)
-  fetchData('/genre/type/?lang=de', genreTypes)
+  fetchTypeData()
+})
+
+// Watch for locale changes and refetch data when locale changes
+watch(locale, () => {
+  fetchTypeData()
 })
 
 // Function to generate query string based on selected filters
@@ -271,4 +344,20 @@ const downloadCalendar = async (eventDateId) => {
     console.error('Error downloading calendar file:', error);
   }
 };
+
+const applyFilters = () => {
+  fetchData(generateQuery(), events)
+}
+
+const resetFilters = () => {
+  eventCity.value = ''
+  selectedVenue.value = ''
+  selectedEventType.value = ''
+  selectedVenueType.value = ''
+  selectedSpaceType.value = ''
+  selectedGenreType.value = ''
+  eventDateStart.value = ''
+  eventDateEnd.value = ''
+  fetchData('/event/', events)
+}
 </script>

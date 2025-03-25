@@ -16,11 +16,21 @@
     "settings": "Settings",
     "profile": "Profile",
     "about": "About",
-    "logout": "Logout"
+    "logout": "Logout",
+    "appName": "Uranus",
+    "structure": "Structure",
+    "organizations": "Organizations",
+    "myProfile": "My Profile",
+    "locale": "Language Settings"
   },
   "settings": {
     "title": "Settings",
-    "language": "Language"
+    "language": "Language",
+    "selectLanguage": "Select Language",
+    "switchTo": "Switch to {language}",
+    "languageChanged": "Language changed to {language}",
+    "pageTitle": "Language Settings",
+    "pageDescription": "Choose your preferred language for the application"
   },
   "uranusAdminPanel": "Uranus Admin Panel",
   "alreadyHaveAccount": "Already have an account? Sign in",
@@ -189,33 +199,39 @@
     }
   },
   "search": {
+    "title": "Search",
     "event": {
       "image_alt": "Event image",
       "organizer": "Organizer",
       "event_id": "Event ID",
       "date_id": "Date ID",
       "start_date": "Start Date",
-      "add_to_calendar": "Zum Kalender hinzufügen"
+      "add_to_calendar": "Add to calendar",
+      "no_events": "No events found. Please use the search!"
     },
     "filter": {
       "event_city": "Event City",
       "enter_city": "Enter city",
       "enter_event_city": "Enter event city",
       "venues": "Filter Venues",
-      "venue_type": "Filter Venue Type",
-      "event_type": "Filter Event Type",
-      "space_type": "Filter Space Type",
-      "genre_type": "Filter Genre Type",
+      "venue_type": "Venue type",
+      "event_type": "Event type",
+      "space_type": "Space type",
+      "genre_type": "Genre",
       "select_venue": "Select venue",
       "select_venue_type": "Select venue type",
       "select_event_type": "Select event type",
       "select_space_type": "Select space type",
       "select_genre_type": "Select genre type",
       "select_option": "Please select",
-      "earliest_start": "Earliest Start",
+      "earliest_start": "Earliest start date",
       "latest_date": "Latest Date",
       "select_earliest_start_date": "Select earliest start date",
-      "select_latest_end_date": "Select latest end date"
+      "select_latest_end_date": "Select latest end date",
+      "earliest_start_desc": "Select the earliest date for events",
+      "latest_date_desc": "Select the latest date for events",
+      "apply": "Apply Filters",
+      "reset": "Reset"
     }
   },
   "isRequired": "is required",
