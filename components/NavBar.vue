@@ -49,7 +49,6 @@
               @keydown.escape="infoMenuOpen = false"
             >
             <nuxt-link :to="localePath('/admin/organization')" class="block w-full text-left px-4 py-2 hover:bg-gray-700 focus:outline-none focus:bg-gray-700" :class="{ 'bg-gray-700': isActive('/admin/organization') }" :aria-current="isActive('/admin/organization') ? 'page' : null" @click="closeAllMenus" role="menuitem">{{ $t('menu.organizations') }}</nuxt-link>
-            <nuxt-link :to="localePath('/admin/organization/roles')" class="block w-full text-left px-4 py-2 hover:bg-gray-700 focus:outline-none focus:bg-gray-700" :class="{ 'bg-gray-700': isActive('/admin/organization/roles') }" :aria-current="isActive('/admin/organization') ? 'page' : null" @click="closeAllMenus" role="menuitem">Organisationsbenutzerrollen</nuxt-link>
           </div>
           </div>
 
@@ -113,9 +112,6 @@
           </li>
           <li v-if="isAuthenticated">
             <nuxt-link :to="localePath('/admin/organization')" @click="isOpen = false" class="block px-4 py-2 hover:bg-gray-700 focus:outline-none focus:bg-gray-600" :class="{ 'bg-gray-700': isActive('/admin/organization') }" :aria-current="isActive('/admin/organization') ? 'page' : null" role="menuitem">{{ $t('menu.organizations') }}</nuxt-link>
-          </li>
-          <li v-if="isAuthenticated">
-            <nuxt-link :to="localePath('/admin/organization/roles')" @click="isOpen = false" class="block px-4 py-2 hover:bg-gray-700 focus:outline-none focus:bg-gray-600" :class="{ 'bg-gray-700': isActive('/admin/organization/roles') }" :aria-current="isActive('/admin/organization/roles') ? 'page' : null" role="menuitem">Organisationsbenutzerrollen</nuxt-link>
           </li>
           <li v-if="isAuthenticated">
             <nuxt-link :to="localePath('/dashboard')" @click="isOpen = false" class="block px-4 py-2 hover:bg-gray-700 focus:outline-none focus:bg-gray-600" :class="{ 'bg-gray-700': isActive('/dashboard') }" :aria-current="isActive('/dashboard') ? 'page' : null" role="menuitem">{{ $t('menu.dashboard') }}</nuxt-link>

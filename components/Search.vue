@@ -22,7 +22,7 @@
               <span class="mb-1">{{ formatDate(event.event_date_start) }}</span>
               <h1 class="text-xl font-semibold">{{ event.event_title }}</h1>
 
-              <p class="text-gray-700 mb-6">{{ truncateDescription(event.event_description) }}</p>
+              <p class="text-gray-700 mb-6">{{ truncateription(event.event_description) }}</p>
               <address class="flex-grow not-italic">
                 <span class="font-bold">{{ event.venue_name }}</span><br>
                 {{ event.venue_postcode }} {{ event.venue_city }}
@@ -167,10 +167,10 @@
                 id="eventDateStart" 
                 v-model="eventDateStart" 
                 class="w-full p-2 border rounded mb-4 focus:ring-2 focus:ring-blue-500 focus:outline-none" 
-                :aria-describedby="eventDateStartDesc"
+                :aria-describedby="eventDateStart"
                 :aria-label="$t('search.filter.select_earliest_start_date')"
               >
-              <div id="eventDateStartDesc" class="sr-only">{{ $t('search.filter.earliest_start_desc') || 'Select the earliest date for events' }}</div>
+              <div id="eventDateStart" class="sr-only">{{ $t('search.filter.earliest_start_desc') || 'Select the earliest date for events' }}</div>
             </div>
 
             <div>
@@ -180,10 +180,10 @@
                 id="eventDateEnd" 
                 v-model="eventDateEnd" 
                 class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none" 
-                :aria-describedby="eventDateEndDesc"
+                :aria-describedby="eventDateEnd"
                 :aria-label="$t('search.filter.select_latest_end_date')"
               >
-              <div id="eventDateEndDesc" class="sr-only">{{ $t('search.filter.latest_date_desc') || 'Select the latest date for events' }}</div>
+              <div id="eventDateEnd" class="sr-only">{{ $t('search.filter.latest_date_desc') || 'Select the latest date for events' }}</div>
             </div>
             
             <div class="flex flex-col space-y-2 mt-6">
@@ -248,7 +248,7 @@ function formatDate(dateString) {
   return dateString
 }
 
-function truncateDescription(description) {
+function truncateription(description) {
   if (description.length <= 200) return description;
   return description.substring(0, 200).split(' ').slice(0, -1).join(' ') + '...';
 }
