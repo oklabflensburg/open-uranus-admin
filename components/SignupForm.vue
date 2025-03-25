@@ -46,7 +46,7 @@
               <button 
                 type="button" 
                 @click="togglePasswordVisibility" 
-                class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                class="absolute inset-y-0 right-0 p-3 flex items-center text-sm text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 :aria-label="passwordVisible ? $t('hidePassword') : $t('showPassword')"
                 :aria-pressed="passwordVisible"
               >
@@ -78,7 +78,7 @@
               <button 
                 type="button" 
                 @click="toggleConfirmPasswordVisibility" 
-                class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                class="absolute inset-y-0 right-0 p-3 flex items-center text-sm text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 :aria-label="confirmPasswordVisible ? $t('hidePassword') : $t('showPassword')"
                 :aria-pressed="confirmPasswordVisible"
               >
