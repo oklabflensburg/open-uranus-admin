@@ -116,8 +116,8 @@
           :aria-invalid="!!errors.venueStateCode"
         >
           <option value="">{{ $t('venueForm.selectState') }}</option>
-          <option v-for="state in germanStates" :key="state.code" :value="state.code">
-            {{ state.name }}
+          <option v-for="state in germanStates" :key="state.state_code" :value="state.state_code">
+            {{ state.state_name }}
           </option>
         </select>
         <p v-if="errors.venueStateCode" id="venueStateCodeError" class="text-red-600">{{ errors.venueStateCode }}</p>
@@ -137,8 +137,8 @@
           :aria-invalid="!!errors.venueCountryCode"
         >
           <option value="">{{ $t('venueForm.selectCountry') }}</option>
-          <option v-for="country in countries" :key="country.code" :value="country.code">
-            {{ country.name }}
+          <option v-for="country in countries" :key="country.country_code" :value="country.country_code">
+            {{ country.country_name }}
           </option>
         </select>
         <p v-if="errors.venueCountryCode" id="venueCountryCodeError" class="text-red-600">{{ errors.venueCountryCode }}</p>
@@ -252,7 +252,7 @@ import { useRoute, useRouter, useLocalePath } from '#imports'
 import { useI18n } from 'vue-i18n'
 import Multiselect from 'vue-multiselect'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const localePath = useLocalePath()
@@ -261,72 +261,8 @@ const { fetchApi } = useApi()
 const venueId = route.params.id
 const organizerId = route.query.organizerId
 
-// German states list
-const germanStates = [
-  { code: "BW", name: "Baden-Württemberg" },
-  { code: "BY", name: "Bayern" },
-  { code: "BE", name: "Berlin" },
-  { code: "BB", name: "Brandenburg" },
-  { code: "HB", name: "Bremen" },
-  { code: "HH", name: "Hamburg" },
-  { code: "HE", name: "Hessen" },
-  { code: "MV", name: "Mecklenburg-Vorpommern" },
-  { code: "NI", name: "Niedersachsen" },
-  { code: "NW", name: "Nordrhein-Westfalen" },
-  { code: "RP", name: "Rheinland-Pfalz" },
-  { code: "SL", name: "Saarland" },
-  { code: "SN", name: "Sachsen" },
-  { code: "ST", name: "Sachsen-Anhalt" },
-  { code: "SH", name: "Schleswig-Holstein" },
-  { code: "TH", name: "Thüringen" }
-]
-
-// Countries list
-const countries = [
-  { code: "DEU", name: "Germany" },
-  { code: "AT", name: "Austria" },
-  { code: "BE", name: "Belgium" },
-  { code: "BG", name: "Bulgaria" },
-  { code: "HR", name: "Croatia" },
-  { code: "CY", name: "Cyprus" },
-  { code: "CZ", name: "Czech Republic" },
-  { code: "DK", name: "Denmark" },
-  { code: "EE", name: "Estonia" },
-  { code: "FI", name: "Finland" },
-  { code: "FR", name: "France" },
-  { code: "GR", name: "Greece" },
-  { code: "HU", name: "Hungary" },
-  { code: "IE", name: "Ireland" },
-  { code: "IT", name: "Italy" },
-  { code: "LV", name: "Latvia" },
-  { code: "LT", name: "Lithuania" },
-  { code: "LU", name: "Luxembourg" },
-  { code: "MT", name: "Malta" },
-  { code: "NL", name: "Netherlands" },
-  { code: "PL", name: "Poland" },
-  { code: "PT", name: "Portugal" },
-  { code: "RO", name: "Romania" },
-  { code: "SK", name: "Slovakia" },
-  { code: "SI", name: "Slovenia" },
-  { code: "ES", name: "Spain" },
-  { code: "SE", name: "Sweden" },
-  { code: "GB", name: "United Kingdom" },
-  { code: "US", name: "United States" },
-  { code: "CA", name: "Canada" },
-  { code: "CH", name: "Switzerland" },
-  { code: "NO", name: "Norway" },
-  { code: "IS", name: "Iceland" },
-  { code: "JP", name: "Japan" },
-  { code: "CN", name: "China" },
-  { code: "IN", name: "India" },
-  { code: "AU", name: "Australia" },
-  { code: "NZ", name: "New Zealand" },
-  { code: "BR", name: "Brazil" },
-  { code: "MX", name: "Mexico" },
-  { code: "ZA", name: "South Africa" },
-  { code: "RU", name: "Russia" },
-  { code: "TR", name: "Turkey" }
-]
+const germanStates = ref([])
+const countries = ref([])
 
 // Reactive form data
 const venueName = ref('')
@@ -335,7 +271,6 @@ const venueHouseNumber = ref('')
 const venuePostalCode = ref('')
 const venueCity = ref('')
 const venueOrganizerId = ref(organizerId)
-console.log('venueOrganizerId', venueOrganizerId.value)
 const venueOrganizerName = ref('')
 const venueStateCode = ref('')
 const venueCountryCode = ref('')
@@ -352,7 +287,6 @@ const submissionError = ref('')
 const statusMessage = ref('')
 const submitButtonText = ref(t('venueForm.submitButton'))
 
-// Accessibility enhancement: Add loading states
 const isLoading = ref(false)
 const isSubmitting = ref(false)
 const loadingMessage = ref('')
@@ -459,6 +393,44 @@ const loadVenueTypes = async () => {
     console.error('Failed to load venue types:', error)
     submissionError.value = t('venueForm.errors.loadVenueTypes')
     updateStatusMessage(t('venueForm.errors.loadVenueTypes'))
+  } finally {
+    isLoading.value = false
+    loadingMessage.value = ''
+  }
+}
+
+// Load states from API
+const loadGermanStates = async () => {
+  isLoading.value = true
+  loadingMessage.value = t('venueForm.loadingStates')
+  updateStatusMessage(t('venueForm.loadingStates'))
+  
+  try {
+    const response = await fetchApi('/state/')
+    germanStates.value = response || []
+  } catch (error) {
+    console.error('Failed to load states:', error)
+    submissionError.value = t('venueForm.errors.loadStates')
+    updateStatusMessage(t('venueForm.errors.loadStates'))
+  } finally {
+    isLoading.value = false
+    loadingMessage.value = ''
+  }
+}
+
+// Load countries from API
+const loadCountries = async () => {
+  isLoading.value = true
+  loadingMessage.value = t('venueForm.loadingCountries')
+  updateStatusMessage(t('venueForm.loadingCountries'))
+  
+  try {
+    const response = await fetchApi(`/country/?lang=${locale.value}`)
+    countries.value = response || []
+  } catch (error) {
+    console.error('Failed to load countries:', error)
+    submissionError.value = t('venueForm.errors.loadCountries')
+    updateStatusMessage(t('venueForm.errors.loadCountries'))
   } finally {
     isLoading.value = false
     loadingMessage.value = ''
@@ -653,14 +625,19 @@ const updateVenueTypeIds = () => {
 }
 
 onMounted(() => {
+  loadGermanStates()
+  loadCountries()
   loadOrganizers()
   loadVenueTypes()
+
   if (isModeEdit()) {
     // For edit mode, load venue types first, then load venue data
     // to ensure we can match venue types properly
     Promise.all([
       loadVenueTypes(),
-      loadOrganizers()
+      loadOrganizers(),
+      loadGermanStates(),
+      loadCountries()
     ]).then(() => {
       isLoading.value = true
       loadingMessage.value = t('venueForm.loadingVenueData')
