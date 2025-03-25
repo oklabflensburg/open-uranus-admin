@@ -1,41 +1,64 @@
 <template>
   <div class="max-w-screen-xl mx-auto bg-white p-3 md:p-6 space-y-12">
     <!-- Organizers -->
-    <section>
+    <section aria-labelledby="organizers-heading">
       <div class="bg-gray-100 p-3 rounded mb-12">
         <h1 class="text-3xl mb-3">{{ $t('dashboard.welcomeMessage') }}</h1>
         <p v-if="organizers.length === 0" class="text-lg">{{ $t('dashboard.welcomeDescription') }}</p>
         <p v-else>Du bist in deinem Dashboard</p>
       </div>
-      <h2 class="text-2xl font-bold mb-4">{{ $t('dashboard.organizers') }}</h2>
+      <h2 id="organizers-heading" class="text-2xl font-bold mb-4">{{ $t('dashboard.organizers') }}</h2>
       <div v-if="organizers.length === 0" class="text-gray-500">
-        <nuxt-link :to="localePath('organizer')" class="bg-green-600 text-white py-2 px-4 hover:bg-green-800 hover:text-white transition rounded">{{ $t('dashboard.createOrganizer') }}</nuxt-link>
+        <nuxt-link :to="localePath('organizer')" class="bg-green-600 text-white py-2 px-4 hover:bg-green-800 hover:text-white transition rounded focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+          {{ $t('dashboard.createOrganizer') }}
+        </nuxt-link>
       </div>
 
-      <ul v-else class="grid grid-cols-12 gap-4">
+      <ul v-else class="grid grid-cols-12 gap-4" role="list" aria-label="Your organizers">
         <li v-for="organizer in organizers" :key="organizer.organizer_id" class="col-span-12 sm:col-span-6 border border-gray-200">
           <div class="flex justify-between items-center font-semibold text-sm text-gray-600 bg-gray-200 p-3">
-            <span>{{ organizer.organizer_name }}</span>
+            <span id="organizer-name-{{ organizer.organizer_id }}">{{ organizer.organizer_name }}</span>
 
             <div v-if="organizer.can_edit" class="flex gap-2">
-              <nuxt-link :to="localePath(`/organizer/${organizer.organizer_id}`)">
-                <img src="/public/icons/edit.svg" alt="Edit" class="cursor-pointer"/>
+              <nuxt-link :to="localePath(`/organizer/${organizer.organizer_id}`)" 
+                class="p-1 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                :aria-label="`Edit ${organizer.organizer_name}`">
+                <img src="/public/icons/edit.svg" alt="" aria-hidden="true" class="w-5 h-5"/>
+                <span class="sr-only">Edit</span>
               </nuxt-link>
-              <img @click="deleteOrganizer(organizer.organizer_id)" src="/public/icons/delete.svg" alt="Delete" class="cursor-pointer"/>
+              <button @click="deleteOrganizer(organizer.organizer_id)" 
+                class="p-1 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                :aria-label="`Delete ${organizer.organizer_name}`"
+                type="button">
+                <img src="/public/icons/delete.svg" alt="" aria-hidden="true" class="w-5 h-5"/>
+                <span class="sr-only">Delete</span>
+              </button>
             </div>
           </div>
           <div class="p-3 bg-white text-gray-700">
-            <div class="grid grid-cols-3 gap-x-2 w-24">
-                <span class="col-span-1 flex items-center justify-center"><img src="/public/icons/venue.svg" alt="Venues"></span>
-                <span class="col-span-1 flex items-center justify-center"><img src="/public/icons/space.svg" alt="Spaces"></span>
-                <span class="col-span-1 flex items-center justify-center"><img src="/public/icons/event.svg" alt="Events"></span>
-                <span class="col-span-1 flex items-center justify-center">{{ organizer.stats.count_venues }}</span>
-              <span class="col-span-1 flex items-center justify-center">{{ organizer.stats.count_spaces }}</span>
-              <span class="col-span-1 flex items-center justify-center">{{ organizer.stats.count_events }}</span>
+            <div class="grid grid-cols-3 gap-x-2 w-24" aria-label="Statistics">
+              <div class="col-span-1 flex flex-col items-center justify-center">
+                <img src="/public/icons/venue.svg" alt="" aria-hidden="true" class="w-5 h-5"/>
+                <span class="sr-only">Venues:</span>
+                <span aria-label="Number of venues">{{ organizer.stats.count_venues }}</span>
+              </div>
+              <div class="col-span-1 flex flex-col items-center justify-center">
+                <img src="/public/icons/space.svg" alt="" aria-hidden="true" class="w-5 h-5"/>
+                <span class="sr-only">Spaces:</span>
+                <span aria-label="Number of spaces">{{ organizer.stats.count_spaces }}</span>
+              </div>
+              <div class="col-span-1 flex flex-col items-center justify-center">
+                <img src="/public/icons/event.svg" alt="" aria-hidden="true" class="w-5 h-5"/>
+                <span class="sr-only">Events:</span>
+                <span aria-label="Number of events">{{ organizer.stats.count_events }}</span>
+              </div>
             </div>
 
             <div v-if="organizer.can_edit" class="mt-2 flex gap-2">
-              <nuxt-link :to="localePath(`/venue?organizerId=${organizer.organizer_id}`)" class="bg-gray-600 text-white py-1 px-3 hover:bg-gray-800 hover:text-gray-100 transition rounded">{{ $t('dashboard.createVenue') }}</nuxt-link>
+              <nuxt-link :to="localePath(`/venue?organizerId=${organizer.organizer_id}`)" 
+                class="bg-gray-600 text-white py-1 px-3 hover:bg-gray-800 hover:text-gray-100 transition rounded focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                {{ $t('dashboard.createVenue') }}
+              </nuxt-link>
             </div>
           </div>
         </li>
@@ -44,60 +67,85 @@
             <span>{{ $t('dashboard.createOrganizer') }}</span>
           </div>
           <div class="flex items-center px-3 py-4 bg-white text-gray-700">
-             <nuxt-link :to="localePath('organizer')" class="bg-green-600 text-white py-2 px-4 hover:bg-green-800 hover:text-white transition rounded">{{ $t('dashboard.createOrganizer') }}</nuxt-link>
+             <nuxt-link :to="localePath('organizer')" 
+              class="bg-green-600 text-white py-2 px-4 hover:bg-green-800 hover:text-white transition rounded focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+              {{ $t('dashboard.createOrganizer') }}
+             </nuxt-link>
           </div>
         </li>
       </ul>
     </section>
 
     <!-- Venues -->
-    <section>
-      <h2 class="text-2xl font-bold mb-4">{{ $t('dashboard.venues') }}</h2>
+    <section aria-labelledby="venues-heading">
+      <h2 id="venues-heading" class="text-2xl font-bold mb-4">{{ $t('dashboard.venues') }}</h2>
       <p v-if="venues.length === 0" class="text-gray-500">{{ $t('dashboard.noVenuesFound') }}</p>
 
-      <ul v-else class="grid grid-cols-12 gap-4">
+      <ul v-else class="grid grid-cols-12 gap-4" role="list" aria-label="Your venues">
         <li v-for="venue in venues" :key="venue.venue_id" class="col-span-12 sm:col-span-6 border border-gray-200">
           <div class="flex justify-between items-center font-semibold text-sm text-gray-600 bg-gray-200 p-3">
-            <span>{{ venue.venue_name }}</span>
+            <span id="venue-name-{{ venue.venue_id }}">{{ venue.venue_name }}</span>
 
             <div v-if="venue.can_edit_venue" class="flex gap-2">
-              <nuxt-link :to="localePath(`/venue/${venue.venue_id}?organizerId=${venue.venue_organizer_id}`)">
-                <img src="/public/icons/edit.svg" alt="Edit" class="cursor-pointer"/>
+              <nuxt-link :to="localePath(`/venue/${venue.venue_id}?organizerId=${venue.venue_organizer_id}`)"
+                class="p-1 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                :aria-label="`Edit ${venue.venue_name}`">
+                <img src="/public/icons/edit.svg" alt="" aria-hidden="true" class="w-5 h-5"/>
+                <span class="sr-only">Edit</span>
               </nuxt-link>
-              <img @click="deleteVenue(venue.venue_id)" src="/public/icons/delete.svg" alt="Delete" class="cursor-pointer">
+              <button @click="deleteVenue(venue.venue_id)"
+                class="p-1 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                :aria-label="`Delete ${venue.venue_name}`"
+                type="button">
+                <img src="/public/icons/delete.svg" alt="" aria-hidden="true" class="w-5 h-5"/>
+                <span class="sr-only">Delete</span>
+              </button>
             </div>
           </div>
 
           <div class="p-3 bg-white text-gray-700">
-            <div class="grid grid-cols-2 gap-x-2 w-16">
-                <span class="col-span-1 flex items-center justify-center"><img src="/public/icons/space.svg" alt="Spaces"></span>
-                <span class="col-span-1 flex items-center justify-center"><img src="/public/icons/event.svg" alt="Events"></span>
-              <span class="col-span-1 flex items-center justify-center">{{ venue.stats.count_spaces }}</span>
-              <span class="col-span-1 flex items-center justify-center">{{ venue.stats.count_events }}</span>
+            <div class="grid grid-cols-2 gap-x-2 w-16" aria-label="Statistics">
+              <div class="col-span-1 flex flex-col items-center justify-center">
+                <img src="/public/icons/space.svg" alt="" aria-hidden="true" class="w-5 h-5"/>
+                <span class="sr-only">Spaces:</span>
+                <span aria-label="Number of spaces">{{ venue.stats.count_spaces }}</span>
+              </div>
+              <div class="col-span-1 flex flex-col items-center justify-center">
+                <img src="/public/icons/event.svg" alt="" aria-hidden="true" class="w-5 h-5"/>
+                <span class="sr-only">Events:</span>
+                <span aria-label="Number of events">{{ venue.stats.count_events }}</span>
+              </div>
             </div>
 
             <div class="mt-2 flex gap-2">
-              <nuxt-link v-if="venue.can_edit_space" :to="localePath({ name: 'space-id', params: { id: venue.venue_id } })" class="bg-gray-600 text-white py-1 px-3 hover:bg-gray-800 hover:text-gray-100 transition rounded">{{ $t('dashboard.createSpace') }}</nuxt-link>
-              <nuxt-link v-if="venue.can_edit_event && venue.stats.count_spaces > 0" :to="localePath({ name: 'event', query: { venueId: venue.venue_id } })" class="bg-gray-600 text-white py-1 px-3 hover:bg-gray-800 hover:text-gray-100 transition rounded"> {{ $t('dashboard.createEvent') }}</nuxt-link>
+              <nuxt-link v-if="venue.can_edit_space" :to="localePath({ name: 'space-id', params: { id: venue.venue_id } })" 
+                class="bg-gray-600 text-white py-1 px-3 hover:bg-gray-800 hover:text-gray-100 transition rounded focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                {{ $t('dashboard.createSpace') }}
+              </nuxt-link>
+              <nuxt-link v-if="venue.can_edit_event && venue.stats.count_spaces > 0" :to="localePath({ name: 'event', query: { venueId: venue.venue_id } })" 
+                class="bg-gray-600 text-white py-1 px-3 hover:bg-gray-800 hover:text-gray-100 transition rounded focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                {{ $t('dashboard.createEvent') }}
+              </nuxt-link>
             </div>
           </div>
         </li>
       </ul>
     </section>
 
-    <!-- Events Table (No changes needed) -->
-    <section>
-      <h2 class="text-2xl font-bold mb-4">{{ $t('dashboard.events') }}</h2>
+    <!-- Events Table -->
+    <section aria-labelledby="events-heading">
+      <h2 id="events-heading" class="text-2xl font-bold mb-4">{{ $t('dashboard.events') }}</h2>
       <p v-if="events.length === 0" class="text-gray-500">{{ $t('dashboard.noEventsFound') }}</p>
 
       <div v-else class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
+        <table class="w-full text-left border-collapse" aria-label="Events list">
+          <caption class="sr-only">List of your events with date, title, location and edit options</caption>
           <thead>
             <tr class="bg-gray-200 text-gray-600 text-sm">
-              <th class="p-3 border">{{ $t('dashboard.date') }}</th>
-              <th class="p-3 border">{{ $t('dashboard.title') }}</th>
-              <th class="p-3 border">{{ $t('dashboard.location') }}</th>
-              <th class="p-3 border">{{ $t('dashboard.action') }}</th>
+              <th class="p-3 border" scope="col">{{ $t('dashboard.date') }}</th>
+              <th class="p-3 border" scope="col">{{ $t('dashboard.title') }}</th>
+              <th class="p-3 border" scope="col">{{ $t('dashboard.location') }}</th>
+              <th class="p-3 border" scope="col">{{ $t('dashboard.action') }}</th>
             </tr>
           </thead>
           <tbody class="text-gray-700">
@@ -106,8 +154,12 @@
               <td class="p-3 border">{{ event.event_title }}</td>
               <td class="p-3 border">{{ event.event_venue_name }}</td>
               <td class="p-3 border text-right">
-                <nuxt-link v-if="event.can_edit" :to="localePath({ name: 'event-id', params: { id: event.event_date_id }, query: { venueId: 21, update: true }})" class="cursor-pointer">
-                  <img src="/public/icons/edit.svg" alt="Edit" class="inline-block">
+                <nuxt-link v-if="event.can_edit" 
+                  :to="localePath({ name: 'event-id', params: { id: event.event_date_id }, query: { venueId: 21, update: true }})" 
+                  class="inline-block p-1 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  :aria-label="`Edit event: ${event.event_title}`">
+                  <img src="/public/icons/edit.svg" alt="" aria-hidden="true" class="w-5 h-5"/>
+                  <span class="sr-only">Edit</span>
                 </nuxt-link>
               </td>
             </tr>
