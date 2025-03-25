@@ -1,190 +1,146 @@
 <template>
-  <div role="region" aria-labelledby="organizerFormTitle">
-    <form id="addOrganizerForm" class="space-y-4" @submit.prevent="handleSubmit">
-      <h2 id="organizerFormTitle" class="text-2xl font-bold mb-4">{{ $t('organizerForm.title') }}</h2>
-      
-      <!-- Accessibility status message for screen readers -->
-      <div aria-live="polite" role="status" class="sr-only">{{ statusMessage }}</div>
+  <form id="addOrganizerForm" class="space-y-4" @submit.prevent="handleSubmit" aria-labelledby="organizerFormTitle">
+    <h2 id="organizerFormTitle" class="text-2xl font-bold mb-4">{{ $t('organizerForm.title') }}</h2>
+    
+    <!-- Accessibility status message for screen readers -->
+    <div class="sr-only" aria-live="polite" role="status">{{ statusMessage }}</div>
 
-      <fieldset class="space-y-4 border-0 p-0 m-0">
-        <legend class="sr-only">{{ $t('organizerForm.formLegend') }}</legend>
+    <!-- Name -->
+    <div>
+      <label class="block text-gray-700" for="organizerName">{{ $t('organizerForm.name') }}<span class="text-red-600 ml-1" aria-hidden="true">*</span><span class="sr-only">{{ $t('organizerForm.required') }}</span></label>
+      <input 
+        type="text" 
+        id="organizerName" 
+        class="mt-1 p-2 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" 
+        v-model="organizerName" 
+        @input="validateField('organizerName')" 
+        aria-describedby="organizerNameError" 
+        aria-required="true"
+        :aria-invalid="!!errors.organizerName"
+      >
+      <p v-if="errors.organizerName" id="organizerNameError" class="text-red-600" role="alert">{{ errors.organizerName }}</p>
+    </div>
 
-        <!-- Name -->
-        <div>
-          <label class="block text-gray-700 font-medium" for="organizerName">
-            {{ $t('organizerForm.name') }}
-            <span class="text-red-600 ml-1" aria-hidden="true">*</span>
-            <span class="sr-only">{{ $t('organizerForm.required') }}</span>
-          </label>
-          <input 
-            type="text" 
-            id="organizerName" 
-            class="mt-1 p-2 w-full border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none" 
-            v-model="organizerName" 
-            @input="validateField('organizerName')" 
-            aria-describedby="organizerNameError organizerNameDesc" 
-            aria-required="true"
-            :aria-invalid="!!errors.organizerName"
-          >
-          <div id="organizerNameDesc" class="text-sm text-gray-500 mt-1">{{ $t('organizerForm.nameDescription') }}</div>
-          <p v-if="errors.organizerName" id="organizerNameError" class="text-red-600 mt-1">{{ errors.organizerName }}</p>
-        </div>
+    <!-- Description -->
+    <div>
+      <label class="block text-gray-700" for="organizerDescription">{{ $t('organizerForm.description') }}</label>
+      <textarea 
+        id="organizerDescription" 
+        rows="4" 
+        class="mt-1 p-2 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" 
+        v-model="organizerDescription" 
+        @input="validateField('organizerDescription')" 
+        aria-describedby="organizerDescriptionError" 
+        :aria-invalid="!!errors.organizerDescription"
+      ></textarea>
+      <p v-if="errors.organizerDescription" id="organizerDescriptionError" class="text-red-600" role="alert">{{ errors.organizerDescription }}</p>
+    </div>
 
-        <!-- Description -->
-        <div>
-          <label class="block text-gray-700 font-medium" for="organizerDescription">{{ $t('organizerForm.description') }}</label>
-          <textarea 
-            id="organizerDescription" 
-            rows="4" 
-            class="mt-1 p-2 w-full border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none" 
-            v-model="organizerDescription" 
-            @input="validateField('organizerDescription')" 
-            aria-describedby="organizerDescriptionError" 
-            :aria-invalid="!!errors.organizerDescription"
-          ></textarea>
-          <p v-if="errors.organizerDescription" id="organizerDescriptionError" class="text-red-600 mt-1">{{ errors.organizerDescription }}</p>
-        </div>
-
-        <!-- Contact Information -->
-        <div role="group" aria-labelledby="contactInfoHeading">
-          <div id="contactInfoHeading" class="font-medium text-gray-700 mb-2">{{ $t('organizerForm.contactInformation') }}</div>
-          <div class="grid grid-cols-12 gap-4">
-            <div class="col-span-12 sm:col-span-6">
-              <label class="block text-gray-700" for="organizerContactEmail">{{ $t('organizerForm.contactEmail') }}</label>
-              <input 
-                type="email" 
-                id="organizerContactEmail" 
-                class="mt-1 p-2 w-full border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none" 
-                v-model="organizerContactEmail" 
-                @input="validateField('organizerContactEmail')" 
-                aria-describedby="organizerContactEmailError" 
-                :aria-invalid="!!errors.organizerContactEmail"
-              >
-              <p v-if="errors.organizerContactEmail" id="organizerContactEmailError" class="text-red-600 mt-1">{{ errors.organizerContactEmail }}</p>
-            </div>
-            <div class="col-span-12 sm:col-span-6">
-              <label class="block text-gray-700" for="organizerContactPhone">{{ $t('organizerForm.contactPhone') }}</label>
-              <input 
-                type="tel" 
-                id="organizerContactPhone" 
-                class="mt-1 p-2 w-full border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none" 
-                v-model="organizerContactPhone" 
-                @input="validateField('organizerContactPhone')" 
-                aria-describedby="organizerContactPhoneError" 
-                :aria-invalid="!!errors.organizerContactPhone"
-              >
-              <p v-if="errors.organizerContactPhone" id="organizerContactPhoneError" class="text-red-600 mt-1">{{ errors.organizerContactPhone }}</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Website URL -->
-        <div>
-          <label class="block text-gray-700" for="organizerWebsiteUrl">{{ $t('organizerForm.websiteUrl') }}</label>
-          <input 
-            type="url" 
-            id="organizerWebsiteUrl" 
-            class="mt-1 p-2 w-full border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none" 
-            v-model="organizerWebsiteUrl" 
-            @input="validateField('organizerWebsiteUrl')" 
-            aria-describedby="organizerWebsiteUrlError organizerWebsiteDesc"
-            :aria-invalid="!!errors.organizerWebsiteUrl"
-            placeholder="https://example.com"
-          >
-          <div id="organizerWebsiteDesc" class="text-sm text-gray-500 mt-1">{{ $t('organizerForm.websiteUrlHint') }}</div>
-          <p v-if="errors.organizerWebsiteUrl" id="organizerWebsiteUrlError" class="text-red-600 mt-1">{{ errors.organizerWebsiteUrl }}</p>
-        </div>
-
-        <!-- Address Fields -->
-        <div role="group" aria-labelledby="addressHeading">
-          <div id="addressHeading" class="font-medium text-gray-700 mb-2">{{ $t('organizerForm.address') }}</div>
-          <div class="grid grid-cols-12 gap-4">
-            <div class="col-span-7 sm:col-span-9">
-              <label class="block text-gray-700" for="organizerStreet">{{ $t('organizerForm.street') }}</label>
-              <input 
-                type="text" 
-                id="organizerStreet" 
-                class="mt-1 p-2 w-full border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none" 
-                v-model="organizerStreet" 
-                @input="validateField('organizerStreet')" 
-                aria-describedby="organizerStreetError"
-                :aria-invalid="!!errors.organizerStreet"
-              >
-              <p v-if="errors.organizerStreet" id="organizerStreetError" class="text-red-600 mt-1">{{ errors.organizerStreet }}</p>
-            </div>
-            <div class="col-span-5 sm:col-span-3">
-              <label class="block text-gray-700" for="organizerHouseNumber">{{ $t('organizerForm.houseNumber') }}</label>
-              <input 
-                type="text" 
-                id="organizerHouseNumber" 
-                class="mt-1 p-2 w-full border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none" 
-                v-model="organizerHouseNumber" 
-                @input="validateField('organizerHouseNumber')" 
-                aria-describedby="organizerHouseNumberError"
-                :aria-invalid="!!errors.organizerHouseNumber"
-              >
-              <p v-if="errors.organizerHouseNumber" id="organizerHouseNumberError" class="text-red-600 mt-1">{{ errors.organizerHouseNumber }}</p>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-12 gap-4 mt-4">
-            <div class="col-span-4">
-              <label class="block text-gray-700" for="organizerPostalCode">{{ $t('organizerForm.postalCode') }}</label>
-              <input 
-                type="text" 
-                inputmode="numeric" 
-                pattern="[0-9]*" 
-                id="organizerPostalCode" 
-                class="mt-1 p-2 w-full border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none" 
-                v-model="organizerPostalCode" 
-                @input="validateField('organizerPostalCode')" 
-                aria-describedby="organizerPostalCodeError"
-                :aria-invalid="!!errors.organizerPostalCode"
-              >
-              <p v-if="errors.organizerPostalCode" id="organizerPostalCodeError" class="text-red-600 mt-1">{{ errors.organizerPostalCode }}</p>
-            </div>
-            <div class="col-span-8">
-              <label class="block text-gray-700" for="organizerCity">{{ $t('organizerForm.city') }}</label>
-              <input 
-                type="text" 
-                id="organizerCity" 
-                class="mt-1 p-2 w-full border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none" 
-                v-model="organizerCity" 
-                @input="validateField('organizerCity')" 
-                aria-describedby="organizerCityError"
-                :aria-invalid="!!errors.organizerCity"
-              >
-              <p v-if="errors.organizerCity" id="organizerCityError" class="text-red-600 mt-1">{{ errors.organizerCity }}</p>
-            </div>
-          </div>
-        </div>
-      </fieldset>
-
-      <div v-if="submissionError" class="text-red-600 border border-red-200 bg-red-50 p-3 rounded" aria-live="assertive" role="alert">{{ submissionError }}</div>
-
-      <div class="flex flex-wrap sm:flex-nowrap space-y-3 sm:space-y-0 space-x-0 sm:space-x-4 justify-end mt-6">
-        <button 
-          type="button" 
-          @click="cancelForm" 
-          class="w-full sm:w-auto px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition"
-          aria-label="Cancel and return to dashboard">
-          {{ $t('organizerForm.cancelButton') }}
-        </button>
-        <button 
-          type="submit" 
-          class="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition">
-          {{ submitButtonText }}
-        </button>
+    <!-- Contact Information -->
+    <div class="grid grid-cols-12 gap-4">
+      <div class="col-span-6">
+        <label class="block text-gray-700" for="organizerContactEmail">{{ $t('organizerForm.contactEmail') }}</label>
+        <input 
+          type="email" 
+          id="organizerContactEmail" 
+          class="mt-1 p-2 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" 
+          v-model="organizerContactEmail" 
+          @input="validateField('organizerContactEmail')" 
+          aria-describedby="organizerContactEmailError" 
+          :aria-invalid="!!errors.organizerContactEmail"
+        >
+        <p v-if="errors.organizerContactEmail" id="organizerContactEmailError" class="text-red-600" role="alert">{{ errors.organizerContactEmail }}</p>
       </div>
-    </form>
-  </div>
+      <div class="col-span-6">
+        <label class="block text-gray-700" for="organizerContactPhone">{{ $t('organizerForm.contactPhone') }}</label>
+        <input 
+          type="tel" 
+          id="organizerContactPhone" 
+          class="mt-1 p-2 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" 
+          v-model="organizerContactPhone" 
+          @input="validateField('organizerContactPhone')" 
+          aria-describedby="organizerContactPhoneError" 
+          :aria-invalid="!!errors.organizerContactPhone"
+        >
+        <p v-if="errors.organizerContactPhone" id="organizerContactPhoneError" class="text-red-600" role="alert">{{ errors.organizerContactPhone }}</p>
+      </div>
+    </div>
+
+    <!-- Website URL -->
+    <div>
+      <label class="block text-gray-700" for="organizerWebsiteUrl">{{ $t('organizerForm.websiteUrl') }}</label>
+      <input 
+        type="url" 
+        id="organizerWebsiteUrl" 
+        class="mt-1 p-2 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" 
+        v-model="organizerWebsiteUrl" 
+        @input="validateField('organizerWebsiteUrl')" 
+        @blur="handleUrlBlur"
+        aria-describedby="organizerWebsiteUrlError organizerWebsiteUrlHint"
+        :aria-invalid="!!errors.organizerWebsiteUrl"
+        placeholder="www.example.com"
+      >
+      <p v-if="errors.organizerWebsiteUrl" id="organizerWebsiteUrlError" class="text-red-600" role="alert">{{ errors.organizerWebsiteUrl }}</p>
+      <p id="organizerWebsiteUrlHint" class="text-gray-500 text-sm">{{ $t('organizerForm.websiteUrlHint') || 'https:// will be added automatically if not provided' }}</p>
+    </div>
+
+    <!-- Address Fields -->
+    <fieldset>
+      <legend class="sr-only">{{ $t('organizerForm.addressInformation') }}</legend>
+      <div class="grid grid-cols-12 gap-4">
+        <div class="col-span-7 sm:col-span-9">
+          <label class="block text-gray-700" for="organizerStreet">{{ $t('organizerForm.street') }}</label>
+          <input type="text" id="organizerStreet" class="mt-1 p-2 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" v-model="organizerStreet" @input="validateField('organizerStreet')" aria-describedby="organizerStreetError" :aria-invalid="!!errors.organizerStreet">
+          <p v-if="errors.organizerStreet" id="organizerStreetError" class="text-red-600" role="alert">{{ errors.organizerStreet }}</p>
+        </div>
+        <div class="col-span-5 sm:col-span-3">
+          <label class="block text-gray-700" for="organizerHouseNumber">{{ $t('organizerForm.houseNumber') }}</label>
+          <input type="text" id="organizerHouseNumber" class="mt-1 p-2 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" v-model="organizerHouseNumber" @input="validateField('organizerHouseNumber')" aria-describedby="organizerHouseNumberError" :aria-invalid="!!errors.organizerHouseNumber">
+          <p v-if="errors.organizerHouseNumber" id="organizerHouseNumberError" class="text-red-600" role="alert">{{ errors.organizerHouseNumber }}</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-12 gap-4 mt-4">
+        <div class="col-span-4">
+          <label class="block text-gray-700" for="organizerPostalCode">{{ $t('organizerForm.postalCode') }}</label>
+          <input type="text" id="organizerPostalCode" class="mt-1 p-2 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" v-model="organizerPostalCode" @input="validateField('organizerPostalCode')" aria-describedby="organizerPostalCodeError" :aria-invalid="!!errors.organizerPostalCode">
+          <p v-if="errors.organizerPostalCode" id="organizerPostalCodeError" class="text-red-600" role="alert">{{ errors.organizerPostalCode }}</p>
+        </div>
+        <div class="col-span-8">
+          <label class="block text-gray-700" for="organizerCity">{{ $t('organizerForm.city') }}</label>
+          <input type="text" id="organizerCity" class="mt-1 p-2 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" v-model="organizerCity" @input="validateField('organizerCity')" aria-describedby="organizerCityError" :aria-invalid="!!errors.organizerCity">
+          <p v-if="errors.organizerCity" id="organizerCityError" class="text-red-600" role="alert">{{ errors.organizerCity }}</p>
+        </div>
+      </div>
+    </fieldset>
+
+    <div v-if="submissionError" class="text-red-600 p-3 border border-red-300 bg-red-50 rounded" role="alert" aria-live="assertive">{{ submissionError }}</div>
+
+    <div class="flex space-x-4 justify-end" role="group" aria-label="Form submission controls">
+      <button 
+        type="button" 
+        @click="cancelForm" 
+        class="mt-6 px-4 py-2 bg-gray-500 text-white rounded-xs hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition"
+      >
+        {{ $t('organizerForm.cancelButton') }}
+      </button>
+      <button 
+        type="submit" 
+        class="mt-6 px-4 py-2 bg-green-500 text-white rounded-xs hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition"
+        :disabled="isSubmitting"
+        aria-busy="isSubmitting"
+      >
+        {{ submitButtonText }}
+      </button>
+    </div>
+  </form>
 </template>
 
 <script setup>
-import { ref, onMounted, useRoute } from 'vue'
+import { ref, nextTick, onMounted } from 'vue'
 import { useApi } from '@/composables/useApi'
 import { useI18n } from 'vue-i18n'
-import { useRouter, useLocalePath } from '#imports'
+import { useRouter, useRoute, useLocalePath } from '#imports'
 
 const router = useRouter()
 const route = useRoute()
@@ -207,6 +163,7 @@ const errors = ref({})
 const submissionError = ref('')
 const statusMessage = ref('')
 const submitButtonText = ref(t('organizerForm.submitButton'))
+const isSubmitting = ref(false)
 
 const organizerId = route.params.id
 
@@ -221,9 +178,12 @@ const updateStatusMessage = (message) => {
 const validateForm = () => {
   errors.value = {}
 
+  // Validate required fields
   validateField('organizerName')
-  validateField('organizerContactEmail')
-  validateField('organizerWebsiteUrl')
+  
+  // Add validation for other fields
+  if (organizerContactEmail.value) validateField('organizerContactEmail')
+  if (organizerWebsiteUrl.value) validateField('organizerWebsiteUrl')
   
   // Focus first error field for better accessibility
   if (Object.keys(errors.value).length > 0) {
@@ -232,17 +192,20 @@ const validateForm = () => {
       document.getElementById(firstErrorField)?.focus()
       updateStatusMessage(t('organizerForm.validationErrors'))
     })
-    return false
   }
-  
-  return true
 }
 
 const validateField = (field) => {
   const fields = {
     organizerName,
+    organizerDescription,
     organizerContactEmail,
-    organizerWebsiteUrl
+    organizerContactPhone,
+    organizerWebsiteUrl,
+    organizerStreet,
+    organizerHouseNumber,
+    organizerPostalCode,
+    organizerCity
   }
   
   if (field === 'organizerName' && !fields[field].value) {
@@ -262,11 +225,26 @@ const validateEmail = (email) => {
 }
 
 const validateUrl = (url) => {
+  if (!url) return true
+  
+  // Add https:// prefix if not present
+  let urlToCheck = url
+  if (!/^https?:\/\//i.test(urlToCheck)) {
+    urlToCheck = 'https://' + urlToCheck
+  }
+  
   try {
-    new URL(url)
+    new URL(urlToCheck)
     return true
   } catch (e) {
     return false
+  }
+}
+
+const handleUrlBlur = () => {
+  if (organizerWebsiteUrl.value && !/^https?:\/\//i.test(organizerWebsiteUrl.value)) {
+    organizerWebsiteUrl.value = 'https://' + organizerWebsiteUrl.value
+    validateField('organizerWebsiteUrl')
   }
 }
 
@@ -276,8 +254,15 @@ const isModeEdit = () => {
 }
 
 const handleSubmit = async () => {
-  if (!validateForm()) return
-
+  validateForm()
+  if (Object.keys(errors.value).length > 0) return
+  
+  // Ensure website URL has https:// prefix before submission
+  if (organizerWebsiteUrl.value && !/^https?:\/\//i.test(organizerWebsiteUrl.value)) {
+    organizerWebsiteUrl.value = 'https://' + organizerWebsiteUrl.value
+  }
+  
+  isSubmitting.value = true
   updateStatusMessage(t('organizerForm.submitting'))
   
   const body = {
@@ -316,6 +301,13 @@ const handleSubmit = async () => {
   } catch (error) {
     submissionError.value = t('organizerForm.errors.submission')
     updateStatusMessage(t('organizerForm.errors.submission'))
+    // Focus the error message for screen readers
+    nextTick(() => {
+      const errorElement = document.querySelector('[role="alert"]')
+      if (errorElement) errorElement.focus()
+    })
+  } finally {
+    isSubmitting.value = false
   }
 }
 
@@ -336,6 +328,8 @@ const loadOrganizerData = async (id) => {
     organizerHouseNumber.value = response.organizer_house_number
     organizerPostalCode.value = response.organizer_postal_code
     organizerCity.value = response.organizer_city
+
+    updateStatusMessage(t('organizerForm.dataLoaded'))
   } catch (error) {
     submissionError.value = t('organizerForm.errors.load')
     updateStatusMessage(t('organizerForm.errors.load'))
@@ -345,7 +339,11 @@ const loadOrganizerData = async (id) => {
 onMounted(() => {
   if (isModeEdit()) {
     loadOrganizerData(organizerId)
-    submitButtonText.value = t('organizerForm.saveChanges')
+    submitButtonText.value = t('organizerForm.updateButton')
   }
+  // Set initial focus to the first form field for better keyboard navigation
+  nextTick(() => {
+    document.getElementById('organizerName')?.focus()
+  })
 })
 </script>
