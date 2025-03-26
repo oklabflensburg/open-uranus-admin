@@ -5,7 +5,6 @@
         <!-- Map container -->
         <div id="map" class="h-96 w-full mb-4 rounded-md"></div>
 
-        {{  events  }}
         <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
           <li v-if="events.length === 0" class="col-span-full text-center text-gray-500">
             {{ $t('search.event.no_events') }}

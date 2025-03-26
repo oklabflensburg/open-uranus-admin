@@ -54,8 +54,8 @@
               </div>
             </div>
 
-            <div class="mt-2 flex gap-2">
-              <nuxt-link v-if="organizer.can_edit" :to="localePath(`/venue?organizerId=${organizer.organizer_id}`)" 
+            <div v-if="organizer.can_edit" class="mt-2 flex gap-2">
+              <nuxt-link :to="localePath(`/venue?organizerId=${organizer.organizer_id}`)" 
                 class="bg-gray-600 text-white py-1 px-3 hover:bg-gray-800 hover:text-gray-100 transition rounded focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
                 {{ $t('dashboard.createVenue') }}
               </nuxt-link>
