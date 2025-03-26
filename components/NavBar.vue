@@ -4,7 +4,7 @@
       <div class="flex justify-between px-4 sm:px-0 h-16 items-center">
         <!-- Logo & Title -->
         <div class="flex items-center">
-          <nuxt-link :to="localePath('/')" class="text-xl font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-white" aria-label="Home">{{ $t('menu.appName') }}</nuxt-link>
+          <nuxt-link :to="localePath('/')" @click="closeAllMenus" class="text-xl font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-white" aria-label="Home">{{ $t('menu.appName') }}</nuxt-link>
         </div>
 
         <!-- Mobile Menu Button -->
