@@ -2,6 +2,10 @@
   <div>
     <div class="grid grid-cols-12 gap-4 mb-4">
       <div class="col-span-12 md:col-span-8 lg:col-span-9">
+        <!-- Map container -->
+        <div id="map" class="h-96 w-full mb-4 rounded-md"></div>
+
+        {{  events  }}
         <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
           <li v-if="events.length === 0" class="col-span-full text-center text-gray-500">
             {{ $t('search.event.no_events') }}
@@ -206,6 +210,8 @@
 import { ref, onMounted, watch } from 'vue'
 import { useRuntimeConfig } from '#app'
 import { useI18n } from 'vue-i18n'
+import maplibregl from 'maplibre-gl'
+import 'maplibre-gl/dist/maplibre-gl.css'
 
 // Get i18n instance to access current locale
 const { locale } = useI18n()
@@ -229,6 +235,9 @@ const selectedGenreType = ref('')
 // Date inputs
 const eventDateStart = ref('')
 const eventDateEnd = ref('')
+
+// Map reference
+const map = ref(null)
 
 // Get API base URL from Nuxt config
 const config = useRuntimeConfig()
@@ -274,14 +283,102 @@ const fetchTypeData = () => {
   fetchData(`/genre/type/?lang=${locale.value}`, genreTypes)
 }
 
+// Initialize map with raster tiles
+const initMap = () => {
+  if (map.value) return; // Avoid initializing multiple times
+  
+  map.value = new maplibregl.Map({
+    container: 'map',
+    style: {
+      version: 8,
+      sources: {
+        'osm': {
+          type: 'raster',
+          tiles: ['https://tiles.oklabflensburg.de/fosm/{z}/{x}/{y}.png'],
+          tileSize: 256,
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }
+      },
+      layers: [
+        {
+          id: 'fosm-layer',
+          type: 'raster',
+          source: 'osm',
+          minzoom: 0,
+          maxzoom: 20
+        }
+      ]
+    },
+    center: [9.4515, 54.1657],
+    zoom: 10
+  });
+  
+  // Add navigation controls
+  map.value.addControl(new maplibregl.NavigationControl());
+  
+  // Add event markers when map is loaded
+  map.value.on('load', () => {
+    updateEventMarkers();
+  });
+}
+
+// Update event markers on the map
+const updateEventMarkers = () => {
+  if (!map.value || !events.value.length) return;
+  
+  // Clear existing markers
+  const existingMarkers = document.querySelectorAll('.maplibregl-marker');
+  existingMarkers.forEach(marker => marker.remove());
+  
+  // Add markers for each event with coordinates
+  events.value.forEach(event => {
+    if (event.geojson && event.geojson.coordinates) {
+      const el = document.createElement('div');
+      el.className = 'marker';
+      el.style.backgroundColor = '#F59E0B';
+      el.style.width = '24px';
+      el.style.height = '24px';
+      el.style.borderRadius = '50%';
+      el.style.cursor = 'pointer';
+      
+      // Format the event date for the popup
+      const formattedDate = formatDate(event.event_date_start);
+      
+      // Add popup with enhanced event info
+      const popup = new maplibregl.Popup({ offset: 25 })
+        .setHTML(`
+          <div style="max-width: 220px;">
+            <h3 class="font-bold">${event.event_title}</h3>
+            <p>${event.venue_name}</p>
+            <p>${formattedDate}</p>
+            ${event.event_type ? `<p><small>${event.event_type}</small></p>` : ''}
+          </div>
+        `);
+        
+      // Use GeoJSON coordinates [longitude, latitude]
+      new maplibregl.Marker(el)
+        .setLngLat(event.geojson.coordinates)
+        .setPopup(popup)
+        .addTo(map.value);
+    }
+  });
+}
+
 // Fetch data when component is mounted
 onMounted(() => {
-  fetchTypeData()
+  fetchTypeData();
+  fetchData('/event/', events);
+  initMap();
+})
+
+// Watch for events changes to update markers
+watch(events, () => {
+  updateEventMarkers();
 })
 
 // Watch for locale changes and refetch data when locale changes
 watch(locale, () => {
-  fetchTypeData()
+  fetchTypeData();
 })
 
 // Function to generate query string based on selected filters
@@ -345,19 +442,96 @@ const downloadCalendar = async (eventDateId) => {
   }
 };
 
+// Loading state for geocoding
+const isLoadingGeocode = ref(false)
+const geocodeError = ref(null)
+
+// Function to fetch city coordinates from Nominatim
+const fetchCityCoordinates = async (city) => {
+  if (!city || !map.value) return;
+  
+  isLoadingGeocode.value = true;
+  geocodeError.value = null;
+  
+  try {
+    const response = await fetch(`https://nominatim.oklabflensburg.de/search?q=${encodeURIComponent(city)}&format=json`);
+    
+    if (!response.ok) {
+      throw new Error(`Geocoding API error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    if (data && data.length > 0) {
+      const { lat, lon } = data[0];
+      
+      // Center map on found coordinates
+      map.value.flyTo({
+        center: [parseFloat(lon), parseFloat(lat)],
+        zoom: 12,
+        essential: true
+      });
+    } else {
+      console.warn(`No geocoding results found for: ${city}`);
+    }
+  } catch (error) {
+    console.error('Error fetching city coordinates:', error);
+    geocodeError.value = error.message;
+  } finally {
+    isLoadingGeocode.value = false;
+  }
+};
+
+// Apply filters and update map if city is provided
 const applyFilters = () => {
-  fetchData(generateQuery(), events)
+  fetchData(generateQuery(), events);
+  if (eventCity.value) {
+    fetchCityCoordinates(eventCity.value);
+  }
 }
 
+// Add debounced watcher for eventCity to update map
+const citySearchTimeout = ref(null);
+watch(eventCity, (newValue) => {
+  // Clear previous timeout
+  if (citySearchTimeout.value) {
+    clearTimeout(citySearchTimeout.value);
+  }
+  
+  // Set new timeout for debounced search (wait 500ms after typing stops)
+  if (newValue) {
+    citySearchTimeout.value = setTimeout(() => {
+      fetchCityCoordinates(newValue);
+    }, 500);
+  }
+});
+
 const resetFilters = () => {
-  eventCity.value = ''
-  selectedVenue.value = ''
-  selectedEventType.value = ''
-  selectedVenueType.value = ''
-  selectedSpaceType.value = ''
-  selectedGenreType.value = ''
-  eventDateStart.value = ''
-  eventDateEnd.value = ''
-  fetchData('/event/', events)
+  eventCity.value = '';
+  selectedVenue.value = '';
+  selectedEventType.value = '';
+  selectedVenueType.value = '';
+  selectedSpaceType.value = '';
+  selectedGenreType.value = '';
+  eventDateStart.value = '';
+  eventDateEnd.value = '';
+  
+  // Reset map to default view
+  if (map.value) {
+    map.value.flyTo({
+      center: [9.4515, 54.1657],
+      zoom: 10,
+      essential: true
+    });
+  }
+  
+  fetchData('/event/', events);
 }
 </script>
+
+<style>
+.marker {
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+</style>
