@@ -241,18 +241,19 @@
   "isRequired": "er påkrævet",
   "isInvalid": "er ugyldig",
   "userProfile": {
+    "title": "Brugerprofil",
+    "displayName": "Visningsnavn",
+    "email": "E-mailadresse",
+    "userId": "Bruger-ID",
     "roles": "Dine roller og tilladelser",
     "organizationName": "Organisation",
-    "organizationRole": "Organisationsadmin",
-    "venueRole": "Stedsadmin",
-    "spaceRole": "Områdeadmin",
-    "eventRole": "Begivenhedsadmin",
-    "organizationRoles": "Organisationsbrugerroller",
-    "userName": "Brugernavn",
-    "userEmail": "E-mail",
     "organizationRole": "Organisationsadministrator",
     "venueRole": "Stedadministrator",
     "spaceRole": "Områdeadministrator",
-    "eventRole": "Begivenhedsadministrator"
+    "eventRole": "Begivenhedsadministrator",
+    "dataLoaded": "Brugerprofildata indlæst med succes",
+    "errors": {
+      "fetchingData": "Fejl ved indlæsning af brugerprofildata"
+    }
   }
 }

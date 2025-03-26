@@ -241,14 +241,19 @@
   "isRequired": "is required",
   "isInvalid": "is invalid",
   "userProfile": {
+    "title": "User Profile",
+    "displayName": "Display Name",
+    "email": "Email Address",
+    "userId": "User ID",
     "roles": "Your Roles & Permissions",
     "organizationName": "Organization",
-    "organizationRoles": "Organization User Roles",
-    "userName": "User Name",
-    "userEmail": "Email",
     "organizationRole": "Organization Admin",
     "venueRole": "Venue Admin",
     "spaceRole": "Space Admin",
-    "eventRole": "Event Admin"
+    "eventRole": "Event Admin",
+    "dataLoaded": "User profile data loaded successfully",
+    "errors": {
+      "fetchingData": "Error loading user profile data"
+    }
   }
 }

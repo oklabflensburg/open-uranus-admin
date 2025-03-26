@@ -241,18 +241,19 @@
   "isRequired": "ist erforderlich",
   "isInvalid": "ist ungültig",
   "userProfile": {
-    "roles": "Deine Rollen & Berechtigungen",
+    "title": "Benutzerprofil",
+    "displayName": "Anzeigename",
+    "email": "E-Mail-Adresse",
+    "userId": "Benutzer-ID",
+    "roles": "Ihre Rollen & Berechtigungen",
     "organizationName": "Organisation",
-    "organizationRole": "Organisations-Admin",
-    "venueRole": "Veranstaltungsort-Admin",
-    "spaceRole": "Raum-Admin",
-    "eventRole": "Veranstaltungs-Admin",
-    "organizationRoles": "Organisationsbenutzerrollen",
-    "userName": "Benutzername",
-    "userEmail": "E-Mail",
     "organizationRole": "Organisationsadministrator",
     "venueRole": "Veranstaltungsortadministrator",
-    "spaceRole": "Bereichsadministrator",
-    "eventRole": "Veranstaltungsadministrator"
+    "spaceRole": "Raumadministrator",
+    "eventRole": "Ereignisadministrator",
+    "dataLoaded": "Benutzerprofildaten erfolgreich geladen",
+    "errors": {
+      "fetchingData": "Fehler beim Laden der Benutzerprofildaten"
+    }
   }
 }

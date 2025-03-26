@@ -1,91 +1,44 @@
 <template>
   <div class="max-w-screen-xl mx-auto bg-white p-3 md:p-6 space-y-12">
-    <div class="mb-6">
-      <h1 class="text-2xl font-bold mb-2">{{ $t('userProfile.title') }}</h1>
-      <p class="text-gray-600">{{ $t('userProfile.subtitle') }}</p>
-    </div>
-
-    <!-- Loading and error states -->
-    <div v-if="loading" class="text-center py-8">
-      <p class="text-gray-600">{{ $t('userProfile.loading') }}</p>
-    </div>
-    
-    <div v-else-if="error" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
-      <p>{{ error }}</p>
-    </div>
-
-    <!-- User profile content -->
-    <div v-else-if="userProfile" class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <!-- Profile image and basic info -->
-      <div class="md:col-span-1">
-        <div class="bg-gray-50 rounded-lg p-6 text-center">
-          <div class="mb-4 w-32 h-32 mx-auto rounded-full overflow-hidden bg-gray-200">
-            <img 
-              v-if="userProfile.profile_image" 
-              :src="userProfile.profile_image" 
-              :alt="userProfile.name" 
-              class="w-full h-full object-cover"
-            >
-            <div v-else class="w-full h-full flex items-center justify-center bg-gray-200 text-gray-500">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-            </div>
+    <!-- User Profile Section -->
+    <div v-if="userProfile" class="bg-gray-50 rounded-lg p-6">
+      <h2 class="text-xl font-semibold mb-4 border-b pb-2">{{ $t('userProfile.title') || 'User Profile' }}</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="flex items-center space-x-4">
+          <div class="bg-blue-100 rounded-full p-4 text-blue-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
           </div>
-          <h2 class="text-xl font-semibold">{{ userProfile.name || userProfile.username }}</h2>
-          <p class="text-gray-600">{{ userProfile.email }}</p>
-          <p v-if="userProfile.role" class="mt-2 inline-block bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">
-            {{ userProfile.role }}
-          </p>
-        </div>
-      </div>
-
-      <!-- Profile details -->
-      <div class="md:col-span-2">
-        <div class="bg-gray-50 rounded-lg p-6">
-          <h3 class="text-lg font-semibold mb-4 border-b pb-2">{{ $t('userProfile.details') }}</h3>
-          
-          <div class="space-y-4">
-            <div v-if="userProfile.username" class="grid grid-cols-3 gap-4">
-              <div class="font-medium text-gray-700">{{ $t('userProfile.username') }}</div>
-              <div class="col-span-2">{{ userProfile.username }}</div>
-            </div>
-
-            <div v-if="userProfile.email" class="grid grid-cols-3 gap-4">
-              <div class="font-medium text-gray-700">{{ $t('userProfile.email') }}</div>
-              <div class="col-span-2">{{ userProfile.email }}</div>
-            </div>
-
-            <div v-if="userProfile.phone" class="grid grid-cols-3 gap-4">
-              <div class="font-medium text-gray-700">{{ $t('userProfile.phone') }}</div>
-              <div class="col-span-2">{{ userProfile.phone }}</div>
-            </div>
-
-            <div v-if="userProfile.created_at" class="grid grid-cols-3 gap-4">
-              <div class="font-medium text-gray-700">{{ $t('userProfile.memberSince') }}</div>
-              <div class="col-span-2">{{ formatDate(userProfile.created_at) }}</div>
-            </div>
-
-            <div v-if="userProfile.bio" class="grid grid-cols-3 gap-4">
-              <div class="font-medium text-gray-700">{{ $t('userProfile.bio') }}</div>
-              <div class="col-span-2">{{ userProfile.bio }}</div>
-            </div>
+          <div>
+            <p class="text-sm text-gray-500">{{ $t('userProfile.displayName') || 'Display Name' }}</p>
+            <p class="font-medium">{{ userProfile.user_display_name }}</p>
           </div>
         </div>
-
-        <!-- Associated organizations -->
-        <div v-if="userProfile.organizations && userProfile.organizations.length > 0" class="bg-gray-50 rounded-lg p-6 mt-4">
-          <h3 class="text-lg font-semibold mb-4 border-b pb-2">{{ $t('userProfile.organizations') }}</h3>
-          <ul class="divide-y">
-            <li v-for="org in userProfile.organizations" :key="org.id" class="py-3">
-              <div class="flex items-center">
-                <div class="flex-1">
-                  <h4 class="font-medium">{{ org.name }}</h4>
-                  <p v-if="org.role" class="text-sm text-gray-600">{{ org.role }}</p>
-                </div>
-              </div>
-            </li>
-          </ul>
+        
+        <div class="flex items-center space-x-4">
+          <div class="bg-blue-100 rounded-full p-4 text-blue-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">{{ $t('userProfile.email') || 'Email Address' }}</p>
+            <p class="font-medium">{{ userProfile.user_email_address }}</p>
+          </div>
+        </div>
+        
+        <div class="flex items-center space-x-4">
+          <div class="bg-blue-100 rounded-full p-4 text-blue-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
+            </svg>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">{{ $t('userProfile.userId') || 'User ID' }}</p>
+            <p class="font-medium">{{ userProfile.user_id }}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -172,10 +125,6 @@
           </tbody>
         </table>
       </div>
-    </div>
-
-    <div v-else class="text-center py-8">
-      <p class="text-gray-600">{{ $t('userProfile.noData') }}</p>
     </div>
   </div>
 </template>
