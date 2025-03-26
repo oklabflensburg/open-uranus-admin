@@ -94,6 +94,8 @@
     "cancelButton": "Annuller",
     "submitButton": "Opret begivenhed",
     "updateButton": "Opdater begivenhed",
+    "removeImage": "Fjern",
+    "imageRemoved": "Billede fjernet",
     "errors": {
       "eventTitle": "Begivenhedstitel er påkrævet",
       "eventDescription": "Begivenhedsbeskrivelse er påkrævet",

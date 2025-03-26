@@ -251,6 +251,17 @@
           <p v-if="errors.file" id="fileError" class="text-red-600 mt-1">{{ errors.file }}</p>
           <div v-if="previewUrl" class="mt-2">
             <img :src="previewUrl" alt="Preview" class="h-32 w-auto object-contain border rounded" />
+            <button 
+              type="button" 
+              class="mt-2 px-3 py-1 bg-red-500 text-white rounded-xs hover:bg-red-700 focus-visible transition flex items-center"
+              @click="removeFile"
+              aria-label="Remove selected image"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+              {{ $t('eventForm.removeImage', 'Remove') }}
+            </button>
           </div>
         </div>
       </div>
@@ -360,6 +371,21 @@ const onFileChange = (event) => {
     console.error('Error handling file change:', error)
     errors.value.file = t('eventForm.errors.fileUpload')
   }
+}
+
+// New function to remove the selected file
+const removeFile = () => {
+  if (previewUrl.value) {
+    URL.revokeObjectURL(previewUrl.value) // Clean up the object URL
+  }
+  file.value = null
+  previewUrl.value = ''
+  // Reset the file input so the same file can be selected again if needed
+  const fileInputElement = document.getElementById('eventImage')
+  if (fileInputElement) {
+    fileInputElement.value = ''
+  }
+  updateStatusMessage(t('eventForm.imageRemoved', 'Image removed'))
 }
 
 const validateForm = () => {

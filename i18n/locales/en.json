@@ -94,6 +94,8 @@
     "cancelButton": "Cancel",
     "submitButton": "Create Event",
     "updateButton": "Update Event",
+    "removeImage": "Remove",
+    "imageRemoved": "Image removed",
     "errors": {
       "eventTitle": "Event title is required",
       "eventDescription": "Event description is required",

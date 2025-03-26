@@ -94,6 +94,8 @@
     "cancelButton": "Abbrechen",
     "submitButton": "Veranstaltung erstellen",
     "updateButton": "Veranstaltung aktualisieren",
+    "removeImage": "Entfernen",
+    "imageRemoved": "Bild entfernt",
     "errors": {
       "eventTitle": "Veranstaltungstitel ist erforderlich",
       "eventDescription": "Veranstaltungsbeschreibung ist erforderlich",
