@@ -53,6 +53,8 @@
   "loginFailed": "Login mislykkedes! Tjek dine oplysninger.",
   "backToSignIn": "Tilbage til login",
   "resetPassword": "Nulstil adgangskode",
+  "hidePassword": "Skjul adgangskode",
+  "showPassword": "Vis adgangskode",
   "dashboard": {
     "welcomeMessage": "Velkommen til dit Uranus Dashboard",
     "welcomeDescription": "Du kan nu starte med at oprette din første organisation.",

@@ -53,6 +53,8 @@
   "loginFailed": "Login failed! Check your credentials.",
   "backToSignIn": "Back to Sign In",
   "resetPassword": "Reset Password",
+  "hidePassword": "Hide password",
+  "showPassword": "Show password",
   "dashboard": {
     "welcomeMessage": "Welcome to your Uranus Dashboard",
     "welcomeDescription": "You can start right away and create your first organization.",

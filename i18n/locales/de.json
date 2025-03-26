@@ -53,6 +53,8 @@
   "loginFailed": "Anmeldung fehlgeschlagen! Überprüfen Sie Ihre Anmeldeinformationen.",
   "backToSignIn": "Zurück zur Anmeldung",
   "resetPassword": "Passwort zurücksetzen",
+  "hidePassword": "Passwort verbergen",
+  "showPassword": "Passwort anzeigen",
   "dashboard": {
     "welcomeMessage": "Willkommen auf deinem Uranus Dashboard",
     "welcomeDescription": "Du kannst jetzt direkt loslegen und deine erste Organisation erstellen.",
