@@ -134,7 +134,7 @@
                 <div class="flex w-full justify-between items-center">
                   <span>{{ space.space_name }}</span>
                   <div class="flex gap-2">
-                    <nuxt-link v-if="venue.can_edit_space" :to="localePath({ name: 'space-id', params: { id: space.space_id } })" 
+                    <nuxt-link v-if="venue.can_edit_space" :to="localePath({ name: 'space-id', params: { id: space.space_id }, query: { venueId: venue.venue_id } })" 
                       class="p-1 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                       :aria-label="`Edit ${space.space_name}`">
                       <img src="/public/icons/edit.svg" alt="" aria-hidden="true" class="w-5 h-5"/>
@@ -217,7 +217,7 @@ const { fetchApi } = useApi()
 const venues = ref([])
 const organizers = ref([])
 const events = ref([])
-const spaces = ref([])  // Added spaces ref
+const spaces = ref([])
 
 const userName = computed(() => {
   return userDisplayName.value || '';
@@ -243,15 +243,13 @@ const fetchVenues = async () => {
         count_spaces: 0,
         count_events: 0,
       },
-      spaces: [] // Initialize spaces array for each venue
+      spaces: []
     }))
 
     for (const venue of venues.value) {
-      // Get venue stats
       const stats = await fetchVenueStats(venue.venue_id)
       venue.stats = stats || venue.stats
       
-      // Get spaces for this venue
       const venueSpaces = await getSpacesByVenueId(venue.venue_id)
       if (venueSpaces && Array.isArray(venueSpaces)) {
         venue.spaces = venueSpaces
