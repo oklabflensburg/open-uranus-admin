@@ -140,7 +140,7 @@
                       <img src="/public/icons/edit.svg" alt="" aria-hidden="true" class="w-5 h-5"/>
                       <span class="sr-only">Edit</span>
                     </nuxt-link>
-                    <button @click="deleteSpace(space.space_id)" 
+                    <button v-if="venue.can_edit_space" @click="deleteSpace(space.space_id)"
                       class="p-1 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                       :aria-label="`Delete ${space.space_name}`"
                       type="button">
