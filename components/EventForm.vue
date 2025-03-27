@@ -155,8 +155,8 @@
           :aria-invalid="!!errors.selectedSpace"
         >
           <option value="" disabled>{{ $t('eventForm.selectOption') }}</option>
-          <option v-for="space in spaces" :key="space.id" :value="space.id">
-            {{ space.name }}
+          <option v-for="space in spaces" :key="space.space_id" :value="space.space_id">
+            {{ space.space_name }}
           </option>
         </select>
         <p v-if="errors.selectedSpace" id="selectedSpaceError" class="text-red-600">{{ errors.selectedSpace }}</p>
@@ -349,7 +349,7 @@ const fetchData = async (url, targetArray) => {
 // Fetch spaces based on selected venue
 const fetchSpaces = async () => {
   if (selectedVenue.value) {
-    const url = `/space/filtered?venue_id=${selectedVenue.value}`
+    const url = `/space/venue/${selectedVenue.value}`
     fetchData(url, spaces)
   } else {
     spaces.value = []
