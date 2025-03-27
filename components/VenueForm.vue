@@ -1,7 +1,9 @@
 <template>
-  <form id="addVenueForm" class="space-y-6" @submit.prevent="handleSubmit" @keydown.esc="cancelForm" aria-labelledby="venueFormTitle">
+  <form id="addVenueForm" class="space-y-6" @submit.prevent="handleSubmit" aria-labelledby="venueFormTitle">
     <div>
-      <h2 id="venueFormTitle" class="text-2xl font-bold">{{ $t('venueForm.title') }}</h2>
+      <h2 id="venueFormTitle" class="text-2xl font-bold">
+        {{ isModeEdit() ? $t('venueForm.editTitle') : $t('venueForm.title') }}
+      </h2>
       <h3 class="text-md mb-4">Für Organisation: {{ venueOrganizerName }}</h3>
     </div>
 
@@ -26,6 +28,7 @@
         aria-describedby="venueNameError"
         aria-required="true"
         :aria-invalid="!!errors.venueName"
+        autocomplete="organization"
       >
       <p v-if="errors.venueName" id="venueNameError" class="text-red-600">{{ errors.venueName }}</p>
     </div>
@@ -41,9 +44,11 @@
           class="mt-1 p-2 w-full border rounded-xs focus-visible" 
           v-model="venueStreet" 
           @input="validateField('venueStreet')" 
+          @change="handleAddressChange"
           aria-describedby="venueStreetError"
           aria-required="true"
           :aria-invalid="!!errors.venueStreet"
+          autocomplete="address-line1"
         >
         <p v-if="errors.venueStreet" id="venueStreetError" class="text-red-600">{{ errors.venueStreet }}</p>
       </div>
@@ -58,9 +63,11 @@
           class="mt-1 p-2 w-full border rounded-xs focus-visible" 
           v-model="venueHouseNumber" 
           @input="validateField('venueHouseNumber')" 
+          @change="handleAddressChange"
           aria-describedby="venueHouseNumberError"
           aria-required="true"
           :aria-invalid="!!errors.venueHouseNumber"
+          autocomplete="address-line2"
         >
         <p v-if="errors.venueHouseNumber" id="venueHouseNumberError" class="text-red-600">{{ errors.venueHouseNumber }}</p>
       </div>
@@ -77,9 +84,11 @@
           class="mt-1 p-2 w-full border rounded-xs focus-visible" 
           v-model="venuePostalCode" 
           @input="validateField('venuePostalCode')" 
+          @change="handleAddressChange"
           aria-describedby="venuePostalCodeError"
           aria-required="true"
           :aria-invalid="!!errors.venuePostalCode"
+          autocomplete="postal-code"
         >
         <p v-if="errors.venuePostalCode" id="venuePostalCodeError" class="text-red-600">{{ errors.venuePostalCode }}</p>
       </div>
@@ -94,9 +103,11 @@
           class="mt-1 p-2 w-full border rounded-xs focus-visible" 
           v-model="venueCity" 
           @input="validateField('venueCity')" 
+          @change="handleAddressChange"
           aria-describedby="venueCityError"
           aria-required="true"
           :aria-invalid="!!errors.venueCity"
+          autocomplete="address-level2"
         >
         <p v-if="errors.venueCity" id="venueCityError" class="text-red-600">{{ errors.venueCity }}</p>
       </div>
@@ -114,6 +125,7 @@
           aria-describedby="venueStateCodeError"
           aria-required="false"
           :aria-invalid="!!errors.venueStateCode"
+          autocomplete="address-level1"
         >
           <option value="">{{ $t('venueForm.selectState') }}</option>
           <option v-for="state in germanStates" :key="state.state_code" :value="state.state_code">
@@ -135,6 +147,7 @@
           aria-describedby="venueCountryCodeError"
           aria-required="true"
           :aria-invalid="!!errors.venueCountryCode"
+          autocomplete="country"
         >
           <option value="">{{ $t('venueForm.selectCountry') }}</option>
           <option v-for="country in countries" :key="country.country_code" :value="country.country_code">
@@ -160,6 +173,7 @@
           aria-describedby="venueLatitudeError"
           aria-required="true"
           :aria-invalid="!!errors.venueLatitude"
+          autocomplete="off"
         >
         <p v-if="errors.venueLatitude" id="venueLatitudeError" class="text-red-600">{{ errors.venueLatitude }}</p>
       </div>
@@ -177,6 +191,7 @@
           aria-describedby="venueLongitudeError"
           aria-required="true"
           :aria-invalid="!!errors.venueLongitude"
+          autocomplete="off"
         >
         <p v-if="errors.venueLongitude" id="venueLongitudeError" class="text-red-600">{{ errors.venueLongitude }}</p>
       </div>
@@ -219,6 +234,7 @@
           name="venueOpenedAt" 
           class="mt-1 p-2 w-full border rounded-xs focus-visible" 
           v-model="venueOpenedAt"
+          autocomplete="off"
         >
       </div>
     </div>
@@ -307,7 +323,7 @@ const getLocationData = async () => {
   loadingMessage.value = t('venueForm.fetchingLocation')
   updateStatusMessage(t('venueForm.fetchingLocation'))
 
-  const url = `https://nominatim.oklabflensburg.de/search?q=${venueStreet.value} ${venueHouseNumber.value} ${venueCity.value} ${venueStateCode.value} ${venueCountryCode.value} ${venuePostalCode.value}&limit=1`
+  const url = `https://nominatim.oklabflensburg.de/search?q=${venueStreet.value} ${venueHouseNumber.value} ${venueCity.value} ${venueStateCode.value} ${venuePostalCode.value}&limit=1`
 
   try {
     const response = await fetch(url)
@@ -335,6 +351,34 @@ const getLocationData = async () => {
   }
 }
 
+// Handler for browser autofill events
+const handleAddressChange = (e) => {
+  console.log('Address change detected', e?.target?.id)
+  
+  // Handle splitting street and house number
+  if (e?.target?.id === 'venueStreet' && !venueHouseNumber.value) {
+    const streetValue = e.target.value;
+    // More permissive pattern for international addresses
+    const matches = streetValue.match(/^(.*\D)\s*(\d+\s*[\w-]*)$/);
+    
+    if (matches && matches.length >= 3) {
+      venueStreet.value = matches[1].trim();
+      venueHouseNumber.value = matches[2].trim();
+      updateStatusMessage(t('venueForm.addressAutofilled'));
+    }
+  }
+  
+  // Using setTimeout to ensure all fields have been autofilled before checking
+  setTimeout(() => {
+    // Check if we have the required fields for geocoding
+    if (venueStreet.value && venueHouseNumber.value && venueCity.value) {
+      console.log('Required address fields detected, fetching location')
+      // Don't check for existing coordinates in edit mode - always update when address changes
+      debouncedGetLocationData()
+    }
+  }, 300)  // Increased timeout to give more time for all fields to be filled
+}
+
 // Add debounce function to prevent too many API calls
 const debounce = (fn, delay) => {
   let timeoutId
@@ -345,16 +389,181 @@ const debounce = (fn, delay) => {
 }
 
 // Create debounced version of getLocationData
-const debouncedGetLocationData = debounce(getLocationData, 1000)
+const debouncedGetLocationData = debounce(getLocationData, 500)
 
 // Watch for changes to the relevant input fields
-watch([venueStreet, venueHouseNumber, venueCity, venueStateCode, venuePostalCode], () => {
+watch([venueStreet, venueHouseNumber, venuePostalCode, venueCity], () => {
   // Only fetch location data if all required address fields are filled
-  if (isModeEdit() || !venueStreet.value || !venueHouseNumber.value || !venueCity.value) {
+  if (!venueStreet.value || !venueHouseNumber.value || !venueCity.value) {
     return
   }
+
+  // Only skip in edit mode if we already have coordinates AND this is not a user-initiated change
+  if (isModeEdit() && venueLatitude.value && venueLongitude.value && !userInitiatedAddressChange.value) {
+    return
+  }
+
+  console.log('Address field watch triggered')
   debouncedGetLocationData()
 })
+
+// Track if address change was user-initiated
+const userInitiatedAddressChange = ref(false)
+
+// Variables to store cleanup functions
+const cleanupFunctions = []
+
+// Set up autofill detection with MutationObserver
+const setupAutofillDetection = () => {
+  const addressFields = [
+    document.getElementById('venueStreet'),
+    document.getElementById('venueHouseNumber'), 
+    document.getElementById('venueCity'),
+    document.getElementById('venuePostalCode')
+  ]
+  
+  // Add event listener for Chrome/Safari/Firefox autofill
+  const animationListeners = []
+  
+  addressFields.forEach(field => {
+    if (field) {
+      const listener = (e) => {
+        if (e.animationName === 'onAutoFillStart' || 
+            e.animationName === '-webkit-autofill') {
+          console.log('Autofill detected via animation', e.target.id)
+          handleAddressChange(e)
+        }
+      }
+      
+      field.addEventListener('animationstart', listener)
+      animationListeners.push(() => field.removeEventListener('animationstart', listener))
+    }
+  })
+
+  // Create MutationObserver for broader autofill detection
+  const observer = new MutationObserver((mutations) => {
+    let shouldCheckLocation = false
+    
+    mutations.forEach((mutation) => {
+      if (mutation.type === 'attributes' || 
+          (mutation.type === 'characterData' && addressFields.includes(mutation.target))) {
+        shouldCheckLocation = true
+      }
+    })
+    
+    if (shouldCheckLocation) {
+      console.log('Autofill detected via MutationObserver')
+      handleAddressChange()
+    }
+  })
+
+  // Observe all address fields for changes
+  addressFields.forEach(field => {
+    if (field) {
+      observer.observe(field, { 
+        attributes: true, 
+        characterData: true,
+        childList: true,
+        subtree: true
+      })
+    }
+  })
+
+  // Add input event listeners to detect manual changes
+  const inputListeners = []
+  const addressFieldIds = ['venueStreet', 'venueHouseNumber', 'venueCity', 'venuePostalCode']
+  addressFieldIds.forEach(fieldId => {
+    const element = document.getElementById(fieldId)
+    if (element) {
+      element.addEventListener('input', markAsUserChange)
+      inputListeners.push(() => element.removeEventListener('input', markAsUserChange))
+    }
+  })
+
+  return () => {
+    // Cleanup function that removes all listeners and disconnects observer
+    animationListeners.forEach(cleanup => cleanup())
+    inputListeners.forEach(cleanup => cleanup())
+    observer.disconnect()
+  }
+}
+
+// CSS to detect autofill in various browsers
+const addAutofillStyles = () => {
+  const style = document.createElement('style')
+  style.textContent = `
+    @keyframes onAutoFillStart { from {} to {} }
+    @keyframes onAutoFillCancel { from {} to {} }
+    input:-webkit-autofill { animation-name: onAutoFillStart; }
+    input:not(:-webkit-autofill) { animation-name: onAutoFillCancel; }
+  `
+  document.head.appendChild(style)
+  
+  return () => {
+    document.head.removeChild(style)
+  }
+}
+
+// Register onUnmounted hook early in the setup function, before any async operations
+onUnmounted(() => {
+  // Clean up all registered cleanup functions
+  cleanupFunctions.forEach(cleanup => {
+    if (typeof cleanup === 'function') {
+      cleanup()
+    }
+  })
+})
+
+onMounted(() => {
+  loadGermanStates()
+  loadCountries()
+  loadOrganizers()
+  loadVenueTypes()
+
+  if (isModeEdit()) {
+    // For edit mode, load venue types first, then load venue data
+    // to ensure we can match venue types properly
+    Promise.all([
+      loadVenueTypes(),
+      loadOrganizers(),
+      loadGermanStates(),
+      loadCountries()
+    ]).then(() => {
+      isLoading.value = true
+      loadingMessage.value = t('venueForm.loadingVenueData')
+      updateStatusMessage(t('venueForm.loadingVenueData'))
+      
+      loadVenueData(venueId).finally(() => {
+        isLoading.value = false
+        loadingMessage.value = ''
+      })
+    })
+    submitButtonText.value = t('venueForm.saveChanges')
+  } else {
+    loadVenueTypes()
+    loadOrganizers()
+  }
+  
+  // Set up autofill detection after DOM is ready
+  nextTick(() => {
+    // Add autofill detection styles and store cleanup function
+    const removeAutofillStyles = addAutofillStyles()
+    cleanupFunctions.push(removeAutofillStyles)
+    
+    // Set up autofill detection and store cleanup function
+    const cleanupAutofillDetection = setupAutofillDetection()
+    cleanupFunctions.push(cleanupAutofillDetection)
+  })
+})
+
+// When any address field is manually edited, mark as user-initiated change
+const markAsUserChange = () => {
+  userInitiatedAddressChange.value = true
+  // Reset the flag after a delay
+  setTimeout(() => {
+    userInitiatedAddressChange.value = false
+  }, 1000)
+}
 
 // Load organizers from API
 const loadOrganizers = async () => {
@@ -623,37 +832,6 @@ const updateVenueTypeIds = () => {
     venueTypeId.value = []
   }
 }
-
-onMounted(() => {
-  loadGermanStates()
-  loadCountries()
-  loadOrganizers()
-  loadVenueTypes()
-
-  if (isModeEdit()) {
-    // For edit mode, load venue types first, then load venue data
-    // to ensure we can match venue types properly
-    Promise.all([
-      loadVenueTypes(),
-      loadOrganizers(),
-      loadGermanStates(),
-      loadCountries()
-    ]).then(() => {
-      isLoading.value = true
-      loadingMessage.value = t('venueForm.loadingVenueData')
-      updateStatusMessage(t('venueForm.loadingVenueData'))
-      
-      loadVenueData(venueId).finally(() => {
-        isLoading.value = false
-        loadingMessage.value = ''
-      })
-    })
-    submitButtonText.value = t('venueForm.saveChanges')
-  } else {
-    loadVenueTypes()
-    loadOrganizers()
-  }
-})
 </script>
 
 <style>
@@ -690,4 +868,20 @@ onMounted(() => {
 .multiselect__tag-icon:focus, .multiselect__tag-icon:hover {
   background-color: #059669;
 }
+
+/* CSS to help detect autofill */
+input:-webkit-autofill {
+  -webkit-animation-name: onAutoFillStart;
+  animation-name: onAutoFillStart;
+}
+
+input:not(:-webkit-autofill) {
+  -webkit-animation-name: onAutoFillCancel;
+  animation-name: onAutoFillCancel;
+}
+
+@-webkit-keyframes onAutoFillStart { from {} to {} }
+@keyframes onAutoFillStart { from {} to {} }
+@-webkit-keyframes onAutoFillCancel { from {} to {} }
+@keyframes onAutoFillCancel { from {} to {} }
 </style>

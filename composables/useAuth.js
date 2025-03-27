@@ -5,11 +5,36 @@ import { useRouter } from 'vue-router'
 export const useAuth = () => {
   const accessToken = useCookie('access_token', { maxAge: 3600, httpOnly: false })
   const refreshToken = useCookie('refresh_token', { maxAge: 3600, httpOnly: false })
+  const userId = useCookie('user_id', { maxAge: 3600, httpOnly: false })
+  const userDisplayName = useCookie('user_display_name', { maxAge: 3600, httpOnly: false })
   const config = useRuntimeConfig()
   const apiBaseUrl = config.public.apiBaseUrl
   const router = useRouter()
 
   const isAuthenticated = computed(() => !!accessToken.value)
+
+  // Function to decode JWT and extract payload
+  const decodeJwtAndStoreUserInfo = (token) => {
+    try {
+      const tokenParts = token.split('.')
+      if (tokenParts.length >= 2) {
+        // Base64Url decode the payload part
+        const base64Url = tokenParts[1].replace(/-/g, '+').replace(/_/g, '/')
+        const base64 = base64Url.padEnd(base64Url.length + (4 - base64Url.length % 4) % 4, '=')
+        const payload = JSON.parse(atob(base64))
+        
+        // Store user information in cookies
+        if (payload.user_id) {
+          userId.value = payload.user_id
+        }
+        if (payload.user_display_name) {
+          userDisplayName.value = payload.user_display_name
+        }
+      }
+    } catch (error) {
+      console.error('Error decoding JWT token:', error)
+    }
+  }
 
   const redirectToSignInIfNotAuthenticated = () => {
     if (!isAuthenticated.value) {
@@ -38,6 +63,8 @@ export const useAuth = () => {
       if (response.access_token) {
         accessToken.value = response.access_token
         refreshToken.value = response.refresh_token
+        // Decode JWT and store user info in cookies
+        decodeJwtAndStoreUserInfo(response.access_token)
         return true
       } else {
         return response.detail
@@ -65,6 +92,8 @@ export const useAuth = () => {
       if (response.access_token) {
         accessToken.value = response.access_token
         refreshToken.value = response.refresh_token
+        // Decode JWT and store user info in cookies
+        decodeJwtAndStoreUserInfo(response.access_token)
         return true
       } else {
         return response.detail || 'Signup failed'
@@ -95,6 +124,8 @@ export const useAuth = () => {
       if (response.access_token) {
         accessToken.value = response.access_token
         refreshToken.value = response.refresh_token
+        // Decode JWT and store user info in cookies
+        decodeJwtAndStoreUserInfo(response.access_token)
         return true
       }
     } catch (error) {
@@ -108,6 +139,8 @@ export const useAuth = () => {
   const logout = () => {
     accessToken.value = null
     refreshToken.value = null
+    userId.value = null
+    userDisplayName.value = null
   }
 
   const handleForgotPassword = async (email) => {
@@ -132,7 +165,9 @@ export const useAuth = () => {
 
   return { 
     accessToken, 
-    refreshToken, 
+    refreshToken,
+    userId,
+    userDisplayName,
     login, 
     signup, 
     refreshAccessToken, 

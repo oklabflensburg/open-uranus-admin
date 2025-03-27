@@ -1,12 +1,14 @@
 <template>
   <div class="max-w-screen-xl mx-auto bg-white p-3 md:p-6 space-y-12">
-    <!-- Organizers -->
-    <section aria-labelledby="organizers-heading">
+    <!-- Dashboard Header -->
+    <section aria-labelledby="dashboard-heading">
       <div class="bg-gray-100 p-3 rounded mb-12">
-        <h1 class="text-3xl mb-3">{{ $t('dashboard.welcomeMessage') }}</h1>
-        <p v-if="organizers.length === 0" class="text-lg">{{ $t('dashboard.welcomeDescription') }}</p>
-        <p v-else>Du bist in deinem Dashboard</p>
+        <h1 id="dashboard-heading" class="text-3xl mb-3 font-bold">
+          {{ $t('dashboard.greeting', { name: userName || '' }).trim() }}
+        </h1>
+        <p class="text-lg">{{ organizers.length === 0 ? $t('dashboard.getStarted') : $t('dashboard.overview') }}</p>
       </div>
+      
       <h2 id="organizers-heading" class="text-2xl font-bold mb-4">{{ $t('dashboard.organizers') }}</h2>
       <div v-if="organizers.length === 0" class="text-gray-500">
         <nuxt-link :to="localePath('organizer')" class="bg-green-600 text-white py-2 px-4 hover:bg-green-800 hover:text-white transition rounded focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
@@ -175,15 +177,22 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useApi } from '@/composables/useApi'
 import { useLocalePath } from "#i18n";
-const localePath = useLocalePath()
+import { useAuth } from '@/composables/useAuth' // Assuming you have an auth composable
 
+const localePath = useLocalePath()
+const { userDisplayName } = useAuth() // Get userDisplayName directly from useAuth
 const { fetchApi } = useApi()
 const venues = ref([])
 const organizers = ref([])
 const events = ref([])
+
+// Get user's name for personalized welcome
+const userName = computed(() => {
+  return userDisplayName.value || '';
+})
 
 const formatGermanDate = (isoString) => {
   if (!isoString) return '';

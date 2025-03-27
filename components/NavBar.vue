@@ -81,7 +81,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                 </div>
-                <span>{{ $t('menu.myProfile') }}</span>
+                <span>{{ userDisplayName || $t('menu.myProfile') }}</span>
               </nuxt-link>
               <nuxt-link :to="localePath('/locale')" class="block w-full text-left px-4 py-2 hover:bg-gray-700 focus:outline-none focus:bg-gray-700" :class="{ 'bg-gray-700': isActive('/locale') }" :aria-current="isActive('/locale') ? 'page' : null" @click="closeAllMenus" role="menuitem">{{ $t('menu.locale') }}</nuxt-link>
               <button @click="handleLogout" class="block w-full text-left px-4 py-2 hover:bg-gray-700 focus:outline-none focus:bg-gray-700" role="menuitem">
@@ -107,7 +107,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
               </div>
-              <span>{{ $t('menu.myProfile') }}</span>
+              <span>{{ userDisplayName || $t('menu.myProfile') }}</span>
             </nuxt-link>
           </li>
           <li v-if="isAuthenticated">
@@ -140,7 +140,7 @@ import { useRoute } from 'vue-router'
 import { navigateTo } from '#app'
 import { useLocalePath } from '#i18n'
 
-const { logout, isAuthenticated } = useAuth()
+const { logout, isAuthenticated, userDisplayName } = useAuth()
 const route = useRoute()
 const isOpen = ref(false)
 const infoMenuOpen = ref(false)

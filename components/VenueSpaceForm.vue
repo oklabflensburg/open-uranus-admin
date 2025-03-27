@@ -2,6 +2,9 @@
   <form id="venueSpaceForm" class="space-y-4" @submit.prevent="handleSubmit" aria-labelledby="venueSpaceFormTitle">
     <h2 id="venueSpaceFormTitle" class="text-2xl font-bold mb-4">{{ $t('venueSpaceForm.title') }}</h2>
 
+    <!-- Accessibility status message for screen readers -->
+    <div class="sr-only" aria-live="polite" role="status">{{ statusMessage }}</div>
+    
     <!-- Name -->
     <div>
       <label class="block text-gray-700" for="name">{{ $t('venueSpaceForm.name') }}</label>
@@ -67,13 +70,22 @@
 
     <div class="flex space-x-4 justify-end">
       <button type="button" @click="cancelForm" class="mt-6 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700 transition">{{ $t('venueSpaceForm.cancelButton') }}</button>
-      <button type="submit" class="mt-6 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700 transition">{{ $t('venueSpaceForm.submitButton') }}</button>
+      <button 
+        type="submit" 
+        class="mt-6 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700 transition"
+        :disabled="isSubmitting"
+        aria-busy="isSubmitting"
+      >
+        {{ submitButtonText }}
+      </button>
     </div>
+    
+    <div v-if="submissionError" class="text-red-600 p-3 border border-red-300 bg-red-50 rounded" role="alert" aria-live="assertive">{{ submissionError }}</div>
   </form>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import { useApi } from '@/composables/useApi'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -100,6 +112,10 @@ const spaceTypes = ref([])
 
 // Validation
 const errors = ref({})
+const isSubmitting = ref(false)
+const submissionError = ref('')
+const statusMessage = ref('')
+const submitButtonText = ref(t('venueSpaceForm.submitButton'))
 
 const validateField = (field) => {
   const fields = {
@@ -136,10 +152,21 @@ const fetchData = async (url, targetArray) => {
   }
 }
 
+const updateStatusMessage = (message) => {
+  statusMessage.value = message
+
+  setTimeout(() => {
+    statusMessage.value = ''
+  }, 5000)
+}
+
 // Handle Form Submission
 const handleSubmit = async () => {
   validateForm()
   if (Object.keys(errors.value).length > 0) return
+
+  isSubmitting.value = true
+  updateStatusMessage(t('venueSpaceForm.submitting'))
 
   const bodyData = {
     space_name: name.value,
@@ -158,9 +185,21 @@ const handleSubmit = async () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(bodyData),
     })
+    
+    updateStatusMessage(t('venueSpaceForm.success'))
     router.push('/dashboard')
   } catch (error) {
     console.error('Error submitting form:', error)
+    submissionError.value = t('venueSpaceForm.errors.submission')
+    updateStatusMessage(t('venueSpaceForm.errors.submission'))
+    
+    // Focus the error message for screen readers
+    nextTick(() => {
+      const errorElement = document.querySelector('[role="alert"]')
+      if (errorElement) errorElement.focus()
+    })
+  } finally {
+    isSubmitting.value = false
   }
 }
 
@@ -169,12 +208,18 @@ const cancelForm = () => {
 }
 
 onMounted(() => {
-  fetchData('/venue/', venues)
+  fetchData('/user/venue/', venues)
   fetchData(`/space/type/?lang=${locale.value}`, spaceTypes)
 
   if (venueId) {
     // Preselect the option if venueId is provided
     selectedVenue.value = venueId
+    updateStatusMessage(t('venueSpaceForm.venuePrefilled'))
   }
+  
+  // Set initial focus to the first form field for better keyboard navigation
+  nextTick(() => {
+    document.getElementById('name')?.focus()
+  })
 })
 </script>

@@ -4,6 +4,11 @@
     
     <!-- Accessibility status message for screen readers -->
     <div class="sr-only" aria-live="polite" role="status">{{ statusMessage }}</div>
+    
+    <!-- Visual status message for sighted users -->
+    <div v-if="statusMessage" class="p-2 bg-blue-50 border border-blue-200 rounded mb-4 transition-opacity" :class="{'opacity-100': statusMessage, 'opacity-0': !statusMessage}">
+      {{ statusMessage }}
+    </div>
 
     <!-- Name -->
     <div>
@@ -14,6 +19,8 @@
         class="mt-1 p-2 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" 
         v-model="organizerName" 
         @input="validateField('organizerName')" 
+        @change="handleAutofill"
+        autocomplete="organization"
         aria-describedby="organizerNameError" 
         aria-required="true"
         :aria-invalid="!!errors.organizerName"
@@ -30,6 +37,7 @@
         class="mt-1 p-2 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" 
         v-model="organizerDescription" 
         @input="validateField('organizerDescription')" 
+        @change="handleAutofill"
         aria-describedby="organizerDescriptionError" 
         :aria-invalid="!!errors.organizerDescription"
       ></textarea>
@@ -46,6 +54,8 @@
           class="mt-1 p-2 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" 
           v-model="organizerContactEmail" 
           @input="validateField('organizerContactEmail')" 
+          @change="handleAutofill"
+          autocomplete="email"
           aria-describedby="organizerContactEmailError" 
           :aria-invalid="!!errors.organizerContactEmail"
         >
@@ -59,6 +69,8 @@
           class="mt-1 p-2 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" 
           v-model="organizerContactPhone" 
           @input="validateField('organizerContactPhone')" 
+          @change="handleAutofill"
+          autocomplete="tel"
           aria-describedby="organizerContactPhoneError" 
           :aria-invalid="!!errors.organizerContactPhone"
         >
@@ -75,7 +87,9 @@
         class="mt-1 p-2 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" 
         v-model="organizerWebsiteUrl" 
         @input="validateField('organizerWebsiteUrl')" 
+        @change="handleAutofill"
         @blur="handleUrlBlur"
+        autocomplete="url"
         aria-describedby="organizerWebsiteUrlError organizerWebsiteUrlHint"
         :aria-invalid="!!errors.organizerWebsiteUrl"
         placeholder="www.example.com"
@@ -90,12 +104,19 @@
       <div class="grid grid-cols-12 gap-4">
         <div class="col-span-7 sm:col-span-9">
           <label class="block text-gray-700" for="organizerStreet">{{ $t('organizerForm.street') }}</label>
-          <input type="text" id="organizerStreet" class="mt-1 p-2 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" v-model="organizerStreet" @input="validateField('organizerStreet')" aria-describedby="organizerStreetError" :aria-invalid="!!errors.organizerStreet">
+          <input type="text" id="organizerStreet" class="mt-1 p-2 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" v-model="organizerStreet" @input="validateField('organizerStreet')" @change="handleAutofill" autocomplete="street-address" aria-describedby="organizerStreetError" :aria-invalid="!!errors.organizerStreet">
           <p v-if="errors.organizerStreet" id="organizerStreetError" class="text-red-600" role="alert">{{ errors.organizerStreet }}</p>
         </div>
         <div class="col-span-5 sm:col-span-3">
           <label class="block text-gray-700" for="organizerHouseNumber">{{ $t('organizerForm.houseNumber') }}</label>
-          <input type="text" id="organizerHouseNumber" class="mt-1 p-2 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" v-model="organizerHouseNumber" @input="validateField('organizerHouseNumber')" aria-describedby="organizerHouseNumberError" :aria-invalid="!!errors.organizerHouseNumber">
+          <input type="text" id="organizerHouseNumber" 
+            class="mt-1 p-2 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" 
+            v-model="organizerHouseNumber" 
+            @input="validateField('organizerHouseNumber')" 
+            @change="handleAutofill" 
+            autocomplete="address-level4"
+            aria-describedby="organizerHouseNumberError" 
+            :aria-invalid="!!errors.organizerHouseNumber">
           <p v-if="errors.organizerHouseNumber" id="organizerHouseNumberError" class="text-red-600" role="alert">{{ errors.organizerHouseNumber }}</p>
         </div>
       </div>
@@ -103,12 +124,12 @@
       <div class="grid grid-cols-12 gap-4 mt-4">
         <div class="col-span-4">
           <label class="block text-gray-700" for="organizerPostalCode">{{ $t('organizerForm.postalCode') }}</label>
-          <input type="text" id="organizerPostalCode" class="mt-1 p-2 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" v-model="organizerPostalCode" @input="validateField('organizerPostalCode')" aria-describedby="organizerPostalCodeError" :aria-invalid="!!errors.organizerPostalCode">
+          <input type="text" id="organizerPostalCode" class="mt-1 p-2 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" v-model="organizerPostalCode" @input="validateField('organizerPostalCode')" @change="handleAutofill" autocomplete="postal-code" aria-describedby="organizerPostalCodeError" :aria-invalid="!!errors.organizerPostalCode">
           <p v-if="errors.organizerPostalCode" id="organizerPostalCodeError" class="text-red-600" role="alert">{{ errors.organizerPostalCode }}</p>
         </div>
         <div class="col-span-8">
           <label class="block text-gray-700" for="organizerCity">{{ $t('organizerForm.city') }}</label>
-          <input type="text" id="organizerCity" class="mt-1 p-2 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" v-model="organizerCity" @input="validateField('organizerCity')" aria-describedby="organizerCityError" :aria-invalid="!!errors.organizerCity">
+          <input type="text" id="organizerCity" class="mt-1 p-2 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" v-model="organizerCity" @input="validateField('organizerCity')" @change="handleAutofill" autocomplete="address-level2" aria-describedby="organizerCityError" :aria-invalid="!!errors.organizerCity">
           <p v-if="errors.organizerCity" id="organizerCityError" class="text-red-600" role="alert">{{ errors.organizerCity }}</p>
         </div>
       </div>
@@ -137,7 +158,7 @@
 </template>
 
 <script setup>
-import { ref, nextTick, onMounted } from 'vue'
+import { ref, nextTick, onMounted, onUnmounted } from 'vue'
 import { useApi } from '@/composables/useApi'
 import { useI18n } from 'vue-i18n'
 import { useRouter, useRoute, useLocalePath } from '#imports'
@@ -164,16 +185,33 @@ const submissionError = ref('')
 const statusMessage = ref('')
 const submitButtonText = ref(t('organizerForm.submitButton'))
 const isSubmitting = ref(false)
+const statusMessageTimeout = ref(null) // Use ref instead of window object
 
 const organizerId = route.params.id
 
 const updateStatusMessage = (message) => {
-  statusMessage.value = message
+  if (!message) return
 
-  setTimeout(() => {
+  statusMessage.value = message
+  console.log('Status message updated:', message) // Helps with debugging
+
+  // Clear any existing timeout to prevent multiple overlapping timeouts
+  if (statusMessageTimeout.value) {
+    clearTimeout(statusMessageTimeout.value)
+  }
+
+  // Store the timeout ID in the component-scoped ref
+  statusMessageTimeout.value = setTimeout(() => {
     statusMessage.value = ''
   }, 5000)
 }
+
+// Ensure cleanup when component is unmounted
+onUnmounted(() => {
+  if (statusMessageTimeout.value) {
+    clearTimeout(statusMessageTimeout.value)
+  }
+})
 
 const validateForm = () => {
   errors.value = {}
@@ -313,6 +351,38 @@ const handleSubmit = async () => {
 
 const cancelForm = () => {
   router.push(localePath('/dashboard'))
+}
+
+// Handler for browser autofill detection
+const handleAutofill = (event) => {
+  // Browsers typically trigger a "change" event when autofill occurs
+  // We validate the field to ensure consistent UI feedback
+  const fieldId = event.target.id
+  const fieldName = fieldId.replace('organizer', '')
+                          .replace(/^./, c => c.toLowerCase())
+  
+  // Check if the field has a value that wasn't set through user interaction
+  if (event.target.value) {
+    validateField(fieldId)
+    
+    // If this is a URL field and it was autofilled, ensure it has correct format
+    if (fieldId === 'organizerWebsiteUrl') {
+      handleUrlBlur()
+    }
+    
+    // Optional: Keep a simplified version that only runs when house number is empty
+    if (fieldId === 'organizerStreet' && !organizerHouseNumber.value) {
+      const streetValue = event.target.value;
+      // More permissive pattern for international addresses
+      const matches = streetValue.match(/^(.*\D)\s*(\d+\s*[\w-]*)$/);
+      
+      if (matches && matches.length >= 3) {
+        organizerStreet.value = matches[1].trim();
+        organizerHouseNumber.value = matches[2].trim();
+        updateStatusMessage(t('organizerForm.addressAutofilled'));
+      }
+    }
+  }
 }
 
 const loadOrganizerData = async (id) => {
