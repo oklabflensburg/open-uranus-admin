@@ -1,6 +1,5 @@
 <template>
   <div class="max-w-screen-xl mx-auto bg-white p-3 md:p-6 space-y-12">
-    <!-- Dashboard Header -->
     <section aria-labelledby="dashboard-heading">
       <div class="bg-gray-100 p-3 rounded mb-12">
         <h1 id="dashboard-heading" class="text-3xl mb-3 font-bold">
@@ -56,15 +55,19 @@
               </div>
             </div>
 
-            <div v-if="organizer.can_edit" class="mt-2 flex gap-2">
-              <nuxt-link :to="localePath(`/venue?organizerId=${organizer.organizer_id}`)" 
-                class="bg-gray-600 text-white py-1 px-3 hover:bg-gray-800 hover:text-gray-100 transition rounded focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
-                {{ $t('dashboard.createVenue') }}
-              </nuxt-link>
-              <nuxt-link :to="localePath(`/admin/organization/roles?organizerId=${organizer.organizer_id}`)" 
-                class="bg-gray-600 text-white py-1 px-3 hover:bg-gray-800 hover:text-gray-100 transition rounded focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
-                Organisationsbenutzerrollen
-              </nuxt-link>
+            <div v-if="organizer.can_edit" class="mt-2 flex flex-col gap-2">
+              <span>
+                <nuxt-link :to="localePath(`/organizer/${organizer.organizer_id}/venue`)" 
+                  class="bg-gray-600 text-white py-1 px-3 hover:bg-gray-800 hover:text-gray-100 transition rounded focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                  {{ $t('dashboard.createVenue') }}
+                </nuxt-link>
+              </span>
+              <span>
+                <nuxt-link :to="localePath(`/admin/organization/roles?organizerId=${organizer.organizer_id}`)" 
+                  class="bg-gray-600 text-white py-1 px-3 hover:bg-gray-800 hover:text-gray-100 transition rounded focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                  {{ $t('dashboard.organizationUserRoles') }}
+                </nuxt-link>
+              </span>
             </div>
           </div>
         </li>
@@ -88,7 +91,7 @@
       <p v-if="venues.length === 0" class="text-gray-500">{{ $t('dashboard.noVenuesFound') }}</p>
 
       <ul v-else class="grid grid-cols-12 gap-4" role="list" aria-label="Your venues">
-        <li v-for="venue in venues" :key="venue.venue_id" class="col-span-12 sm:col-span-6 border border-gray-200">
+        <li v-for="venue in venues" :key="venue.venue_id" class="flex flex-col flex-1 col-span-12 sm:col-span-6 border border-gray-200">
           <div class="flex justify-between items-center font-semibold text-sm text-gray-600 bg-gray-200 p-3">
             <span id="venue-name-{{ venue.venue_id }}">{{ venue.venue_name }}</span>
 
@@ -109,8 +112,8 @@
             </div>
           </div>
 
-          <div class="p-3 bg-white text-gray-700">
-            <div class="grid grid-cols-2 gap-x-2 w-16" aria-label="Statistics">
+          <div class="flex flex-1 flex-col p-3 bg-steal-100 text-gray-700">
+            <div class="grid grid-cols-2 gap-x-2 w-16 mb-3" aria-label="Statistics">
               <div class="col-span-1 flex flex-col items-center justify-center">
                 <img src="/public/icons/space.svg" alt="" aria-hidden="true" class="w-5 h-5"/>
                 <span class="sr-only">Spaces:</span>
@@ -123,8 +126,34 @@
               </div>
             </div>
 
-            <div class="mt-2 flex gap-2">
-              <nuxt-link v-if="venue.can_edit_space" :to="localePath({ name: 'space-id', params: { id: venue.venue_id } })" 
+            <div v-if="venue.spaces.length > 0" class="mb-6">
+              <div class="font-semibold text-sm text-gray-600 bg-gray-200 p-3">
+                <h4>{{ $t('dashboard.spaces') }}</h4>
+              </div>
+              <div v-for="space in venue.spaces" :key="space.space_id" class="flex justify-between items-center bg-gray-100 p-2 rounded mt-2">
+                <div class="flex w-full justify-between items-center">
+                  <span>{{ space.space_name }}</span>
+                  <div class="flex gap-2">
+                    <nuxt-link v-if="venue.can_edit_space" :to="localePath({ name: 'space-id', params: { id: space.space_id } })" 
+                      class="p-1 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                      :aria-label="`Edit ${space.space_name}`">
+                      <img src="/public/icons/edit.svg" alt="" aria-hidden="true" class="w-5 h-5"/>
+                      <span class="sr-only">Edit</span>
+                    </nuxt-link>
+                    <button @click="deleteSpace(space.space_id)" 
+                      class="p-1 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                      :aria-label="`Delete ${space.space_name}`"
+                      type="button">
+                      <img src="/public/icons/delete.svg" alt="" aria-hidden="true" class="w-5 h-5"/>
+                      <span class="sr-only">Delete</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex gap-2 mt-auto">
+              <nuxt-link v-if="venue.can_edit_space" :to="localePath(`/space?venueId=${venue.venue_id}`)" 
                 class="bg-gray-600 text-white py-1 px-3 hover:bg-gray-800 hover:text-gray-100 transition rounded focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
                 {{ $t('dashboard.createSpace') }}
               </nuxt-link>
@@ -180,16 +209,16 @@
 import { ref, onMounted, computed } from 'vue'
 import { useApi } from '@/composables/useApi'
 import { useLocalePath } from "#i18n";
-import { useAuth } from '@/composables/useAuth' // Assuming you have an auth composable
+import { useAuth } from '@/composables/useAuth'
 
 const localePath = useLocalePath()
-const { userDisplayName } = useAuth() // Get userDisplayName directly from useAuth
+const { userDisplayName } = useAuth()
 const { fetchApi } = useApi()
 const venues = ref([])
 const organizers = ref([])
 const events = ref([])
+const spaces = ref([])  // Added spaces ref
 
-// Get user's name for personalized welcome
 const userName = computed(() => {
   return userDisplayName.value || '';
 })
@@ -213,12 +242,20 @@ const fetchVenues = async () => {
       stats: {
         count_spaces: 0,
         count_events: 0,
-      }
+      },
+      spaces: [] // Initialize spaces array for each venue
     }))
 
     for (const venue of venues.value) {
+      // Get venue stats
       const stats = await fetchVenueStats(venue.venue_id)
       venue.stats = stats || venue.stats
+      
+      // Get spaces for this venue
+      const venueSpaces = await getSpacesByVenueId(venue.venue_id)
+      if (venueSpaces && Array.isArray(venueSpaces)) {
+        venue.spaces = venueSpaces
+      }
     }
   } catch (error) {
     console.error('Error fetching venues:', error)
@@ -275,6 +312,19 @@ const fetchEvents = async () => {
   }
 }
 
+const getSpacesByVenueId = async (venueId) => {
+  try {
+    const data = await fetchApi(`/space/venue/${venueId}`)
+    if (data && Array.isArray(data)) {
+      spaces.value = data
+    }
+    return data
+  } catch (error) {
+    console.error('Error fetching spaces for venue', venueId, ':', error)
+    return []
+  }
+}
+
 const deleteOrganizer = async (id) => {
   const userConfirmed = confirm('Are you sure you want to delete this organizer? This action cannot be undone.');
   if (!userConfirmed) return;
@@ -315,6 +365,20 @@ const deleteVenue = async (id) => {
     venues.value = venues.value.filter(venue => venue.venue_id !== id)
   } catch (error) {
     console.error('Error deleting venue:', error)
+  }
+}
+
+const deleteSpace = async (id) => {
+  const userConfirmed = confirm('Are you sure you want to delete this space? This action cannot be undone.');
+  if (!userConfirmed) return;
+
+  try {
+    await fetchApi(`/space/${id}`, { method: 'DELETE' })
+    spaces.value = spaces.value.filter(space => space.space_id !== id)
+    alert('Space deleted successfully.');
+  } catch (error) {
+    console.error('Error deleting space:', error)
+    alert('Failed to delete space. Please try again.');
   }
 }
 

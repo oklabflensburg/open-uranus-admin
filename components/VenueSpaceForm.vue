@@ -95,7 +95,8 @@ const { t, locale } = useI18n()
 const route = useRoute()
 const router = useRouter()
 
-const venueId = route.params.id
+const venueId = route.query.venueId
+const spaceId = route.params.id
 
 // Form Data
 const name = ref('')
@@ -160,6 +161,33 @@ const updateStatusMessage = (message) => {
   }, 5000)
 }
 
+// Check if we're in edit mode
+const isModeEdit = () => {
+  return !!spaceId
+}
+
+// Load space data for editing
+const loadSpaceData = async (id) => {
+  try {
+    const { fetchApi } = useApi()
+    const data = await fetchApi(`/space/${id}`)
+    
+    name.value = data.space_name
+    totalCapacity.value = data.space_total_capacity
+    seatingCapacity.value = data.space_seating_capacity
+    spaceTypeId.value = data.space_type_id ? data.space_type_id.toString() : ''
+    buildingLevel.value = data.space_building_level
+    url.value = data.space_url
+    selectedVenue.value = data.space_venue_id ? data.space_venue_id.toString() : ''
+    
+    updateStatusMessage(t('venueSpaceForm.dataLoaded'))
+  } catch (error) {
+    console.error('Error loading space data:', error)
+    submissionError.value = t('venueSpaceForm.errors.load')
+    updateStatusMessage(t('venueSpaceForm.errors.load'))
+  }
+}
+
 // Handle Form Submission
 const handleSubmit = async () => {
   validateForm()
@@ -180,11 +208,22 @@ const handleSubmit = async () => {
 
   try {
     const { fetchApi } = useApi()
-    await fetchApi('/space/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(bodyData),
-    })
+    
+    if (isModeEdit()) {
+      // Update existing space
+      await fetchApi(`/space/${spaceId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(bodyData),
+      })
+    } else {
+      // Create new space
+      await fetchApi('/space/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(bodyData),
+      })
+    }
     
     updateStatusMessage(t('venueSpaceForm.success'))
     router.push('/dashboard')
@@ -211,9 +250,15 @@ onMounted(() => {
   fetchData('/user/venue/', venues)
   fetchData(`/space/type/?lang=${locale.value}`, spaceTypes)
 
-  if (venueId) {
-    // Preselect the option if venueId is provided
-    selectedVenue.value = venueId
+  if (isModeEdit()) {
+    // Load existing space data if in edit mode
+    loadSpaceData(spaceId)
+    submitButtonText.value = t('venueSpaceForm.updateButton')
+  } else if (venueId) {
+    // Preselect the venue option if venueId is provided (create mode with preselected venue)
+    selectedVenue.value = venueId.toString()
+    // Clear any validation errors for the venue field
+    delete errors.value.selectedVenue
     updateStatusMessage(t('venueSpaceForm.venuePrefilled'))
   }
   
