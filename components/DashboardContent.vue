@@ -190,7 +190,7 @@
               <td class="p-3 border">{{ event.event_venue_name }}</td>
               <td class="p-3 border text-right">
                 <nuxt-link v-if="event.can_edit" 
-                  :to="localePath({ name: 'event-id', params: { id: event.event_date_id }, query: { venueId: 21, update: true }})" 
+                  :to="localePath({ name: 'event-id', params: { id: event.event_date_id }, query: { venueId: 21 }})" 
                   class="inline-block p-1 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                   :aria-label="`Edit event: ${event.event_title}`">
                   <img src="/public/icons/edit.svg" alt="" aria-hidden="true" class="w-5 h-5"/>

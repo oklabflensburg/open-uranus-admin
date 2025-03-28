@@ -169,19 +169,20 @@
         <select 
           class="bg-white mt-1 p-3 w-full border rounded-xs focus-visible" 
           id="genreType" 
-          v-model="selectedGenreType" 
+          v-model="selectedGenreTypes"
+          multiple
           :disabled="genreTypes.length === 0" 
-          @change="validateField('selectedGenreType')"
-          aria-describedby="selectedGenreTypeError"
-          :aria-invalid="!!errors.selectedGenreType"
+          @change="validateField('selectedGenreTypes')"
+          aria-describedby="selectedGenreTypesError"
+          :aria-invalid="!!errors.selectedGenreTypes"
         >
           <option v-if="genreTypes.length === 0" value="" selected>---</option>
           <option v-else value="" disabled>{{ $t('eventForm.selectOption') }}</option>
-          <option v-for="genreType in genreTypes" :key="genreType.id" :value="genreType.id">
+          <option v-for="genreType in genreTypes" :key="genreType.genre_type_id" :value="genreType.genre_type_id">
             {{ genreType.genre_type_name }}
           </option>
         </select>
-        <p v-if="errors.selectedGenreType" id="selectedGenreTypeError" class="text-red-600">{{ errors.selectedGenreType }}</p>
+        <p v-if="errors.selectedGenreTypes" id="selectedGenreTypesError" class="text-red-600">{{ errors.selectedGenreTypes }}</p>
       </div>
 
       <div class="col-span-12 sm:col-span-6 lg:col-span-4">
@@ -227,7 +228,6 @@
       <div class="col-span-12 sm:col-span-6 lg:col-span-4">
         <label for="eventImage">{{ $t('eventForm.selectImage') }}</label>
         <div class="relative mt-1">
-          <!-- Hide actual input but keep it accessible -->
           <input 
             type="file" 
             id="eventImage"
@@ -322,11 +322,14 @@ const previewUrl = ref('')
 // Selected values
 const selectedEventTypes = ref([])
 const selectedOrganizer = ref('')
-const selectedGenreType = ref('')
+const selectedGenreTypes = ref('')
 const selectedLicenseType = ref('')
 const selectedImageType = ref('')
 const selectedVenue = ref(venueId || '')
 const selectedSpace = ref('')
+
+// Add this with your other refs
+const isInitialLoad = ref(true)
 
 const updateStatusMessage = (message) => {
   statusMessage.value = message
@@ -347,17 +350,33 @@ const fetchData = async (url, targetArray) => {
 }
 
 // Fetch spaces based on selected venue
-const fetchSpaces = async () => {
+const fetchSpaces = async (id) => {
   if (selectedVenue.value) {
-    const url = `/space/venue/${selectedVenue.value}`
-    fetchData(url, spaces)
+    try {
+      const url = `/space/venue/${id}`
+      if (!isInitialLoad.value) {
+        selectedSpace.value = ''
+      }
+      const data = await fetchApi(url)
+      spaces.value = data
+    } catch (error) {
+      console.error(`Error fetching spaces:`, error)
+      updateStatusMessage(t('eventForm.errors.fetchingData'))
+      spaces.value = []
+    }
   } else {
     spaces.value = []
+    selectedSpace.value = ''
   }
 }
 
-watch(selectedVenue, () => {
-  fetchSpaces()
+watch(selectedVenue, (newVenueId) => {
+  if (newVenueId) {
+    fetchSpaces(newVenueId)
+  } else {
+    spaces.value = []
+    selectedSpace.value = ''
+  }
 })
 
 const onFileChange = (event) => {
@@ -425,7 +444,7 @@ const validateField = (field, required = false) => {
     selectedVenue,
     selectedSpace,
     selectedEventTypes,
-    selectedGenreType,
+    selectedGenreTypes,
     selectedLicenseType,
     selectedImageType
   }
@@ -440,7 +459,7 @@ const validateField = (field, required = false) => {
 }
 
 const isModeEdit = () => {
-  return !!eventDateId && updteEvent
+  return !!eventDateId
 }
 
 const handleSubmit = async () => {
@@ -473,10 +492,6 @@ const handleSubmit = async () => {
       formData.append('event_entry_time', entryTime.value)
     }
 
-    if (selectedGenreType.value) {
-      formData.append('event_genre_type_id', parseInt(selectedGenreType.value));
-    }
-
     if (selectedLicenseType.value) {
       formData.append('event_image_license_type_id', parseInt(selectedLicenseType.value));
     }
@@ -501,6 +516,12 @@ const handleSubmit = async () => {
       formData.append('event_type_id', parseInt(eventType))
     })
 
+    selectedGenreTypes.value.forEach(genreType => {
+      formData.append('event_genre_type_id', parseInt(genreType))
+    })
+
+    console.log('formData:', formData)
+
     try {
       await fetchApi(`/event/${isModeEdit() ? parseInt(eventDateId) : ''}`, {
         method: isModeEdit() ? 'PUT' : 'POST',
@@ -508,7 +529,7 @@ const handleSubmit = async () => {
       })
 
       updateStatusMessage(t('eventForm.success'))
-      router.push(localePath('/dashboard'))
+      // router.push(localePath('/dashboard'))
     } catch (error) {
       console.error('Error sending data:', error)
       submissionError.value = t('eventForm.errors.submission')
@@ -545,7 +566,12 @@ const fetchEventData = async () => {
           selectedEventTypes.value.push(eventTypeId)
         })
       }
-      selectedGenreType.value = eventData.event_genre_type_id || ''
+      selectedGenreTypes.value = eventData.event_genre_type_ids || ''
+      if (eventData.event_genre_type_ids && Array.isArray(eventData.event_genre_type_ids)) {
+        eventData.event_genre_type_ids.forEach(genreTypeId => {
+          selectedGenreTypes.value.push(genreTypeId)
+        })
+      } 
       selectedLicenseType.value = eventData.event_image_license_type_id || ''
       selectedImageType.value = eventData.event_image_type_id || ''
       
@@ -562,7 +588,6 @@ const fetchEventData = async () => {
 
 // Fetch organizers, venues, and event data when component is mounted
 onMounted(() => {
-  fetchSpaces()
   fetchData('/user/organizer/', organizers)
   fetchData(`/genre/type/?lang=${locale.value}`, genreTypes)
   fetchData(`/license/type?lang=${locale.value}`, licenseTypes)
@@ -578,5 +603,10 @@ onMounted(() => {
   if (isModeEdit()) {
     submitButtonText.value = t('eventForm.updateButton')
   }
+  
+  // Set isInitialLoad to false after all initial data loading is complete
+  setTimeout(() => {
+    isInitialLoad.value = false
+  }, 500)
 })
 </script>
