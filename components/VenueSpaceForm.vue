@@ -89,8 +89,10 @@ import { ref, onMounted, nextTick } from 'vue'
 import { useApi } from '@/composables/useApi'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { useLocalePath } from '@nuxtjs/i18n'
 
 const { t, locale } = useI18n()
+const localePath = useLocalePath()
 
 const route = useRoute()
 const router = useRouter()
@@ -226,7 +228,7 @@ const handleSubmit = async () => {
     }
     
     updateStatusMessage(t('venueSpaceForm.success'))
-    router.push('/dashboard')
+    router.push(localePath('/dashboard'))
   } catch (error) {
     console.error('Error submitting form:', error)
     submissionError.value = t('venueSpaceForm.errors.submission')
@@ -243,7 +245,7 @@ const handleSubmit = async () => {
 }
 
 const cancelForm = () => {
-  router.push('/dashboard')
+  router.push(localePath('/dashboard'))
 }
 
 onMounted(() => {
