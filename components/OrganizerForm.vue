@@ -149,7 +149,7 @@
         type="submit" 
         class="mt-6 px-4 py-2 bg-green-500 text-white rounded-xs hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition"
         :disabled="isSubmitting"
-        aria-busy="isSubmitting"
+        :aria-busy="isSubmitting"
       >
         {{ submitButtonText }}
       </button>

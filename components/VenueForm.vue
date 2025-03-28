@@ -252,7 +252,7 @@
         type="submit" 
         class="mt-6 px-4 py-2 bg-green-500 text-white rounded-xs hover:bg-green-700 focus-visible transition"
         :disabled="isSubmitting"
-        aria-busy="isSubmitting"
+        :aria-busy="isSubmitting"
       >
         <span v-if="isSubmitting">{{ $t('venueForm.submitting') }}</span>
         <span v-else>{{ submitButtonText }}</span>
