@@ -1,52 +1,52 @@
 <template>
-  <form id="eventForm" class="space-y-4" @submit.prevent="handleSubmit" aria-labelledby="eventFormTitle" novalidate>
+  <form id="eventForm" class="space-y-4" @submit.prevent="handleSubmit" aria-labelledby="eventFormTitle">
     <h2 id="eventFormTitle" class="text-2xl font-bold mb-4">{{ $t('eventForm.title') }}</h2>
 
     <!-- Accessibility status message for screen readers -->
-    <div class="sr-only" aria-live="assertive" role="status">{{ statusMessage }}</div>
+    <div class="sr-only" aria-live="polite" role="status">{{ statusMessage }}</div>
 
     <div>
-      <label class="block text-gray-700" for="eventTitle">{{ $t('eventForm.eventTitle') }}<span class="text-red-600 ml-1" aria-hidden="true">*</span><span class="sr-only">({{ $t('eventForm.required') }})</span></label>
+      <label class="block text-gray-700" for="eventTitle">{{ $t('eventForm.eventTitle') }}<span class="text-red-600 ml-1" aria-hidden="true">*</span></label>
       <input 
         type="text" 
         id="eventTitle" 
         name="eventTitle" 
-        class="mt-1 p-2 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" 
+        class="mt-1 p-2 w-full border rounded-xs focus-visible" 
         v-model="eventTitle" 
         @input="validateField('eventTitle')" 
         aria-describedby="eventTitleError"
         aria-required="true"
         :aria-invalid="!!errors.eventTitle"
       >
-      <p v-if="errors.eventTitle" id="eventTitleError" class="text-red-600" role="alert">{{ errors.eventTitle }}</p>
+      <p v-if="errors.eventTitle" id="eventTitleError" class="text-red-600">{{ errors.eventTitle }}</p>
     </div>
     
     <div>
-      <label class="block text-gray-700" for="eventDescription">{{ $t('eventForm.eventDescription') }}<span class="text-red-600 ml-1" aria-hidden="true">*</span><span class="sr-only">({{ $t('eventForm.required') }})</span></label>
+      <label class="block text-gray-700" for="eventDescription">{{ $t('eventForm.eventDescription') }}<span class="text-red-600 ml-1" aria-hidden="true">*</span></label>
       <textarea 
         id="eventDescription" 
         name="eventDescription" 
         rows="4" 
-        class="mt-1 p-2 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" 
+        class="mt-1 p-2 w-full border rounded-xs focus-visible" 
         v-model="eventDescription" 
         @input="validateField('eventDescription')"
         aria-describedby="eventDescriptionError"
         aria-required="true"
         :aria-invalid="!!errors.eventDescription"
       ></textarea>
-      <p v-if="errors.eventDescription" id="eventDescriptionError" class="text-red-600" role="alert">{{ errors.eventDescription }}</p>
+      <p v-if="errors.eventDescription" id="eventDescriptionError" class="text-red-600">{{ errors.eventDescription }}</p>
     </div>
 
     <div class="col-span-12 sm:col-span-6 lg:col-span-4">
-      <label for="eventType">{{ $t('eventForm.eventType') }}<span class="text-red-600 ml-1" aria-hidden="true">*</span><span class="sr-only">({{ $t('eventForm.required') }})</span></label>
+      <label for="eventType">{{ $t('eventForm.eventType') }}<span class="text-red-600 ml-1" aria-hidden="true">*</span></label>
       <select 
-        class="bg-white mt-1 p-3 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" 
+        class="bg-white mt-1 p-3 w-full border rounded-xs focus-visible" 
         id="eventType" 
         v-model="selectedEventTypes" 
         multiple 
         :disabled="eventTypes.length === 0" 
         @change="validateField('selectedEventTypes')"
-        aria-describedby="selectedEventTypesError eventTypeInstructions"
+        aria-describedby="selectedEventTypesError"
         aria-required="true"
         :aria-invalid="!!errors.selectedEventTypes"
       >
@@ -55,25 +55,24 @@
           {{ eventType.event_type_name }}
         </option>
       </select>
-      <p id="eventTypeInstructions" class="text-sm text-gray-600">{{ $t('eventForm.multiSelectInstructions', 'Hold Ctrl (or Cmd) to select multiple options') }}</p>
-      <p v-if="errors.selectedEventTypes" id="selectedEventTypesError" class="text-red-600" role="alert">{{ errors.selectedEventTypes }}</p>
+      <p v-if="errors.selectedEventTypes" id="selectedEventTypesError" class="text-red-600">{{ errors.selectedEventTypes }}</p>
     </div>
 
     <div class="grid grid-cols-12 gap-4 mb-4">
       <div class="col-span-12 sm:col-span-6 lg:col-span-4">
-        <label class="block text-gray-700" for="eventDateStart">{{ $t('eventForm.eventDateStart') }}<span class="text-red-600 ml-1" aria-hidden="true">*</span><span class="sr-only">({{ $t('eventForm.required') }})</span></label>
+        <label class="block text-gray-700" for="eventDateStart">{{ $t('eventForm.eventDateStart') }}<span class="text-red-600 ml-1" aria-hidden="true">*</span></label>
         <input 
           type="datetime-local" 
           name="eventDateStart" 
           id="eventDateStart"
-          class="mt-1 p-2 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" 
+          class="mt-1 p-2 w-full border rounded-xs focus-visible" 
           v-model="eventDateStart" 
           @input="validateField('eventDateStart')"
           aria-describedby="eventDateStartError"
           aria-required="true"
           :aria-invalid="!!errors.eventDateStart"
         >
-        <p v-if="errors.eventDateStart" id="eventDateStartError" class="text-red-600" role="alert">{{ errors.eventDateStart }}</p>
+        <p v-if="errors.eventDateStart" id="eventDateStartError" class="text-red-600">{{ errors.eventDateStart }}</p>
       </div>
 
       <div class="col-span-12 sm:col-span-6 lg:col-span-4">
@@ -82,7 +81,7 @@
           type="datetime-local" 
           name="eventDateEnd" 
           id="eventDateEnd"
-          class="mt-1 p-2 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" 
+          class="mt-1 p-2 w-full border rounded-xs focus-visible" 
           v-model="eventDateEnd"
         >
       </div>
@@ -93,20 +92,20 @@
           type="time" 
           name="entryTime" 
           id="entryTime"
-          class="mt-1 p-2 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" 
+          class="mt-1 p-2 w-full border rounded-xs focus-visible" 
           v-model="entryTime" 
           @input="validateField('entryTime')"
           aria-describedby="entryTimeError"
           :aria-invalid="!!errors.entryTime"
         >
-        <p v-if="errors.entryTime" id="entryTimeError" class="text-red-600" role="alert">{{ errors.entryTime }}</p>
+        <p v-if="errors.entryTime" id="entryTimeError" class="text-red-600">{{ errors.entryTime }}</p>
       </div>
 
       <!-- Organizer ID -->
       <div class="col-span-12 sm:col-span-6 lg:col-span-4">
-        <label class="block text-gray-700" for="organizer">{{ $t('eventForm.organizer') }}<span class="text-red-600 ml-1" aria-hidden="true">*</span><span class="sr-only">({{ $t('eventForm.required') }})</span></label>
+        <label class="block text-gray-700" for="organizer">{{ $t('eventForm.organizer') }}<span class="text-red-600 ml-1" aria-hidden="true">*</span></label>
         <select 
-          class="bg-white mt-1 p-3 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" 
+          class="bg-white mt-1 p-3 w-full border rounded-xs focus-visible" 
           id="organizer" 
           v-model="selectedOrganizer" 
           @change="validateField('selectedOrganizer')"
@@ -119,14 +118,14 @@
             {{ organizer.organizer_name }}
           </option>
         </select>
-        <p v-if="errors.selectedOrganizer" id="selectedOrganizerError" class="text-red-600" role="alert">{{ errors.selectedOrganizer }}</p>
+        <p v-if="errors.selectedOrganizer" id="selectedOrganizerError" class="text-red-600">{{ errors.selectedOrganizer }}</p>
       </div>
 
       <!-- Venue ID -->
       <div class="col-span-12 sm:col-span-6 lg:col-span-4">
-        <label class="block text-gray-700" for="venue">{{ $t('eventForm.venue') }}<span class="text-red-600 ml-1" aria-hidden="true">*</span><span class="sr-only">({{ $t('eventForm.required') }})</span></label>
+        <label class="block text-gray-700" for="venue">{{ $t('eventForm.venue') }}<span class="text-red-600 ml-1" aria-hidden="true">*</span></label>
         <select 
-          class="bg-white mt-1 p-3 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" 
+          class="bg-white mt-1 p-3 w-full border rounded-xs focus-visible" 
           id="venue" 
           v-model="selectedVenue" 
           @change="validateField('selectedVenue')"
@@ -139,14 +138,14 @@
             {{ venue.venue_name }}
           </option>
         </select>
-        <p v-if="errors.selectedVenue" id="selectedVenueError" class="text-red-600" role="alert">{{ errors.selectedVenue }}</p>
+        <p v-if="errors.selectedVenue" id="selectedVenueError" class="text-red-600">{{ errors.selectedVenue }}</p>
       </div>
 
       <!-- Space -->
       <div class="col-span-12 sm:col-span-6 lg:col-span-4">
-        <label for="space">{{ $t('eventForm.space') }}<span class="text-red-600 ml-1" aria-hidden="true">*</span><span class="sr-only">({{ $t('eventForm.required') }})</span></label>
+        <label for="space">{{ $t('eventForm.space') }}<span class="text-red-600 ml-1" aria-hidden="true">*</span></label>
         <select 
-          class="bg-white mt-1 p-3 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" 
+          class="bg-white mt-1 p-3 w-full border rounded-xs focus-visible" 
           id="space" 
           v-model="selectedSpace" 
           :disabled="spaces.length === 0" 
@@ -160,7 +159,7 @@
             {{ space.space_name }}
           </option>
         </select>
-        <p v-if="errors.selectedSpace" id="selectedSpaceError" class="text-red-600" role="alert">{{ errors.selectedSpace }}</p>
+        <p v-if="errors.selectedSpace" id="selectedSpaceError" class="text-red-600">{{ errors.selectedSpace }}</p>
       </div>
     </div>
 
@@ -168,7 +167,7 @@
       <div class="col-span-12 sm:col-span-6 lg:col-span-4">
         <label for="genreType">{{ $t('eventForm.genreType') }}</label>
         <select 
-          class="bg-white mt-1 p-3 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" 
+          class="bg-white mt-1 p-3 w-full border rounded-xs focus-visible" 
           id="genreType" 
           v-model="selectedGenreType" 
           :disabled="genreTypes.length === 0" 
@@ -182,13 +181,13 @@
             {{ genreType.genre_type_name }}
           </option>
         </select>
-        <p v-if="errors.selectedGenreType" id="selectedGenreTypeError" class="text-red-600" role="alert">{{ errors.selectedGenreType }}</p>
+        <p v-if="errors.selectedGenreType" id="selectedGenreTypeError" class="text-red-600">{{ errors.selectedGenreType }}</p>
       </div>
 
       <div class="col-span-12 sm:col-span-6 lg:col-span-4">
         <label for="licenseType">{{ $t('eventForm.licenseType') }}</label>
         <select 
-          class="bg-white mt-1 p-3 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" 
+          class="bg-white mt-1 p-3 w-full border rounded-xs focus-visible" 
           id="licenseType" 
           v-model="selectedLicenseType" 
           :disabled="licenseTypes.length === 0" 
@@ -202,13 +201,13 @@
             {{ licenseType.license_type_name }}
           </option>
         </select>
-        <p v-if="errors.selectedLicenseType" id="selectedLicenseTypeError" class="text-red-600" role="alert">{{ errors.selectedLicenseType }}</p>
+        <p v-if="errors.selectedLicenseType" id="selectedLicenseTypeError" class="text-red-600">{{ errors.selectedLicenseType }}</p>
       </div>
 
       <div class="col-span-12 sm:col-span-6 lg:col-span-4">
         <label for="imageType">{{ $t('eventForm.imageType') }}</label>
         <select 
-          class="bg-white mt-1 p-3 w-full border rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500" 
+          class="bg-white mt-1 p-3 w-full border rounded-xs focus-visible" 
           id="imageType" 
           v-model="selectedImageType" 
           :disabled="imageTypes.length === 0" 
@@ -222,43 +221,41 @@
             {{ imageType.image_type_name }}
           </option>
         </select>
-        <p v-if="errors.selectedImageType" id="selectedImageTypeError" class="text-red-600" role="alert">{{ errors.selectedImageType }}</p>
+        <p v-if="errors.selectedImageType" id="selectedImageTypeError" class="text-red-600">{{ errors.selectedImageType }}</p>
       </div>
 
       <div class="col-span-12 sm:col-span-6 lg:col-span-4">
         <label for="eventImage">{{ $t('eventForm.selectImage') }}</label>
         <div class="relative mt-1">
-          <!-- Make file input properly accessible -->
+          <!-- Hide actual input but keep it accessible -->
           <input 
             type="file" 
             id="eventImage"
-            class="sr-only"
+            class="sr-only absolute"
             ref="fileInput"
             @change="onFileChange" 
             accept="image/*" 
-            aria-describedby="fileError fileInstructions"
+            aria-describedby="fileError"
             :aria-invalid="!!errors.file"
           >
           <button 
             type="button" 
-            class="w-full flex items-center justify-center px-4 py-2 bg-white border border-gray-300 rounded-xs hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition"
+            class="w-full flex items-center justify-center px-4 py-2 bg-white border border-gray-300 rounded-xs hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition"
             @click="$refs.fileInput.click()"
-            aria-controls="eventImage"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
             <span>{{ file?.name || $t('eventForm.selectImage') }}</span>
           </button>
-          <p id="fileInstructions" class="text-sm text-gray-600">{{ $t('eventForm.imageInstructions', 'Select an image for the event') }}</p>
-          <p v-if="errors.file" id="fileError" class="text-red-600 mt-1" role="alert">{{ errors.file }}</p>
+          <p v-if="errors.file" id="fileError" class="text-red-600 mt-1">{{ errors.file }}</p>
           <div v-if="previewUrl" class="mt-2">
-            <img :src="previewUrl" :alt="$t('eventForm.imagePreview', 'Event image preview')" class="h-32 w-auto object-contain border rounded" />
+            <img :src="previewUrl" alt="Preview" class="h-32 w-auto object-contain border rounded" />
             <button 
               type="button" 
-              class="mt-2 px-3 py-1 bg-red-500 text-white rounded-xs hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition flex items-center"
+              class="mt-2 px-3 py-1 bg-red-500 text-white rounded-xs hover:bg-red-700 focus-visible transition flex items-center"
               @click="removeFile"
-              aria-label="{{ $t('eventForm.removeImageFull', 'Remove the selected image') }}"
+              aria-label="Remove selected image"
             >
               <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -270,25 +267,11 @@
       </div>
     </div>
 
-    <div v-if="submissionError" class="text-red-600 p-4 border border-red-300 bg-red-50 rounded-md" role="alert" aria-live="assertive">{{ submissionError }}</div>
+    <div v-if="submissionError" class="text-red-600" aria-live="assertive">{{ submissionError }}</div>
 
     <div class="flex space-x-4 justify-end">
-      <button 
-        type="button" 
-        @click="cancelForm" 
-        class="mt-6 px-4 py-2 bg-gray-500 text-white rounded-xs hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition"
-      >
-        {{ $t('eventForm.cancelButton') }}
-      </button>
-      <button 
-        type="submit" 
-        id="addEventButton" 
-        class="mt-6 px-4 py-2 bg-green-500 text-white rounded-xs hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition"
-        :disabled="isSubmitting"
-        :aria-busy="isSubmitting"
-      >
-        {{ submitButtonText }}
-      </button>
+      <button type="button" @click="cancelForm" class="mt-6 px-4 py-2 bg-gray-500 text-white rounded-xs hover:bg-gray-700 focus-visible transition">{{ $t('eventForm.cancelButton') }}</button>
+      <button type="submit" id="addEventButton" class="mt-6 px-4 py-2 bg-green-500 text-white rounded-xs hover:bg-green-700 focus-visible transition">{{ submitButtonText }}</button>
     </div>
   </form>
 </template>
@@ -345,18 +328,12 @@ const selectedImageType = ref('')
 const selectedVenue = ref(venueId || '')
 const selectedSpace = ref('')
 
-const isSubmitting = ref(false)
-
-// Improved status message handling for better screen reader announcements
 const updateStatusMessage = (message) => {
   statusMessage.value = message
 
-  // For important messages, keep them longer
-  const clearTime = message.includes('error') || message.includes('success') ? 8000 : 5000
-  
   setTimeout(() => {
     statusMessage.value = ''
-  }, clearTime)
+  }, 5000)
 }
 
 const fetchData = async (url, targetArray) => {
@@ -411,7 +388,6 @@ const removeFile = () => {
   updateStatusMessage(t('eventForm.imageRemoved', 'Image removed'))
 }
 
-// Enhanced validation for better accessibility
 const validateForm = () => {
   errors.value = {}
   
@@ -433,16 +409,10 @@ const validateForm = () => {
   if (Object.keys(errors.value).length > 0) {
     const firstErrorField = Object.keys(errors.value)[0]
     nextTick(() => {
-      const element = document.getElementById(firstErrorField)
-      if (element) {
-        element.focus()
-        element.scrollIntoView({ behavior: 'smooth', block: 'center' })
-      }
+      document.getElementById(firstErrorField)?.focus()
       updateStatusMessage(t('eventForm.validationErrors'))
     })
-    return false
   }
-  return true
 }
 
 // Update validateField to handle required fields
@@ -473,14 +443,15 @@ const isModeEdit = () => {
   return !!eventDateId && updteEvent
 }
 
-// Improved form submission with proper accessibility states
 const handleSubmit = async () => {
   try {
-    if (!validateForm()) {
+    validateForm()
+
+    // Ensure all required fields are present
+    if (Object.keys(errors.value).length > 0) {
       return
     }
 
-    isSubmitting.value = true
     updateStatusMessage(t('eventForm.submitting'))
 
     const formData = new FormData();
@@ -537,27 +508,16 @@ const handleSubmit = async () => {
       })
 
       updateStatusMessage(t('eventForm.success'))
-      // Add a slight delay before navigation to ensure screen readers announce success
-      setTimeout(() => {
-        router.push(localePath('/dashboard'))
-      }, 1000)
+      router.push(localePath('/dashboard'))
     } catch (error) {
       console.error('Error sending data:', error)
       submissionError.value = t('eventForm.errors.submission')
       updateStatusMessage(t('eventForm.errors.submission'))
-      // Focus the error message for better accessibility
-      nextTick(() => {
-        const errorElement = document.querySelector('[role="alert"]')
-        if (errorElement) errorElement.focus()
-      })
-    } finally {
-      isSubmitting.value = false
     }
   } catch (error) {
     console.error('Error in handleSubmit:', error)
     submissionError.value = t('eventForm.errors.submission')
     updateStatusMessage(t('eventForm.errors.submission'))
-    isSubmitting.value = false
   }
 }
 

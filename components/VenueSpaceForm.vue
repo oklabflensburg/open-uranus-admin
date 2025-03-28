@@ -1,6 +1,8 @@
 <template>
   <form id="venueSpaceForm" class="space-y-4" @submit.prevent="handleSubmit" aria-labelledby="venueSpaceFormTitle">
-    <h2 id="venueSpaceFormTitle" class="text-2xl font-bold mb-4">{{ $t('venueSpaceForm.title') }}</h2>
+    <h2 id="venueSpaceFormTitle" class="text-2xl font-bold mb-4">
+      {{ isModeEdit() ? $t('venueSpaceForm.editTitle') : $t('venueSpaceForm.title') }}
+    </h2>
 
     <!-- Accessibility status message for screen readers -->
     <div class="sr-only" aria-live="polite" role="status">{{ statusMessage }}</div>
