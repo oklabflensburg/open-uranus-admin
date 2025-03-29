@@ -58,50 +58,18 @@
       <p v-if="errors.selectedEventTypes" id="selectedEventTypesError" class="text-red-600">{{ errors.selectedEventTypes }}</p>
     </div>
 
+    <EventDateFields
+      :event-date-start="eventDateStart"
+      @update:event-date-start="eventDateStart = $event"
+      :event-date-end="eventDateEnd"
+      @update:event-date-end="eventDateEnd = $event"
+      :entry-time="entryTime"
+      @update:entry-time="entryTime = $event"
+      :errors="errors"
+      @validate-field="validateField"
+    />
+
     <div class="grid grid-cols-12 gap-4 mb-4">
-      <div class="col-span-12 sm:col-span-6 lg:col-span-4">
-        <label class="block text-gray-700" for="eventDateStart">{{ $t('eventForm.eventDateStart') }}<span class="text-red-600 ml-1" aria-hidden="true">*</span></label>
-        <input 
-          type="datetime-local" 
-          name="eventDateStart" 
-          id="eventDateStart"
-          class="mt-1 p-2 w-full border rounded-xs focus-visible" 
-          v-model="eventDateStart" 
-          @input="validateField('eventDateStart')"
-          aria-describedby="eventDateStartError"
-          aria-required="true"
-          :aria-invalid="!!errors.eventDateStart"
-        >
-        <p v-if="errors.eventDateStart" id="eventDateStartError" class="text-red-600">{{ errors.eventDateStart }}</p>
-      </div>
-
-      <div class="col-span-12 sm:col-span-6 lg:col-span-4">
-        <label class="block text-gray-700" for="eventDateEnd">{{ $t('eventForm.eventDateEnd') }}</label>
-        <input 
-          type="datetime-local" 
-          name="eventDateEnd" 
-          id="eventDateEnd"
-          class="mt-1 p-2 w-full border rounded-xs focus-visible" 
-          v-model="eventDateEnd"
-        >
-      </div>
-
-      <div class="col-span-12 sm:col-span-6 lg:col-span-4">
-        <label class="block text-gray-700" for="entryTime">{{ $t('eventForm.entryTime') }}</label>
-        <input 
-          type="time" 
-          name="entryTime" 
-          id="entryTime"
-          class="mt-1 p-2 w-full border rounded-xs focus-visible" 
-          v-model="entryTime" 
-          @input="validateField('entryTime')"
-          aria-describedby="entryTimeError"
-          :aria-invalid="!!errors.entryTime"
-        >
-        <p v-if="errors.entryTime" id="entryTimeError" class="text-red-600">{{ errors.entryTime }}</p>
-      </div>
-
-      <!-- Organizer ID -->
       <div class="col-span-12 sm:col-span-6 lg:col-span-4">
         <label class="block text-gray-700" for="organizer">{{ $t('eventForm.organizer') }}<span class="text-red-600 ml-1" aria-hidden="true">*</span></label>
         <select 
@@ -282,6 +250,7 @@ import { useApi } from '@/composables/useApi'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useRouter, useLocalePath } from '#imports'
+import EventDateFields from './EventDateFields.vue'
 
 const { fetchApi } = useApi()
 
